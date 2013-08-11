@@ -1,0 +1,6 @@
+---
+logentries_key: key
+logentries_logs:
+  - /var/log/auth.log
+  - /var/log/cron.log
+  - /var/log/syslog

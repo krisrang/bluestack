@@ -1,0 +1,13 @@
+---
+- name: Remove foreign keys
+  file: path=/root/.ssh/authorized_keys state=absent
+
+- name: SSHD config
+  template: src=ssh.j2 dest=/etc/ssh/sshd_config owner=root group=root mode=0644
+  notify: restart ssh
+
+- name: install python-software-properties
+  apt: name='python-software-properties' state=installed
+
+- include: ufw.yml
+- include: logentries.yml

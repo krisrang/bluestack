@@ -1,0 +1,15 @@
+---
+- name:   firewall disable
+  shell: yes | ufw disable
+
+- name:   firewall reset
+  shell: yes | ufw reset
+
+- name:   firewall allow ssh
+  command: ufw allow OpenSSH
+
+- name:   firewall deny all
+  command: ufw default deny
+
+- name:   firewall enable
+  shell: yes | ufw enable
