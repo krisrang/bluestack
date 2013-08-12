@@ -8,6 +8,9 @@
 - name:   firewall allow ssh
   command: ufw allow OpenSSH
 
+- name:   firewall allow ssh
+  command: ufw allow "Nginx Full"
+
 - name:   firewall deny all
   command: ufw default deny
 

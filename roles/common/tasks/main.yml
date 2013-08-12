@@ -6,8 +6,15 @@
   template: src=ssh.j2 dest=/etc/ssh/sshd_config owner=root group=root mode=0644
   notify: restart ssh
 
-- name: install python-software-properties
-  apt: name='python-software-properties' state=installed
+- name: install packages
+  apt: name={{ item }} state=installed
+  with_items:
+    - build-essential
+    - python-software-properties
+    - libssl-dev
+    - zlib1g-dev
+    - e2fslibs-dev 
 
 - include: ufw.yml
 - include: logentries.yml
+# - include: tarsnap.yml
