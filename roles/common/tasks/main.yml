@@ -16,7 +16,11 @@
     - libssl-dev
     - zlib1g-dev
     - e2fslibs-dev
-  tags: main
+    - ssl-cert
+  tags: 
+    - main
+    - nginx
+    - ssl
 
 - include: ufw.yml
 - include: logentries.yml

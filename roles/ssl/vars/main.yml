@@ -1,0 +1,4 @@
+---
+ssl_wildcard_domain: star.rang.ee
+ssl_crt: /etc/ssl/certs/star.rang.ee.crt
+ssl_key: /etc/ssl/private/star.rang.ee.key

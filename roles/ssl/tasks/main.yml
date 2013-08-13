@@ -1,0 +1,20 @@
+---
+- name: Write cert
+  copy: src=secrets/{{ ssl_wildcard_domain }}.crt dest={{ ssl_crt }} owner=root group=root mode=0644
+  tags: 
+    - nginx
+    - ssl
+
+- name: Write key
+  copy: src=secrets/{{ ssl_wildcard_domain }}.key dest={{ ssl_key }} owner=root group="ssl-cert" mode=0640
+  tags: 
+    - nginx
+    - ssl
+
+- name: Write ssl.conf
+  template: src=ssl.conf.j2 dest='/etc/nginx/conf.d/ssl.conf' backup=yes
+  notify:
+    - restart nginx
+  tags: 
+    - nginx
+    - ssl

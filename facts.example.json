@@ -1,0 +1,265 @@
+{
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "10.0.3.1", 
+            "172.17.42.1", 
+            "37.187.8.220"
+        ], 
+        "ansible_all_ipv6_addresses": [
+            "fe80::4c40:ffff:fe9c:4399", 
+            "fe80::e066:7cff:fe30:4262", 
+            "2001:41d0:a:8dc::1", 
+            "fe80::7254:d2ff:fe1a:a420"
+        ], 
+        "ansible_architecture": "x86_64", 
+        "ansible_bios_date": "12/04/2012", 
+        "ansible_bios_version": "BLH6710H.86A.0160.2012.1204.1156", 
+        "ansible_cmdline": {
+            "BOOT_IMAGE": "/boot/vmlinuz-3.8.0-27-generic", 
+            "ro": true, 
+            "root": "/dev/md1"
+        }, 
+        "ansible_date_time": {
+            "date": "2013-08-13", 
+            "day": "13", 
+            "epoch": "1376390684", 
+            "hour": "12", 
+            "iso8601": "2013-08-13T10:44:44Z", 
+            "iso8601_micro": "2013-08-13T10:44:44.872884Z", 
+            "minute": "44", 
+            "month": "08", 
+            "second": "44", 
+            "time": "12:44:44", 
+            "tz": "CEST", 
+            "year": "2013"
+        }, 
+        "ansible_default_ipv4": {
+            "address": "37.187.8.220", 
+            "alias": "eth0", 
+            "gateway": "37.187.8.254", 
+            "interface": "eth0", 
+            "macaddress": "70:54:d2:1a:a4:20", 
+            "mtu": 1500, 
+            "netmask": "255.255.255.0", 
+            "network": "37.187.8.0", 
+            "type": "ether"
+        }, 
+        "ansible_default_ipv6": {
+            "address": "2001:41d0:a:8dc::1", 
+            "gateway": "2001:41d0:a:8ff:ff:ff:ff:ff", 
+            "interface": "eth0", 
+            "macaddress": "70:54:d2:1a:a4:20", 
+            "mtu": 1500, 
+            "prefix": "64", 
+            "scope": "global", 
+            "type": "ether"
+        }, 
+        "ansible_devices": {
+            "sda": {
+                "holders": [], 
+                "host": "", 
+                "model": "INTEL SSDSA2CW12", 
+                "partitions": {
+                    "sda1": {
+                        "sectors": "218048512", 
+                        "sectorsize": 512, 
+                        "size": "103.97 GB", 
+                        "start": "4096"
+                    }, 
+                    "sda2": {
+                        "sectors": "16381952", 
+                        "sectorsize": 512, 
+                        "size": "7.81 GB", 
+                        "start": "218052608"
+                    }
+                }, 
+                "removable": "0", 
+                "rotational": "0", 
+                "scheduler_mode": "deadline", 
+                "sectors": "234441648", 
+                "sectorsize": "512", 
+                "size": "111.79 GB", 
+                "support_discard": "512", 
+                "vendor": "ATA"
+            }, 
+            "sdb": {
+                "holders": [], 
+                "host": "", 
+                "model": "INTEL SSDSA2CW12", 
+                "partitions": {
+                    "sdb1": {
+                        "sectors": "218048512", 
+                        "sectorsize": 512, 
+                        "size": "103.97 GB", 
+                        "start": "4096"
+                    }, 
+                    "sdb2": {
+                        "sectors": "16381952", 
+                        "sectorsize": 512, 
+                        "size": "7.81 GB", 
+                        "start": "218052608"
+                    }
+                }, 
+                "removable": "0", 
+                "rotational": "0", 
+                "scheduler_mode": "deadline", 
+                "sectors": "234441648", 
+                "sectorsize": "512", 
+                "size": "111.79 GB", 
+                "support_discard": "512", 
+                "vendor": "ATA"
+            }
+        }, 
+        "ansible_distribution": "Ubuntu", 
+        "ansible_distribution_release": "raring", 
+        "ansible_distribution_version": "13.04", 
+        "ansible_docker0": {
+            "active": false, 
+            "device": "docker0", 
+            "id": "8000.000000000000", 
+            "interfaces": [], 
+            "ipv4": {
+                "address": "172.17.42.1", 
+                "netmask": "255.255.0.0", 
+                "network": "172.17.0.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "fe80::e066:7cff:fe30:4262", 
+                    "prefix": "64", 
+                    "scope": "link"
+                }
+            ], 
+            "mtu": 1500, 
+            "stp": false, 
+            "type": "bridge"
+        }, 
+        "ansible_domain": "rang.ee", 
+        "ansible_eth0": {
+            "active": true, 
+            "device": "eth0", 
+            "ipv4": {
+                "address": "37.187.8.220", 
+                "netmask": "255.255.255.0", 
+                "network": "37.187.8.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "2001:41d0:a:8dc::1", 
+                    "prefix": "64", 
+                    "scope": "global"
+                }, 
+                {
+                    "address": "fe80::7254:d2ff:fe1a:a420", 
+                    "prefix": "64", 
+                    "scope": "link"
+                }
+            ], 
+            "macaddress": "70:54:d2:1a:a4:20", 
+            "module": "e1000e", 
+            "mtu": 1500, 
+            "type": "ether"
+        }, 
+        "ansible_form_factor": "Desktop", 
+        "ansible_fqdn": "lynx.rang.ee", 
+        "ansible_hostname": "lynx", 
+        "ansible_interfaces": [
+            "lo", 
+            "lxcbr0", 
+            "docker0", 
+            "eth0"
+        ], 
+        "ansible_kernel": "3.8.0-27-generic", 
+        "ansible_lo": {
+            "active": true, 
+            "device": "lo", 
+            "ipv4": {
+                "address": "127.0.0.1", 
+                "netmask": "255.0.0.0", 
+                "network": "127.0.0.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "::1", 
+                    "prefix": "128", 
+                    "scope": "host"
+                }
+            ], 
+            "mtu": 65536, 
+            "type": "loopback"
+        }, 
+        "ansible_lsb": {
+            "codename": "raring", 
+            "description": "Ubuntu 13.04", 
+            "id": "Ubuntu", 
+            "major_release": "13", 
+            "release": "13.04"
+        }, 
+        "ansible_lxcbr0": {
+            "active": true, 
+            "device": "lxcbr0", 
+            "id": "8000.000000000000", 
+            "interfaces": [], 
+            "ipv4": {
+                "address": "10.0.3.1", 
+                "netmask": "255.255.255.0", 
+                "network": "10.0.3.0"
+            }, 
+            "ipv6": [
+                {
+                    "address": "fe80::4c40:ffff:fe9c:4399", 
+                    "prefix": "64", 
+                    "scope": "link"
+                }
+            ], 
+            "macaddress": "4e:40:ff:9c:43:99", 
+            "mtu": 1500, 
+            "stp": false, 
+            "type": "bridge"
+        }, 
+        "ansible_machine": "x86_64", 
+        "ansible_memfree_mb": 29111, 
+        "ansible_memtotal_mb": 32077, 
+        "ansible_mounts": [
+            {
+                "device": "/dev/md1", 
+                "fstype": "ext4", 
+                "mount": "/", 
+                "options": "rw,relatime,discard,errors=remount-ro,data=ordered", 
+                "size_available": 100892889088, 
+                "size_total": 109754417152
+            }
+        ], 
+        "ansible_os_family": "Debian", 
+        "ansible_pkg_mgr": "apt", 
+        "ansible_processor": [
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz", 
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz", 
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz", 
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz", 
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz", 
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz", 
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz", 
+            "Intel(R) Xeon(R) CPU E3-1245 V2 @ 3.40GHz"
+        ], 
+        "ansible_processor_cores": 4, 
+        "ansible_processor_count": 1, 
+        "ansible_product_name": "NA", 
+        "ansible_product_serial": "NA", 
+        "ansible_product_uuid": "A468739C-364B-E211-90BC-505054503030", 
+        "ansible_product_version": "NA", 
+        "ansible_python_version": "2.7.4", 
+        "ansible_selinux": false, 
+        "ansible_ssh_host_key_dsa_public": "AAAAB3NzaC1kc3MAAACBAIrfNT1tEldh5fXYOAWc8TSeIOKOeE5Dn2gte2d9ep9da1HKSaUuibb/iiHigIQCSj8UEggPsYMosKUjBqMgLptHpFafU1rU7x9tsdo6VPIJoGdKWA2SvnMHqLyUrpBts6U8YuXhX0zgSFFJSI+Gz2IdJdA4C1gdg7av0TsguhY5AAAAFQDuA6ZPSa/gj0qjP2/J8J88UUbsVQAAAIBOlPv0TK78EBKcy0U5KPkfDO3DwlMe6n2FO29gafIyf/tWcHoRz4nbQcr7zmsIL0u8RSLKQRD7McIEZafIGm0mIjG2tgBpDSkz1RxBrIyukVlCH6B7+0bh9itAtwrj9aKYobgUhFWK7xna2CTrKDVeNAc0bNqiS6NN1YrDrdT33QAAAIBRQcBlBKrptOQ2brG4BBD2zZosDls0F7e18BGurlQx9sEoT6g3EZNxEOR1cpRp7GvazWADNlFZ97IUHTKadFqrLY/iQN+81dXFqxnwmlvPuw/L7IbqPDlnUnjXjR2t8OxHWT31uYXubKzeiz5vsXW6FDokDnoFHjgnwU17RmyjMA==", 
+        "ansible_ssh_host_key_rsa_public": "AAAAB3NzaC1yc2EAAAADAQABAAABAQCzxqrx+mqhsGbMtnhII+hWOHksDv4zDJFR9ePY1OV9Qw5jprAfYMIMeiWCCNpp5OHm58IwpXpsB0wlUI4F3wrTo45j3kb1fsSmBtpFXxR8nsU2jLVdOiDX7Dzgs6d71qi7e1O5cR76Btq3xDEj10PP0Kw2V24bbmUWHN2pnLleqbZJCfnMcSxxHk/xcTKtuH4v8cSID3ATzEuFgkficLFd54yV+2u1FQK9sJI5Xs/AUog0KZ2o9Ui8ODV7pgefZl6Fbjj0gcTrInEzS/0zWcFUzFnIWYcbnuyj/uwaULgHgUQBfZ+Ng5u6oUYeidro/xIV9ZaJVNBGq0ShSDkd4gVH", 
+        "ansible_swapfree_mb": 15997, 
+        "ansible_swaptotal_mb": 15997, 
+        "ansible_system": "Linux", 
+        "ansible_system_vendor": "NA", 
+        "ansible_user_id": "root", 
+        "ansible_userspace_architecture": "x86_64", 
+        "ansible_userspace_bits": "64", 
+        "ansible_virtualization_role": "host", 
+        "ansible_virtualization_type": "kvm"
+    }
+}
