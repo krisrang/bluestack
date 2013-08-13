@@ -1,23 +1,30 @@
 ---
 - name: Add logentries repo key
   apt_key: id=C43C79AD url=http://pgp.mit.edu:11371/pks/lookup?op=get&fingerprint=on&search=0xA5270289C43C79AD state=present
+  tags: logentries
 
 - name: Add logentries repo
   apt_repository: repo='deb http://rep.logentries.com/ {{ ansible_distribution_release }} main'
+  tags: logentries
 
 - name: Install logentries agent
   apt: name=logentries state=installed
+  tags: logentries
 
 - name: Register host if needed
   command: le register --account-key {{ logentries_key }} creates=/etc/le/config
+  tags: logentries
 
 - name: Install logentries daemon
   apt: name=logentries-daemon state=installed
+  tags: logentries
 
 - name: Follow logs
   command: le follow {{ item }}
   with_items: logentries_logs
   ignore_errors: yes
+  tags: logentries
 
 - name: Restart logentries
   service: name=logentries state=restarted
+  tags: logentries

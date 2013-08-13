@@ -1,0 +1,21 @@
+---
+- name: Install php-fpm and deps 
+  apt: name={{ item }} state=present
+  with_items:
+    - php5
+    - php5-fpm
+    - php5-enchant
+    - php5-intl
+    - php5-mysql
+    - php5-gd
+    - php5-sqlite
+    - php5-curl
+    - php-xml-parser
+    - libphp-phpmailer
+    - libphp-simplepie
+  tags: php
+
+- name: Disable default pool
+  command: mv /etc/php5/fpm/pool.d/www.conf /etc/php5/fpm/pool.d/www.disabled creates=/etc/php5/fpm/pool.d/www.disabled
+  notify: restart php-fpm
+  tags: php

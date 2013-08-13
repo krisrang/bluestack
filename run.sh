@@ -1,1 +1,1 @@
-ansible-playbook -K -i inventory site.yml
+ansible-playbook -K -i inventory site.yml $@

@@ -1,12 +1,16 @@
 ---
 - name: Download tarsnap 
   get_url: url=http://www.tarsnap.com/download/tarsnap-autoconf-{{ tarsnap_version }}.tgz dest=/root/cache/tarsnap-{{ tarsnap_version }}.tgz sha256sum="{{ tarsnap_hash }}"
+  tags: tarsnap
 
 - name: Extract tarsnap
   command: chdir=/root/cache tar xvf tarsnap-{{ tarsnap_version }}.tgz creates=/usr/local/bin/tarsnap
+  tags: tarsnap
 
 - name: Configure tarsnap
   command: chdir=/root/cache/tarsnap-autoconf-{{ tarsnap_version }} ./configure creates=/usr/local/bin/tarsnap
+  tags: tarsnap
 
 - name: Install tarsnap
   command: chdir=/root/cache/tarsnap-autoconf-{{ tarsnap_version }} make all install clean creates=/usr/local/bin/tarsnap
+  tags: tarsnap
