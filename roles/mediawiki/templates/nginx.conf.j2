@@ -1,0 +1,44 @@
+# {{ ansible_managed }}
+# nginx wiki application vhost
+
+server {
+  listen 80;
+  server_name {{ wiki_host }};
+  rewrite        ^ https://$server_name$request_uri? permanent;
+}
+
+server {
+    listen 443 ssl;
+
+
+  server_name {{ wiki_host }};
+  root /usr/share/nginx/{{ wiki_host }};
+  index index.html index.htm index.php;
+
+  ssl on;
+
+  location = / {
+    return 301 /wiki/Main_Page;
+  }
+
+  location ~ \.php$ {
+    try_files $uri =404;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_pass unix:/var/run/php5-fpm-mediawiki.sock;
+  }
+
+  location ^~ /w/languages      { deny all; }
+  location ^~ /w/maintenance    { deny all; }
+  location ^~ /w/serialized     { deny all; }
+  location ~ /.git(/|$)      { deny all; }
+
+  location ^~ /wiki {
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME $document_root/w/index.php;
+    fastcgi_pass unix:/var/run/php5-fpm-mediawiki.sock;
+  }
+
+  error_log   /var/log/nginx/{{ wiki_host }}-error.log;
+  access_log  /var/log/nginx/{{ wiki_host }}-access.log;
+}

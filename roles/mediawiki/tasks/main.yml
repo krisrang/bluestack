@@ -1,0 +1,52 @@
+---
+- name: Check out latest stable branch of MediaWiki
+  git: repo=https://git.wikimedia.org/git/mediawiki/core.git
+       dest=/usr/share/nginx/{{wiki_host}}/w
+       version=1.21.1
+  tags: mediawiki
+
+- name: Copy php-fpm pool configuration
+  template: src=php.conf.j2 dest=/etc/php5/fpm/pool.d/{{wiki_host}}.conf backup=yes
+  notify: restart php-fpm
+  tags: mediawiki
+
+- name: Copy nginx site configuration
+  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{wiki_host}}.conf backup=yes
+  notify: restart nginx
+  tags: mediawiki
+
+- name: Link nginx site configuration
+  file: src=/etc/nginx/sites-available/{{wiki_host}}.conf path=/etc/nginx/sites-enabled/{{wiki_host}}.conf state=link
+  notify: restart nginx
+  tags: mediawiki
+
+# - name: Write MediaWiki settings
+#   template: src=LocalSettings.php.j2 dest=/usr/share/nginx/{{wiki_host}}/w/LocalSettings.php backup=yes
+#   tags: mediawiki
+
+# - name: Download MediaWiki extensions
+#   command: >
+#             git submodule update --init
+#             extensions/AbuseFilter
+#             extensions/AntiSpoof
+#             extensions/CentralAuth
+#             extensions/CheckUser
+#             extensions/Cite
+#             extensions/CreateWiki
+#             extensions/ConfirmEdit
+#             extensions/Gadgets
+#             extensions/GlobalBlocking
+#             extensions/InputBox
+#             extensions/InterwikiMagic
+#             extensions/Nuke
+#             extensions/ParserFunctions
+#             extensions/Renameuser
+#             extensions/Scribunto
+#             extensions/SiteMatrix
+#             extensions/SpamBlacklist
+#             extensions/TitleBlacklist
+#             extensions/WikimediaMessages
+#             skins/foreground
+#             skins/monaco
+#             chdir=/usr/share/nginx/{{wiki_host}}/w
+#   tags: mediawiki

@@ -1,3 +1,5 @@
+# {{ ansible_managed }}
+
 user {{ nginx_user }} {{ nginx_user }};
 worker_processes  {{ ansible_processor_cores }};
 
@@ -30,6 +32,8 @@ http {
   {% if nginx_keepalive_timeout %}
   keepalive_timeout {{ nginx_keepalive_timeout }};
   {% endif %}
+
+  server_tokens off;
 
   gzip {{ nginx_gzip }};
   {% if nginx_gzip %}

@@ -1,0 +1,572 @@
+<?php
+/**
+ * Copyright (C) 2013 Orain, Kudu and contributors
+ *
+ * This file is part of Orain's playbook.
+ *
+ * Orain's playbook is free software: you can redistribute it and/or modify it
+ * under the terms of the GNU Affero General Public License as published by the
+ * Free Software Foundation, either version 3 of the License, or (at your option)
+ * any later version.
+ *
+ * Orain's playbook is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU Affero General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Affero General Public License along
+ * with Orain's playbook.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+# Protect against web entry
+if ( !defined( 'MEDIAWIKI' ) ) {
+  exit;
+}
+
+// require_once( "$IP/extensions/AntiSpoof/AntiSpoof.php" );
+// require_once( "$IP/extensions/AbuseFilter/AbuseFilter.php" );
+// require_once( "$IP/extensions/CentralAuth/CentralAuth.php" );
+// require_once( "$IP/extensions/CheckUser/CheckUser.php" );
+// require_once( "$IP/extensions/Cite/Cite.php" );
+// require_once( "$IP/extensions/Cite/SpecialCite.php" );
+// require_once( "$IP/extensions/ConfirmEdit/Asirra.php" );
+// require_once( "$IP/extensions/ConfirmEdit/ConfirmEdit.php" );
+// require_once( "$IP/extensions/Gadgets/Gadgets.php" );
+// require_once( "$IP/extensions/GlobalBlocking/GlobalBlocking.php" );
+// require_once( "$IP/extensions/InputBox/InputBox.php" );
+// require_once( "$IP/extensions/InterwikiMagic/InterwikiMagic.php" );
+// require_once( "$IP/extensions/Nuke/Nuke.php" );
+// require_once( "$IP/extensions/OrainMessages/OrainMessages.php" );
+// require_once( "$IP/extensions/ParserFunctions/ParserFunctions.php" );
+// require_once( "$IP/extensions/Renameuser/Renameuser.php" );
+// require_once( "$IP/extensions/Scribunto/Scribunto.php" );
+// require_once( "$IP/extensions/SiteMatrix/SiteMatrix.php" );
+// require_once( "$IP/extensions/SpamBlacklist/SpamBlacklist.php" );
+// require_once( "$IP/extensions/TitleBlacklist/TitleBlacklist.php" );
+// require_once( "$IP/extensions/WikimediaMessages/WikimediaMessages.php" );
+// require_once( "$IP/extensions/YouTube/YouTube.php" );
+// require_once( "$IP/skins/foreground/foreground.php" );
+// require_once( "$IP/skins/monaco/monaco.php" );
+
+$wgLocalDatabases = array_map( 'trim', file( "$IP/all.dblist" ) );
+$wgConf = new SiteConfiguration;
+$wgConf->wikis =& $wgLocalDatabases;
+$wgConf->suffixes = array( 'wiki' );
+$wgConf->localVHosts = array( '{{mysql_address}}' );
+
+$wgConf->settings = array(
+  // AbuseFilter
+  'wgAbuseFilterCentralDB' => array(
+    'default' => 'metawiki',
+  ),
+  'wgAbuseFilterIsCentral' => array(
+    'default' => false,
+    'metawiki' => true,
+  ),
+  // /AbuseFilter
+
+  // Permissions
+  'wgAddGroups' => array(
+    'default' => array(
+      'bureaucrat' => array(
+        'bot',
+        'bureaucrat',
+        'rollbacker',
+        'sysop',
+      ),
+      'sysop' => array(
+        'rollbacker',
+      ),
+    ),
+  ),
+  'wgAutoConfirmAge' => array(
+    'default' => 111600, // 31 h * 60 min/h * 60 s/min
+  ),
+  'wgAutoConfirmCount' => array(
+    'default' => 5,
+  ),
+  '+wgGroupPermissions' => array(
+    'default' => array(
+      '*' => array(
+        'abusefilter-log' => true,
+        'abusefilter-log-detail' => true,
+        'abusefilter-view' => true,
+      ),
+      'bot' => array(
+        'noanalytics' => true,
+      ),
+      'checkuser' => array(
+        // Leaks IP addresses
+        'abusefilter-private' => true,
+      ),
+      'oversight' => array(
+        'abusefilter-hidden-log' => true,
+        'abusefilter-hide-log' => true,
+        'browsearchive' => true,
+        'deletedhistory' => true,
+        'deletedtext' => true,
+        'deletelogentry' => true,
+        'deleterevision' => true,
+        'hideuser' => true,
+        'suppressionlog' => true,
+        'suppressrevision' => true,
+      ),
+      'rollbacker' => array(
+        'autoconfirmed' => true,
+        'rollback' => true,
+      ),
+      'sysop' => array(
+        'abusefilter-modify' => true,
+        'abusefilter-modify-restricted' => true,
+        'abusefilter-revert' => true,
+        'deletelogentry' => true,
+        'deleterevision' => true,
+      ),
+    ),
+    '+metawiki' => array(
+      'steward' => array(
+        'abusefilter-modify-global' => true,
+        'centralauth-lock' => true,
+        'centralauth-oversight' => true,
+        'centralauth-unmerge' => true,
+        'createwiki' => true,
+        'globalblock' => true,
+        'globalunblock' => true,
+        'noratelimit' => true,
+        'userrights' => true,
+        'userrights-interwiki' => true,
+      ),
+    ),
+  ),
+  'wgGroupsRemoveFromSelf' => array(
+    'default' => array(
+      '*' => true,
+    )
+  ),
+  'wgRemoveGroups' => array(
+    'default' => array(
+      'bureaucrat' => array(
+        'bot',
+        'rollbacker',
+        'sysop',
+      ),
+      'sysop' => array(
+        'rollbacker',
+      ),
+    ),
+  ),
+  // /Permissions
+
+  // Server
+  'wgArticlePath' => array(
+    'default' => '/wiki/$1',
+  ),
+  'wgDisableOutputCompression' => array(
+    'default' => true,
+  ),
+  'wgResourceLoaderMaxQueryLength' => array(
+    'default' => -1,
+  ),
+  'wgScriptExtension' => array(
+    'default' => '.php',
+  ),
+  'wgScriptPath' => array(
+    'default' => '/w',
+  ),
+  'wgServer' => array(
+    'default' => '//\$lang.orain.org',
+  ),
+  'wgUsePathInfo' => array(
+    'default' => true,
+  ),
+  // /Server
+
+  // Anti-spam
+  'wgAccountCreationThrottle' => array(
+    'default' => 6,
+  ),
+  'wgCaptchaClass' => array(
+    'default' => 'Asirra',
+  ),
+  'wgSpamBlacklistFiles' => array(
+    'default' => array(
+      "DB: metawiki Spam_blacklist",
+      "https://meta.wikimedia.org/w/index.php?title=Spam_blacklist&action=raw",
+    ),
+  ),
+  'wgTitleBlacklistSources' => array(
+    'default' => array(
+      array(
+           'type' => TBLSRC_LOCALPAGE,
+           'src'  => 'MediaWiki:Titleblacklist',
+      ),
+      array(
+           'type' => TBLSRC_URL,
+           'src'  => '//meta.orain.org/w/index.php?title=Title_blacklist&action=raw',
+      ),
+      array(
+           'type' => TBLSRC_URL,
+           'src'  => '//meta.wikimedia.org/w/index.php?title=Title_blacklist&action=raw',
+      ),
+    ),
+  ),
+  // /Anti-spam
+
+  // CentralAuth
+  'wgCentralAuthAutoMigrate' => array(
+    'default' => true,
+  ),
+  'wgCentralAuthAutoNew' => array(
+    'default' => true,
+  ),
+  'wgCentralAuthCookieDomain' => array(
+    'default' => '.orain.org',
+  ),
+  'wgCentralAuthCookies' => array(
+    'default' => true,
+  ),
+  'wgCentralAuthCreateOnView' => array(
+    'default' => true,
+  ),
+  'wgDisableUnmergedEditing' => array(
+    'default' => true,
+  ),
+  'wgSiteMatrixSites' => array(
+    'default' => array(),
+  ),
+  // /CentralAuth
+
+  // Database
+  'wgCompressRevisions' => array(
+    'default' => true,
+  ),
+  'wgDBpassword' => array(
+    'default' => "{{mw_db_password}}",
+  ),
+  'wgDBprefix' => array(
+    'default' => '',
+  ),
+  'wgDBserver' => array(
+    'default' => "{{mysql_address}}",
+  ),
+  'wgDBTableOptions' => array(
+    'default' => "ENGINE=InnoDB, DEFAULT CHARSET=binary",
+  ),
+  'wgDBtype' => array(
+    'default' => 'mysql',
+  ),
+  'wgDBuser' => array(
+    'default' => "{{mw_db_user}}",
+  ),
+  'wgSharedDB' => array(
+    'default' => 'centralauth',
+  ),
+  'wgSharedTables' => array(
+    'default' => array(),
+  ),
+  // /Database
+
+  // CreateWiki
+  '+wgCreateWikiSQLfiles' => array(
+    'default' => array(
+      "$IP/extensions/AbuseFilter/abusefilter.tables.sql",
+      "$IP/extensions/AntiSpoof/sql/patch-antispoof.mysql.sql",
+      "$IP/extensions/CheckUser/cu_changes.sql",
+      "$IP/extensions/CheckUser/cu_log.sql",
+      "$IP/extensions/CreateWiki/global_block_whitelist.sql",
+    ),
+  ),
+  // /CreateWiki
+
+  // Style
+  'wgDefaultSkin' => array(
+    'default' => 'vector',
+  ),
+  'wgLogo' => array(
+    'default' => '//static.orain.org/meta.orain.org/images/c/c6/Orain.png',
+    'computerclanwiki' => '//upload.wikimedia.org/wikipedia/commons/f/f7/CC_Wiki_Graphic_Mark_Small.png',
+    'levelswiki' => '//upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Wikilevels_logo_text.png/135px-Wikilevels_logo_text.png',
+    'testwiki' => '//static.orain.org/test.orain.org/images/8/8d/Twlogo.png',
+  ),
+  'wgStylePath' => array(
+    'default' => '//static.orain.org/common/skins',
+  ),
+  // /Style
+
+  // Email
+  'wgEmailAuthentication' => array(
+    'default' => true,
+  ),
+  'wgEmergencyContact' => array(
+    'default' => 'help@orain.org',
+  ),
+  'wgEnableEmail' => array(
+    'default' => true,
+  ),
+  'wgEnableUserEmail' => array(
+    'default' => true,
+  ),
+  'wgEnotifMinorEdits' => array(
+    'default' => true,
+  ),
+  'wgEnotifUserTalk' => array(
+    'default' => true,
+  ),
+  'wgEnotifWatchlist' => array(
+    'default' => true,
+  ),
+  'wgPasswordSender' => array(
+    'default' => 'help@orain.org',
+  ),
+  // /Email
+
+  // Cache
+  'wgEnableSidebarCache' => array(
+    'default' => true,
+  ),
+  'wgHitcounterUpdateFreq' => array(
+    'default' => 5,
+  ),
+  'wgMainCacheType' => array(
+    'default' => CACHE_MEMCACHED,
+  ),
+  'wgMemCachedServers' => array(
+    'default' => array( '{{memcache_address}}:11211' ),
+  ),
+  'wgParserCacheExpireTime' => array(
+    'default' => 604800, // 7 days
+  ),
+  'wgRevisionCacheExpiry' => array(
+    'default' => 259200, // 3 days
+  ),
+  'wgUseFileCache' => array(
+    'default' => true,
+  ),
+  // /Cache
+
+  // Profiling
+  'wgEnableProfileInfo' => array(
+    'default' => true,
+  ),
+  'wgProfileToDatabase' => array(
+    'default' => true,
+  ),
+  // /Profiling
+
+  // Files
+  'wgEnableUploads' => array(
+    'default' => false,
+    'metawiki' => true,
+    'nflwiki' => true,
+  ),
+  'wgGenerateThumbnailOnParse' => array(
+    'default' => false,
+  ),
+  'wgUseInstantCommons' => array(
+    'default' => true,
+  ),
+  // /Files
+
+  // GraphicsMagick
+  'wgImageMagickConvertCommand' => array(
+    'default' => "/usr/bin/convert",
+  ),
+  'wgShellLocale' => array(
+    'default' => "en_US.utf8",
+  ),
+  'wgUseImageMagick' => array(
+    'default' => true,
+  ),
+  // /GraphicsMagick
+
+  // Language
+  'wgLanguageCode' => array(
+    'default' => 'en',
+  ),
+  // /Language
+
+  // Names
+  'wgMetaNamespace' => array(
+    'metawiki' => 'Meta',
+  ),
+  '+wgNamespacesWithSubpages' => array(
+    'default' => array(
+      NS_MAIN => true,
+    ),
+  ),
+  'wgSitename' => array(
+    'default' => 'Unconfigured',
+    'computerclanwiki' => 'Computer Clan Wiki',
+    'cricketwiki' => 'Cricket Wiki',
+    'levelswiki' => 'Wikilevels',
+    'metawiki' => 'Orain Meta',
+    'polymetawiki' => 'PolyWiki Meta',
+    'nflwiki' => 'NFL Wiki',
+    'testwiki' => 'TestWiki',
+  ),
+  // /Names
+
+  // ParserFunctions
+  'wgPFEnableStringFunctions' => array(
+    'default' => true,
+  ),
+  // /ParserFunctions
+
+  // Piwik
+  'wmgPiwikSiteID' => array(
+    'default' => false,
+    'metawiki' => 1,
+    'testwiki' => 2,
+  ),
+  // /Piwik
+
+  // License
+  'wgRightsIcon' => array(
+    'default' => '//static.orain.org/common/skins/common/images/cc-by-sa.png',
+  ),
+  'wgRightsPage' => array(
+    'default' => '',
+  ),
+  'wgRightsText' => array(
+    'default' => 'Creative Commons Attribution Share Alike',
+  ),
+  'wgRightsUrl' => array(
+    'default' => 'https://creativecommons.org/licenses/by-sa/3.0/',
+  ),
+  // /License
+
+  // Keys
+  'wgSecretKey' => array(
+    'default' => '{{wgSecretKey}}',
+  ),
+  'wgUpgradeKey' => array(
+    'default' => '{{wgUpgradeKey}}',
+  ),
+  // /Keys
+);
+
+// From https://www.mediawiki.org/wiki/Manual:$wgConf#for_1.14_and_newer
+function efGetSiteParams( $conf, $wiki ) {
+  $site = null;
+  $lang = null;
+  foreach( $conf->suffixes as $suffix ) {
+    if ( substr( $wiki, -strlen( $suffix ) ) == $suffix ) {
+      $site = $suffix;
+      $lang = substr( $wiki, 0, -strlen( $suffix ) );
+      break;
+    }
+  }
+  return array(
+    'suffix' => $site,
+    'lang' => $lang,
+    'params' => array(
+      'lang' => $lang,
+      'site' => $site,
+      'wiki' => $wiki,
+    ),
+    'tags' => array(),
+  );
+}
+
+// Defaults
+$wgGroupPermissions['bureaucrat']['renameuser'] = false;
+$wgGroupPermissions['bureaucrat']['userrights'] = false;
+unset( $wgGroupPermissions['steward'] );
+
+foreach ( $wgConf->settings['wgServer'] as $db => $server ) {
+  $canonical =& $wgConf->settings['wgCanonicalServer'][$db];
+  $canonical = $canonical ?: ( 'https:' . $server );
+}
+
+if ( ( basename( $_SERVER["SCRIPT_FILENAME"] ) == "thumb.php" ) && isset( $_REQUEST['sitex'] ) ) {
+  $wmgHostname = $_REQUEST['sitex'];
+} else {
+  $wmgHostname = $_SERVER['HTTP_HOST'];
+}
+
+$wgConf->siteParamsCallback = 'efGetSiteParams';
+
+if ( defined( "MW_DB" ) ) {
+  $wgDBname = MW_DB;
+} elseif ( $search = array_search( '//' . $wmgHostname, $wgConf->settings['wgServer'] ) ) {
+  $wgDBname = $search;
+} elseif ( preg_match( '/^(.+?)\.(.+?)\.orain\.org$/', $wmgHostname, $matches ) ) {
+  $wgDBname = $matches[1] . $matches[2];
+} elseif ( preg_match( '/^(.*)\.orain\.org$/', $wmgHostname, $matches ) ) {
+  $wgDBname = $matches[1] . 'wiki';
+} else {
+  $wgDBname = false;
+}
+
+if ( !in_array( $wgDBname, $wgLocalDatabases ) ) {
+  header("HTTP/1.1 404 Not Found");
+  echo(<<<RESP
+<html>
+<head><title>404 Not Found</title></head>
+<body bgcolor="white">
+<center><h1>404 Not Found</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+RESP
+  );
+  exit();
+}
+
+if ( $wgDBname === "metawiki" ) {
+  require_once( "$IP/extensions/CreateWiki/CreateWiki.php" );
+}
+
+$wgConf->extractAllGlobals( $wgDBname );
+
+if ( $wgDBname == "polymetawiki" ) {
+  $wgReadOnly = "Archived wiki";
+}
+
+$wgFileCacheDirectory = "/var/tmp/mediawiki/cache/$wmgHostname";
+$wgUploadDirectory = "/usr/share/nginx/static.orain.org/$wmgHostname/images";
+$wgUploadPath = "//static.orain.org/$wmgHostname/images";
+$wgDebugLogFile = "/var/log/mediawiki/$wmgHostname.log";
+
+// Piwik
+$wgHooks['SkinAfterBottomScripts'][] = 'lfPiwikScript';
+function lfPiwikScript( $skin, &$text='' ) {
+  global $wmgPiwikSiteID, $wgUser;
+  if ( !$wmgPiwikSiteID ) {
+    $text .= "<!-- Piwik not enabled -->\n";
+    return true;
+  }
+  if ( $wgUser->isAllowed('noanalytics') ) {
+    $text .= "<!-- Piwik code omitted -->\n";
+    return true;
+  }
+  $id = strval( $wmgPiwikSiteID );
+  $title = $skin->getRelevantTitle();
+  $jstitle = Xml::encodeJsVar( $title->getPrefixedText() );
+  $urltitle = $title->getPrefixedURL();
+  $text .= <<<SCRIPT
+<!-- Piwik -->
+<script type="text/javascript">
+  var _paq = _paq || [];
+  _paq.push(["trackPageView"]);
+  _paq.push(["enableLinkTracking"]);
+
+  (function() {
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://bits.orain.org/piwik/";
+    _paq.push(["setTrackerUrl", u+"piwik.php"]);
+    _paq.push(['setDocumentTitle', {$jstitle}]);
+    _paq.push(["setSiteId", "{$id}"]);
+    var d=document, g=d.createElement("script"), s=d.getElementsByTagName("script")[0]; g.type="text/javascript";
+    g.defer=true; g.async=true; g.src=u+"piwik.js"; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Piwik Code -->
+<!-- Piwik Image Tracker -->
+<noscript>
+<img src="//bits.orain.org/piwik/piwik.php?idsite={$id}&amp;rec=1&amp;action_name={$urltitle}" style="border:0" alt="" />
+</noscript>
+<!-- End Piwik -->
+SCRIPT;
+  return true;
+}
+// /Piwik
