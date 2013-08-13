@@ -24,6 +24,7 @@
     - git
     - htop
     - zsh
+    - postfix
   tags: 
     - main
     - nginx

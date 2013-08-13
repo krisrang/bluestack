@@ -1,8 +1,13 @@
 ---
-- name: Check out latest stable branch of MediaWiki
+- name: Make sure mediawiki dir exists
+  file: path=/usr/share/nginx/{{wiki_host}}/w state=directory owner=www-data group=www-data
+  tags: mediawiki
+
+- name: Check out version {{wiki_version}} of mediawiki
+  sudo_user: www-data
   git: repo=https://git.wikimedia.org/git/mediawiki/core.git
        dest=/usr/share/nginx/{{wiki_host}}/w
-       version=1.21.1
+       version={{wiki_version}}
   tags: mediawiki
 
 - name: Copy php-fpm pool configuration
@@ -20,33 +25,32 @@
   notify: restart nginx
   tags: mediawiki
 
-# - name: Write MediaWiki settings
-#   template: src=LocalSettings.php.j2 dest=/usr/share/nginx/{{wiki_host}}/w/LocalSettings.php backup=yes
-#   tags: mediawiki
+- name: Create mediawiki database
+  sudo_user: postgres
+  postgresql_db: db={{ wiki_dbname }}
+  tags: mediawiki
 
-# - name: Download MediaWiki extensions
-#   command: >
-#             git submodule update --init
-#             extensions/AbuseFilter
-#             extensions/AntiSpoof
-#             extensions/CentralAuth
-#             extensions/CheckUser
-#             extensions/Cite
-#             extensions/CreateWiki
-#             extensions/ConfirmEdit
-#             extensions/Gadgets
-#             extensions/GlobalBlocking
-#             extensions/InputBox
-#             extensions/InterwikiMagic
-#             extensions/Nuke
-#             extensions/ParserFunctions
-#             extensions/Renameuser
-#             extensions/Scribunto
-#             extensions/SiteMatrix
-#             extensions/SpamBlacklist
-#             extensions/TitleBlacklist
-#             extensions/WikimediaMessages
-#             skins/foreground
-#             skins/monaco
-#             chdir=/usr/share/nginx/{{wiki_host}}/w
-#   tags: mediawiki
+- name: Ensure mediawiki user has access to database
+  sudo_user: postgres
+  postgresql_user: db={{ wiki_dbname }} user={{ wiki_dbuser }} password={{ item }} priv=ALL
+  with_password: ../../../secrets/{{ ansible_fqdn }}/mediawiki_db_password encrypt=sha256_crypt
+  tags: mediawiki
+
+- name: Ensure mediawiki user does not have unnecessary privilege
+  sudo_user: postgres
+  postgresql_user: user={{ wiki_dbuser }} role_attr_flags=NOSUPERUSER,NOCREATEDB
+  tags: mediawiki
+
+- name: Write mediawiki settings
+  template: src=LocalSettings.php.j2 dest=/usr/share/nginx/{{wiki_host}}/w/LocalSettings.php backup=yes owner=www-data group=www-data mode=0644
+  tags: mediawiki
+
+- name: Download mediawiki extensions
+  sudo_user: www-data
+  command: git submodule update --init extensions/WikiEditor extensions/SyntaxHighlight_GeSHi extensions/CodeEditor
+    chdir=/usr/share/nginx/{{wiki_host}}/w
+  tags: mediawiki
+
+- name: Copy logo
+  copy: src=logo.png dest=/usr/share/nginx/{{wiki_host}}/w/logo.png owner=www-data group=www-data mode=0644
+  tags: mediawiki

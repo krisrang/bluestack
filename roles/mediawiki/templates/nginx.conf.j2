@@ -8,35 +8,48 @@ server {
 }
 
 server {
-    listen 443 ssl;
-
-
-  server_name {{ wiki_host }};
-  root /usr/share/nginx/{{ wiki_host }};
-  index index.html index.htm index.php;
-
+  listen 443 ssl;
   ssl on;
 
-  location = / {
-    return 301 /wiki/Main_Page;
+  server_name {{ wiki_host }};
+  root /usr/share/nginx/{{ wiki_host }}/w;
+  index index.html index.htm index.php;
+
+  location / {
+    try_files $uri $uri/ @rewrite;
+  }
+
+  location @rewrite {
+    rewrite ^/(.*)$ /index.php?title=$1&$args;
+  }
+
+  location ^~ /maintenance/ {
+    return 403;
   }
 
   location ~ \.php$ {
-    try_files $uri =404;
     include fastcgi_params;
-    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
     fastcgi_pass unix:/var/run/php5-fpm-mediawiki.sock;
   }
 
-  location ^~ /w/languages      { deny all; }
-  location ^~ /w/maintenance    { deny all; }
-  location ^~ /w/serialized     { deny all; }
-  location ~ /.git(/|$)      { deny all; }
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+    try_files $uri /index.php;
+    expires max;
+    log_not_found off;
+  }
 
-  location ^~ /wiki {
-    include fastcgi_params;
-    fastcgi_param SCRIPT_FILENAME $document_root/w/index.php;
-    fastcgi_pass unix:/var/run/php5-fpm-mediawiki.sock;
+  location = /_.gif {
+    expires max;
+    empty_gif;
+  }
+
+  location ^~ /cache/ {
+    deny all;
+  }
+
+  location /dumps {
+    root /var/www/mediawiki/local;
+    autoindex on;
   }
 
   error_log   /var/log/nginx/{{ wiki_host }}-error.log;
