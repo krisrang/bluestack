@@ -1,3 +1,7 @@
 ---
 - name: restart nginx
   service: name=nginx state=restarted
+  notify: allow nginx
+
+- name: allow nginx
+  command: ufw allow "Nginx Full"

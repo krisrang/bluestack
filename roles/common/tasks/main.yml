@@ -1,10 +1,23 @@
 ---
+- name: Set locale to {{locale}}
+  command: /usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}
+  tags: main
+
+- name: Set /etc/localtime to {{timezone}}
+  command: /bin/cp /usr/share/zoneinfo/{{timezone}} /etc/localtime
+  tags: main
+
+- name: Set /etc/timezone to {{timezone}}
+  template: src=timezone.j2 dest=/etc/timezone
+  notify: update tzdata
+  tags: main
+
 - name: Install ansible dependencies
   raw: apt-get install -y python-apt python-simplejson
   tags: main
 
 - name: Remove foreign keys
-  file: path=/root/.ssh/authorized_keys state=absent
+  file: path=/root/.ssh/authorized_keys2 state=absent
   tags: main
 
 - name: SSHD config

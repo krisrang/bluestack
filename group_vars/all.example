@@ -1,4 +1,7 @@
 ---
+locale: en_US.UTF-8
+timezone: Etc/UTC
+
 logentries_key: key
 logentries_logs:
   - /var/log/auth.log

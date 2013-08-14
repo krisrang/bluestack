@@ -3,3 +3,5 @@
   service:  name=ssh state=restarted
 - name: restart iptables
   service: name=iptables state=restarted
+- name: update tzdata
+  command: /usr/sbin/dpkg-reconfigure --frontend noninteractive 

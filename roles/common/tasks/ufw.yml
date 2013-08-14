@@ -11,10 +11,6 @@
   command: ufw allow OpenSSH
   tags: ufw
 
-- name:   firewall allow ssh
-  command: ufw allow "Nginx Full"
-  tags: ufw
-
 - name:   firewall deny all
   command: ufw default deny
   tags: ufw

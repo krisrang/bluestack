@@ -6,5 +6,5 @@
      - php-fpm
      - nginx
      - ssl
-     - mediawiki
      - postgresql
+     - mediawiki

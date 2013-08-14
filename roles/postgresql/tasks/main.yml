@@ -19,6 +19,7 @@
   tags: postgresql
 
 - name: Ensure PostgreSQL is listening on all localhost
+  sudo_user: postgres
   lineinfile: dest=/etc/postgresql/9.2/main/postgresql.conf
     regexp='^#?listen_addresses\s*='
     line="listen_addresses = '127.0.0.1'"
@@ -26,9 +27,15 @@
   notify: restart postgresql
   tags: postgresql
 
-- lineinfile: dest=/etc/postgresql/9.2/main/pg_hba.conf
+- name: Ensure PostgreSQL is listening on all localhost
+  sudo_user: postgres
+  lineinfile: dest=/etc/postgresql/9.2/main/pg_hba.conf
              regexp='host\s+all\s+all\s+127.0.0.1/32\s+md5'
              line='host all all 127.0.0.1/32 md5'
              insertbefore=BOF
   notify: restart postgresql
+  tags: postgresql
+
+- name: Reload PostgreSQL
+  service: name=postgresql state=reloaded
   tags: postgresql
