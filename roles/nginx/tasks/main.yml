@@ -25,5 +25,8 @@
 
 - name: Start nginx 
   service: name=nginx state=started
-  notify: allow nginx
+  tags: nginx
+
+- name: allow nginx
+  command: ufw allow "Nginx Full"
   tags: nginx

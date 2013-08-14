@@ -4,7 +4,7 @@
 server {
   listen 80;
   server_name {{ wiki_host }};
-  rewrite        ^ https://$server_name$request_uri? permanent;
+  rewrite ^ https://$server_name$request_uri? permanent;
 }
 
 server {
@@ -16,6 +16,12 @@ server {
   index index.html index.htm index.php;
 
   location / {
+    # Add HSTS header. This must be sent via HTTPS.
+    add_header Strict-Transport-Security max-age=31536000;
+
+    # Disable framing
+    add_header X-Frame-Options DENY;
+
     try_files $uri $uri/ @rewrite;
   }
 
@@ -23,19 +29,9 @@ server {
     rewrite ^/(.*)$ /index.php?title=$1&$args;
   }
 
-  location ^~ /maintenance/ {
-    return 403;
-  }
-
   location ~ \.php$ {
     include fastcgi_params;
     fastcgi_pass unix:/var/run/php5-fpm-mediawiki.sock;
-  }
-
-  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
-    try_files $uri /index.php;
-    expires max;
-    log_not_found off;
   }
 
   location = /_.gif {
@@ -43,13 +39,53 @@ server {
     empty_gif;
   }
 
-  location ^~ /cache/ {
-    deny all;
+  # Exclude all access from the cache directory
+  location ^~ /cache/ { deny all; }
+
+  # Prevent access to any files starting with a dot, like .htaccess
+  # or text editor temp files
+  location ~ /\. { access_log off; log_not_found off; deny all; }
+
+  # Prevent access to any files starting with a $ (usually temp files)
+  location ~ ~$ { access_log off; log_not_found off; deny all; }
+
+  location = /robots.txt { access_log off; log_not_found off; }
+  location = /favicon.ico { access_log off; log_not_found off; }
+
+  # Keep images and CSS around in browser cache for as long as possible,
+  # to cut down on server load
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+      try_files $uri /index.php;
+      expires max;
+      log_not_found off;
   }
 
-  location /dumps {
-    root /var/www/mediawiki/local;
-    autoindex on;
+  # Mark all of these directories as "internal", which means that they cannot
+  # be explicitly accessed by clients. However, the web server can still use
+  # and serve the files inside of them. This keeps people from poking around
+  # in the wiki's internals.
+  location ^~ /bin/ { internal; }
+  location ^~ /docs/ { internal; }
+  location ^~ /extensions/ { internal; }
+  location ^~ /includes/ { internal; }
+  location ^~ /maintenance/ { internal; }
+  # location ^~ /mw-config/ { internal; } #Uncomment after installation
+  location ^~ /resources/ { internal; }
+  location ^~ /serialized/ { internal; }
+  location ^~ /tests/ { internal; }
+
+  # Force potentially-malicious files in the /images directory to be served
+  # with a text/plain mime type, to prevent them from being executed by
+  # the PHP handler
+  location ~* ^/images/.*.(html|htm|shtml|php)$ {
+      types { }
+      default_type text/plain;
+  }
+
+  # Redirect all requests for unknown URLs out of images and back to the
+  # root index.php file
+  location ^~ /images/ {
+      try_files $uri /index.php;
   }
 
   error_log   /var/log/nginx/{{ wiki_host }}-error.log;

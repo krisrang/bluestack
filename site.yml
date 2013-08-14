@@ -7,4 +7,5 @@
      - nginx
      - ssl
      - postgresql
+     - memcached
      - mediawiki
