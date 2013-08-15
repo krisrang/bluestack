@@ -13,8 +13,12 @@
   tags: main
 
 - name: Install ansible dependencies
-  raw: apt-get install -y python-apt python-simplejson
-  tags: main
+  raw: apt-get install -y python-apt python-simplejson python-pycurl python-passlib
+  tags:
+    - main
+    - nginx
+    - ssl
+    - jenkins
 
 - name: Remove foreign keys
   file: path=/root/.ssh/authorized_keys2 state=absent
@@ -42,6 +46,7 @@
     - main
     - nginx
     - ssl
+    - jenkins
 
 - name: Allow users in the sudo group to run sudo without a password
   lineinfile: dest=/etc/sudoers regexp='^\%sudo' line='%sudo ALL=(ALL) NOPASSWD:ALL'

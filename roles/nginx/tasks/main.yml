@@ -4,7 +4,7 @@
   tags: nginx
 
 - name: Install nginx 
-  apt: name=nginx state=installed
+  apt: name=nginx state=installed update-cache=yes
   when: nginx_naxsi == false
   tags: nginx
 
