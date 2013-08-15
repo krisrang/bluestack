@@ -1,6 +1,6 @@
 ---
 - name: Make sure mediawiki dir exists
-  file: path=/usr/share/nginx/{{wiki_host}}/w state=directory owner=www-data group=www-data
+  file: path=/usr/share/nginx/{{wiki_host}} state=directory owner=www-data group=www-data
   tags: mediawiki
 
 - name: Check out version {{wiki_version}} of mediawiki
@@ -45,6 +45,12 @@
 
 - name: Write mediawiki settings
   template: src=LocalSettings.php.j2 dest=/usr/share/nginx/{{wiki_host}}/w/LocalSettings.php backup=yes owner=www-data group=www-data mode=0644
+  tags: mediawiki
+
+- name: Download mediawiki extensions
+  sudo_user: www-data
+  command: git submodule update --init extensions/WikiEditor extensions/SyntaxHighlight_GeSHi extensions/CodeEditor
+    chdir=/usr/share/nginx/{{wiki_host}}/w
   tags: mediawiki
 
 - name: Copy logo
