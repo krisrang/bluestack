@@ -15,3 +15,7 @@ wiki_login: kris
 wiki_pass: pass
 wiki_secret: secret
 wiki_upgrade: upgradekey
+
+jenkins:
+  user: user
+  password: pass
