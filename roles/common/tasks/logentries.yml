@@ -7,8 +7,12 @@
   apt_repository: repo='deb http://rep.logentries.com/ {{ ansible_distribution_release }} main'
   tags: logentries
 
+- name: Remove invalid logentries src repository
+  command: sed --in-place '/deb-src.*rep.logentries.com/d' /etc/apt/sources.list
+  tags: logentries
+
 - name: Install logentries agent
-  apt: name=logentries state=installed
+  apt: name=logentries state=installed  update-cache=yes
   tags: logentries
 
 - name: Register host if needed

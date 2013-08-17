@@ -1,13 +1,13 @@
 ---
-- name: "Set locale to {{locale}}"
+- name: Set locale
   command: "/usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}"
   tags: main
 
-- name: "Set /etc/localtime to {{timezone}}"
+- name: Set /etc/localtime
   command: "/bin/cp /usr/share/zoneinfo/{{timezone}} /etc/localtime"
   tags: main
 
-- name: "Set /etc/timezone to {{timezone}}"
+- name: Set /etc/timezone
   template: src=timezone.j2 dest=/etc/timezone
   notify: update tzdata
   tags: main

@@ -35,11 +35,19 @@
   tags: php
 
 - name: Increase APC memory segments to 8 (* 32 MB = 256 MB)
-  lineinfile: dest=/etc/php5/fpm/conf.d/20-apc.ini regexp='^;?apc.shm_segments' line='apc.shm_segments = 8;'
+  lineinfile: dest=/etc/php5/fpm/conf.d/apc.ini regexp='^;?apc.shm_segments' line='apc.shm_segments = 8;'
+  when: ansible_distribution_release == "precise"
+  notify: restart php-fpm
+  tags: php
+
+- name: Disable MySQLi
+  lineinfile: dest=/etc/php5/fpm/conf.d/mysqli.ini regexp='^;?extension\=mysqli\.so' line=';extension=mysqli.so'
+  when: ansible_distribution_release == "precise"
   notify: restart php-fpm
   tags: php
 
 - name: Disable MySQLi
   lineinfile: dest=/etc/php5/fpm/conf.d/20-mysqli.ini regexp='^;?extension\=mysqli\.so' line=';extension=mysqli.so'
+  when: ansible_distribution_release == "raring"
   notify: restart php-fpm
   tags: php
