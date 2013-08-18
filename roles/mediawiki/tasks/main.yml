@@ -49,7 +49,7 @@
 
 - name: Download mediawiki extensions
   sudo_user: www-data
-  command: git submodule update --init extensions/WikiEditor extensions/SyntaxHighlight_GeSHi extensions/CodeEditor
+  command: git submodule update --init extensions/WikiEditor extensions/SyntaxHighlight_GeSHi extensions/CodeEditor extensions/Vector
     chdir=/usr/share/nginx/{{wiki_host}}/w
   tags: mediawiki
 

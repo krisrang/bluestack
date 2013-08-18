@@ -138,7 +138,10 @@ $wgParserCacheExpireTime = 14*24*3600; # 14 days
 
 ## Extensions
 
-require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
+require_once "$IP/extensions/Vector/Vector.php";
+$wgVectorFeatures['footercleanup']['global'] = true;
+$wgVectorFeatures['sectioneditlinks']['global'] = true;
+
 require_once( "$IP/extensions/CodeEditor/CodeEditor.php" );
 
 # Enables use of WikiEditor by default but still allow users to disable it in preferences
@@ -151,4 +154,6 @@ $wgDefaultUserOptions['wikieditor-preview'] = 1;
 # Displays the Publish and Cancel buttons on the top right side
 $wgDefaultUserOptions['wikieditor-publish'] = 1;
 
+require_once( "$IP/extensions/WikiEditor/WikiEditor.php" );
 require_once("$IP/extensions/SyntaxHighlight_GeSHi/SyntaxHighlight_GeSHi.php");
+

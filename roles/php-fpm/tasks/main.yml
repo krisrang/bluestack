@@ -51,3 +51,7 @@
   when: ansible_distribution_release == "raring"
   notify: restart php-fpm
   tags: php
+
+- name: Ensure php-fpm is started
+  service: name=php5-fpm state=started
+  tags: php

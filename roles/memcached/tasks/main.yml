@@ -7,3 +7,7 @@
   template: src=memcached.conf.j2 dest=/etc/memcached.conf mode=0644
   notify: restart memcached
   tags: memcached
+
+- name: Start memcached
+  service: name=memcached state=started
+  tags: memcached
