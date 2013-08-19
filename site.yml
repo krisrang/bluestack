@@ -8,6 +8,7 @@
      - ssl
      - postgresql
      - memcached
+     - mongodb
      - redis
      - mediawiki
      - jenkins
