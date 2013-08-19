@@ -43,6 +43,10 @@
     - htop
     - zsh
     - postfix
+    - graphicsmagick-libmagick-dev-compat
+    - libmagickwand-dev
+    - libreadline-dev
+    - zlib1g-dev
   tags: 
     - main
     - nginx
