@@ -138,6 +138,9 @@ $wgParserCacheExpireTime = 14*24*3600; # 14 days
 
 ## Extensions
 
+require_once("$IP/extensions/MobileFrontend/MobileFrontend.php");
+$wgMFAutodetectMobileView = true;
+
 require_once "$IP/extensions/Vector/Vector.php";
 $wgVectorFeatures['footercleanup']['global'] = true;
 $wgVectorFeatures['sectioneditlinks']['global'] = true;
