@@ -1,0 +1,2 @@
+---
+- include: owncloud.yml tags=nginx,php,owncloud

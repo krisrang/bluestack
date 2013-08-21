@@ -1,0 +1,4 @@
+---
+owncloud_domain: cloud.rang.ee
+owncloud_mysql_username: owncloud
+owncloud_mysql_database: owncloud
