@@ -1,20 +1,18 @@
 ---
-- name:   firewall disable
+- name: firewall disable
   shell: yes | ufw disable
-  tags: ufw
 
-- name:   firewall reset
+- name: firewall reset
   shell: yes | ufw reset
-  tags: ufw
 
-- name:   firewall allow ssh
+- name: firewall allow ssh
   command: ufw allow OpenSSH
-  tags: ufw
 
-- name:   firewall deny all
+- name: firewall deny all
   command: ufw default deny
-  tags: ufw
 
 - name:   firewall enable
   shell: yes | ufw enable
-  tags: ufw
+
+- name: firewall allow nginx
+  command: ufw allow "Nginx Full"

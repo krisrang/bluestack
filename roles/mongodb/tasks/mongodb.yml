@@ -1,0 +1,12 @@
+---
+- name: Add mongodb repo key
+  apt_key: id=7F0CEB10 url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x9ECBEC467F0CEB10 state=present
+
+- name: Add mongodb repo
+  apt_repository: repo='deb http://downloads-distro.mongodb.org/repo/ubuntu-upstart dist 10gen'
+
+- name: Install mongodb
+  apt: name=mongodb-10gen state=installed update-cache=yes
+
+- name: Start mongodb and enable at boot
+  service: name=mongodb enabled=yes state=started

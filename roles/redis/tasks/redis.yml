@@ -1,0 +1,10 @@
+---
+- name: Install Redis server
+  apt: pkg=${redis.package} state=installed update-cache=yes
+
+- name: Bind Redis server to all interfaces
+  lineinfile: dest=/etc/redis/redis.conf state=present regexp="^#?bind" line="#bind 127.0.0.1"
+  notify: restart redis
+
+- name: Ensure Redis server is running
+  service: name=${redis.package} state=started

@@ -1,13 +1,2 @@
 ---
-- name: Install memcached
-  apt:  name=memcached state=present update-cache=yes
-  tags: memcached
-
-- name: Write memcached.conf
-  template: src=memcached.conf.j2 dest=/etc/memcached.conf mode=0644
-  notify: restart memcached
-  tags: memcached
-
-- name: Start memcached
-  service: name=memcached state=started
-  tags: memcached
+- include: memcached.yml tags=memcached

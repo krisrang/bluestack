@@ -1,0 +1,23 @@
+---
+- name: Install security-related packages
+  apt: pkg=$item state=installed
+  with_items:
+    - fail2ban
+    - rkhunter
+    - lynis
+
+- name: Remove foreign keys
+  file: path=/root/.ssh/authorized_keys2 state=absent
+
+- name: SSHD config
+  template: src=ssh.j2 dest=/etc/ssh/sshd_config owner=root group=root mode=0644
+  notify: restart ssh
+
+- name: Copy fail2ban configuration files into place
+  copy: src=etc_fail2ban_filter.d_dovecot-pop3imap.conf dest=/etc/fail2ban/filter.d/dovecot-pop3imap.conf
+- template: src=etc_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local
+  notify: restart fail2ban
+
+- name: Allow users in the sudo group to run sudo without a password
+  lineinfile: dest=/etc/sudoers regexp='^\%sudo' line='%sudo ALL=(ALL) NOPASSWD:ALL'
+  tags: main

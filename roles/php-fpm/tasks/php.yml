@@ -1,0 +1,50 @@
+---
+- name: Install php-fpm and deps 
+  apt: name={{ item }} state=present
+  with_items:
+    - graphicsmagick
+    - graphicsmagick-imagemagick-compat
+    - libpcre3
+    - libpcre3-dev
+    - libphp-phpmailer
+    - libphp-simplepie
+    - php-xml-parser
+    - php-apc
+    - php-pear
+    - php5
+    - php5-dev
+    - php5-fpm
+    - php5-enchant
+    - php5-intl
+    - php5-mysqlnd
+    - php5-pgsql
+    - php5-gd
+    - php5-sqlite
+    - php5-curl
+    - php5-cli
+
+- name: Disable default pool
+  command: mv /etc/php5/fpm/pool.d/www.conf /etc/php5/fpm/pool.d/www.disabled creates=/etc/php5/fpm/pool.d/www.disabled
+  notify: restart php-fpm
+
+- name: Disable FastCGI path info fix
+  lineinfile: dest=/etc/php5/fpm/php.ini regexp='^;?cgi.fix_pathinfo' line='cgi.fix_pathinfo = 0;'
+  notify: restart php-fpm
+
+- name: Increase APC memory segments to 8 (* 32 MB = 256 MB)
+  lineinfile: dest=/etc/php5/fpm/conf.d/apc.ini regexp='^;?apc.shm_segments' line='apc.shm_segments = 8;'
+  when: ansible_distribution_release == "precise"
+  notify: restart php-fpm
+
+- name: Disable MySQLi
+  lineinfile: dest=/etc/php5/fpm/conf.d/mysqli.ini regexp='^;?extension\=mysqli\.so' line=';extension=mysqli.so'
+  when: ansible_distribution_release == "precise"
+  notify: restart php-fpm
+
+- name: Disable MySQLi
+  lineinfile: dest=/etc/php5/fpm/conf.d/20-mysqli.ini regexp='^;?extension\=mysqli\.so' line=';extension=mysqli.so'
+  when: ansible_distribution_release == "raring"
+  notify: restart php-fpm
+
+- name: Ensure php-fpm is started
+  service: name=php5-fpm state=started
