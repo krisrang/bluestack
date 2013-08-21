@@ -1,0 +1,10 @@
+127.0.0.1
+{% for host in mail_opendkim_hosts %}
+{{ host}}
+{% endfor %}
+{% for domain in mail_virtual_domains %}
+{{ domain.name }}
+{% endfor %}
+{% for domain in mail_virtual_domains %}
+mail.{{ domain.name }}
+{% endfor %}

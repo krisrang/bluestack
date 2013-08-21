@@ -1,0 +1,29 @@
+---
+mail_server_hostname: rang.ee
+mail_mysql_username: mailserver
+mail_mysql_database: mailserver
+mail_opendkim_hosts:
+  - 37.187.8.220
+  - rang.ee
+  - lynx.rang.ee
+  - mail.rang.ee
+mail_virtual_domains:
+  - name: rang.ee
+    pk_id: 1
+    primary_user: mail
+  - name: kristjanrang.eu
+    pk_id: 2
+    primary_user: mail
+  - name: pebblesinspace.com
+    pk_id: 3
+    primary_user: mail
+mail_virtual_users:
+  - address: mail@rang.ee
+    password_hash: $6$.3Y0eium3k$gnFU8iEu6kWd374NP6rxx2TEaXKbQiE5Dx6TYU1/UPpp9YzVt/DPDitlohvtJWd0UwDnPcn4pTcIU5ik1d7JH1
+    domain_pk_id: 1
+  - address: mail@kristjanrang.eu
+    password_hash: $6$.3Y0eium3k$gnFU8iEu6kWd374NP6rxx2TEaXKbQiE5Dx6TYU1/UPpp9YzVt/DPDitlohvtJWd0UwDnPcn4pTcIU5ik1d7JH1
+    domain_pk_id: 2
+  - address: mail@pebblesinspace.com
+    password_hash: $6$.3Y0eium3k$gnFU8iEu6kWd374NP6rxx2TEaXKbQiE5Dx6TYU1/UPpp9YzVt/DPDitlohvtJWd0UwDnPcn4pTcIU5ik1d7JH1
+    domain_pk_id: 3

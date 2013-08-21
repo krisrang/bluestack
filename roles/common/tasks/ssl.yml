@@ -5,6 +5,9 @@
 - name: Write key
   copy: src=secrets/{{ ssl_wildcard_domain }}.key dest={{ ssl_key }} owner=root group="ssl-cert" mode=0640
 
+- name: Write pem
+  copy: src=secrets/{{ ssl_wildcard_domain }}.pem dest={{ ssl_pem }} owner=root group="ssl-cert" mode=0640
+
 - name: Write ssl.conf
   template: src=ssl.conf.j2 dest='/etc/nginx/conf.d/ssl.conf' backup=yes
   notify: restart nginx

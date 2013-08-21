@@ -1,0 +1,6 @@
+---
+- include: postfix.yml tags=mail,postfix
+- include: dovecot.yml tags=mail,dovecot
+- include: opendkim.yml tags=mail,opendkim
+- include: dspam.yml tags=mail,dspam
+- include: solr.yml tags=mail,solr
