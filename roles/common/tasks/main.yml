@@ -1,4 +1,7 @@
 ---
+- name: Allow users in the sudo group to run sudo without a password
+  lineinfile: dest=/etc/sudoers regexp='^\%sudo' line='%sudo ALL=(ALL) NOPASSWD:ALL'
+  
 - name: Set locale
   command: "/usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}"
 
@@ -18,6 +21,7 @@
     - ntp
     - build-essential
     - python-software-properties
+    - software-properties-common
     - libssl-dev
     - zlib1g-dev
     - e2fslibs-dev
@@ -31,7 +35,6 @@
     - screen
     - zsh
     - postfix
-    - graphicsmagick-libmagick-dev-compat
     - libmagickwand-dev
     - libreadline-dev
     - zlib1g-dev

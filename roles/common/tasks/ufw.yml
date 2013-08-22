@@ -13,6 +13,3 @@
 
 - name:   firewall enable
   shell: yes | ufw enable
-
-- name: firewall allow nginx
-  command: ufw allow "Nginx Full"

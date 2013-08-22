@@ -1,1 +1,5 @@
-lynx.rang.ee  ansible_ssh_user=kris
+[site]
+lynx.rang.ee ansible_ssh_user=kris
+
+[vpn]
+vpn.rang.ee ansible_ssh_user=kris
