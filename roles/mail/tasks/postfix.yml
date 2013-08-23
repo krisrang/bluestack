@@ -12,10 +12,16 @@
   mysql_user: user={{ mail_mysql_username }} password={{ item }} state=present priv="mailserver.*:ALL"
   with_password: ../../../secrets/{{ ansible_fqdn }}/mail_db_password encrypt=sha256_crypt
 
-
 - name: Create database for mail server
   mysql_db: name={{ mail_mysql_database }} state=present
-# - mysql_db: name={{ mail_mysql_database }} state=import target=mailserver.sql.j2
+
+- name: copy over mailserver sql
+  template: src=mailserver.sql.j2 dest=/etc/postfix/import.sql owner=root group=root mode=0600
+  tags: first
+
+- name: import mysql postfix
+  mysql_db: name={{ mail_mysql_database }} state=import target=/etc/postfix/import.sql
+  tags: first
 
 - name: Copy Postfix config files into place
   template: src=etc_postfix_main.cf.j2 dest=/etc/postfix/main.cf owner=root group=root
