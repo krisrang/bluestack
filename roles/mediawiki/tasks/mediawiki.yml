@@ -1,6 +1,6 @@
 ---
 - name: Make sure mediawiki dir exists
-  file: path=/usr/share/nginx/{{wiki_host}} state=directory owner=www-data group=www-data
+  file: path=/usr/share/nginx/{{wiki_host}}/w state=directory owner=www-data group=www-data
 
 - name: Check out version {{wiki_version}} of mediawiki
   sudo_user: www-data
