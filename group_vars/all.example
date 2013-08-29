@@ -19,3 +19,6 @@ wiki_upgrade: upgradekey
 jenkins:
   user: user
   password: pass
+
+ssh_users:
+  - user
