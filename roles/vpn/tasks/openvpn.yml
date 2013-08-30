@@ -10,21 +10,17 @@
   command: cp -R /usr/share/doc/openvpn/examples/easy-rsa/ /etc/openvpn
 
 - name: Put easy-rsa parameter settings in place
-  template: src=etc_openvpn_easy-rsa_2.0_vars.j2 dest=/etc/openvpn/easy-rsa/2.0/vars
+  template: src=etc_openvpn_easy-rsa_2.0_vars.j2 dest=/etc/openvpn/easy-rsa/2.0/vars mode=0755
 
-###### manually:
-# cd /etc/openvpn/easy-rsa/2.0/
-# . /etc/openvpn/easy-rsa/2.0/vars
-# . /etc/openvpn/easy-rsa/2.0/clean-all
-# . /etc/openvpn/easy-rsa/2.0/build-ca
-# . /etc/openvpn/easy-rsa/2.0/build-key-server server
-#
-# for each client:
+###### manually for each client:
 # . /etc/openvpn/easy-rsa/2.0/build-key $client_name
 #####
 
-- name: Generate Diffie-Hellman parameters
-  command: /etc/openvpn/easy-rsa/2.0/build-dh creates=/etc/openvpn/easy-rsa/2.0/keys/dh1024.pem
+- name: Copy genkeys.sh
+  copy: src=genkeys.sh dest=/etc/openvpn/easy-rsa/2.0/genkeys.sh mode=0755
+
+- name: Generate server keys
+  command: sh /etc/openvpn/easy-rsa/2.0/genkeys.sh  creates=/etc/openvpn/easy-rsa/2.0/keys/ca.crt
 
 - name: Copy certificates and key files into place
   command: cp /etc/openvpn/easy-rsa/2.0/keys/$item /etc/openvpn creates=/etc/openvpn/$item
@@ -32,8 +28,8 @@
     - ca.crt
     - ca.key
     - dh1024.pem
-    - server.crt
-    - server.key
+    - "{{vpn.cn}}.crt"
+    - "{{vpn.cn}}.key"
 
 - name: Copy rc.local with firewall and dnsmasq rules into place
   copy: src=etc_rc.local dest=/etc/rc.local

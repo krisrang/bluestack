@@ -19,3 +19,6 @@
 
 - name: Restart logentries
   service: name=logentries state=restarted
+
+- name: Install logentries cronjob
+  cron: name="logentries reload" minute="*/15" job="service logentries force-reload"

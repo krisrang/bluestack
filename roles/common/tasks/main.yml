@@ -49,7 +49,7 @@
   apt: name={{ item }} state=absent
   with_items:
     - bind9
-    - resolvconf
+    - consolekit
 
 - name: Copy resolv.conf
   copy: src=resolv.conf dest=/etc/resolv.conf mode=0644

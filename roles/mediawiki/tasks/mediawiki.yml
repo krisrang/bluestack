@@ -4,7 +4,7 @@
 
 - name: Check out version {{mediawiki.version}} of mediawiki
   sudo_user: www-data
-  git: repo=https://git.wikimedia.org/git/mediawiki/core.git
+  git: repo=https://gerrit.wikimedia.org/r/mediawiki/core
        dest=/usr/share/nginx/{{mediawiki.host}}/w version={{mediawiki.version}}
 
 - name: Copy php-fpm pool configuration
