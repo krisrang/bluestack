@@ -1,5 +1,7 @@
+# {{ ansible_managed }}
+
 [DEFAULT]
-ignoreip  = 127.0.0.1 37.187.8.220
+ignoreip  = 127.0.0.1 {{ ansible_default_ipv4["address"] }}
 bantime   = 86400
 destemail = {{ admin_email }}
 banaction = iptables-multiport
