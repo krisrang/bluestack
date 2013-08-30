@@ -1,7 +1,7 @@
 ---
 - name: Allow users in the sudo group to run sudo without a password
   lineinfile: dest=/etc/sudoers regexp='^\%sudo' line='%sudo ALL=(ALL) NOPASSWD:ALL'
-  
+
 - name: Set locale
   command: "/usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}"
 
@@ -30,7 +30,6 @@
     - htop
     - iftop
     - iotop
-    - mosh
     - ruby1.9.3
     - screen
     - zsh

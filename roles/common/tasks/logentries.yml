@@ -17,10 +17,5 @@
 - name: Install logentries daemon
   apt: name=logentries-daemon state=installed
 
-- name: Follow logs
-  command: le follow {{ item }}
-  with_items: logentries_logs
-  ignore_errors: yes
-
 - name: Restart logentries
   service: name=logentries state=restarted

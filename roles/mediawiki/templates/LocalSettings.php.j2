@@ -52,10 +52,10 @@ $wgEmailAuthentication = true;
 
 ## Database settings
 $wgDBtype = "postgres";
-$wgDBserver = "localhost";
+$wgDBserver = "{{postgresql.ip}}";
 $wgDBname = "{{wiki_dbname}}";
 $wgDBuser = "{{wiki_dbuser}}";
-$wgDBpassword = '{{ lookup('password', 'secrets/' + ansible_fqdn + '/mediawiki_db_password encrypt=sha256_crypt') }}';
+$wgDBpassword = '{{ lookup('password', 'secrets/db/mediawiki encrypt=sha256_crypt') }}';
 
 # Postgres specific settings
 $wgDBport = "5432";

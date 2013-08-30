@@ -1,10 +1,11 @@
 ---
+- include: db.yml
+
 - hosts: wiki
   sudo: yes
   roles:
      - common
      - php-fpm
      - nginx
-     - postgresql
      - memcached
      - mediawiki

@@ -19,22 +19,6 @@
   file: src=/etc/nginx/sites-available/{{wiki_host}}.conf path=/etc/nginx/sites-enabled/{{wiki_host}}.conf state=link
   notify: restart nginx
 
-- name: Create mediawiki db user
-  sudo_user: postgres
-  postgresql_user: user={{ wiki_dbuser }} password={{ item }} role_attr_flags=SUPERUSER
-  with_password: ../../../secrets/{{ ansible_fqdn }}/mediawiki_db_password encrypt=sha256_crypt
-
-- name: Create mediawiki database
-  sudo_user: postgres
-  postgresql_db: db={{ wiki_dbname }} owner={{ wiki_dbuser }}
-
-- name: Run mediawiki installer
-  sudo_user: www-data
-  command: "php install.php --dbserver 127.0.0.1 --dbuser {{wiki_dbuser}} --dbpass {{item}}  --dbname {{wiki_dbname}} --dbtype postgres --installdbuser {{wiki_dbuser}} --installdbpass {{item}} --pass {{wiki_pass}} --scriptpath \"\" {{wiki_name}} {{wiki_login}}
-    chdir=/usr/share/nginx/{{wiki_host}}/w/maintenance
-    creates=/usr/share/nginx/{{wiki_host}}/w/LocalSettings.php"
-  with_password: ../../../secrets/{{ ansible_fqdn }}/mediawiki_db_password encrypt=sha256_crypt
-
 - name: Write mediawiki settings
   template: src=LocalSettings.php.j2 dest=/usr/share/nginx/{{wiki_host}}/w/LocalSettings.php backup=yes owner=www-data group=www-data mode=0644
 

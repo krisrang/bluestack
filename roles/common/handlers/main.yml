@@ -6,7 +6,7 @@
   service: name=iptables state=restarted
 
 - name: update tzdata
-  command: /usr/sbin/dpkg-reconfigure --frontend noninteractive 
+  command: /usr/sbin/dpkg-reconfigure --frontend noninteractive tzdata
 
 - name: restart ntp
   service: name=ntp state=restarted

@@ -11,18 +11,15 @@
     - python-psycopg2
     - postgresql-9.2
 
-- name: Start PostgreSQL and enable at boot
-  service: name=postgresql enabled=yes state=started
-
-- name: Ensure PostgreSQL is listening on all localhost
+- name: Ensure PostgreSQL is listening on all
   sudo_user: postgres
   lineinfile: dest=/etc/postgresql/9.2/main/postgresql.conf
     regexp='^#?listen_addresses\s*='
-    line="listen_addresses = '127.0.0.1'"
+    line="listen_addresses = '*'"
     state=present
   notify: restart postgresql
 
-- name: Ensure PostgreSQL is listening on all localhost
+- name: Ensure PostgreSQL is listening on all
   sudo_user: postgres
   lineinfile: dest=/etc/postgresql/9.2/main/pg_hba.conf
              regexp='host\s+all\s+all\s+127.0.0.1/32\s+md5'
@@ -30,5 +27,23 @@
              insertbefore=BOF
   notify: restart postgresql
 
+- name: Allow access to other hosts
+  sudo_user: postgres
+  lineinfile: dest=/etc/postgresql/9.2/main/pg_hba.conf
+             regexp='host\s+all\s+all\s+{{item}}/32\s+md5'
+             line='host all all {{item}}/32 md5'
+             insertafter=EOF
+  notify: restart postgresql
+  with_items: postgresql.hosts
+
+- name: Start PostgreSQL and enable at boot
+  service: name=postgresql enabled=yes state=started
+
 - name: Reload PostgreSQL
   service: name=postgresql state=reloaded
+
+- name: Copy UFW rule
+  copy: src=ufw dest=/etc/ufw/applications.d/postgresql owner=root group=root
+
+- name: UFW allow postgresql
+  command: ufw allow "PostgreSQL"
