@@ -4,11 +4,11 @@
 
 - name: Install nginx 
   apt: name=nginx state=installed update-cache=yes
-  when: nginx_naxsi == false
+  when: nginx.naxsi == false
 
 - name: Install nginx_naxsi 
   apt: name=nginx_naxsi state=installed
-  when: nginx_naxsi == true
+  when: nginx.naxsi == true
 
 - name: Disable default site
   file: path=/etc/nginx/sites-enabled/default state=absent

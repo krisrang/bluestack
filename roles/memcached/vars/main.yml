@@ -1,6 +1,7 @@
 ---
-memcached_memory: 128
-memcached_port: 11211
-memcached_user: memcache
-memcached_listen: 127.0.0.1
-memcached_max_connections: 1024
+memcached:
+  memory: 128
+  port: 11211
+  user: memcache
+  listen: 127.0.0.1
+  max_connections: 1024

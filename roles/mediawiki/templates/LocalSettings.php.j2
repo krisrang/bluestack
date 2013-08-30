@@ -16,7 +16,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 ## Uncomment this to disable output compression
 # $wgDisableOutputCompression = true;
 
-$wgSitename = "{{wiki_name}}";
+$wgSitename = "{{mediawiki.name}}";
 
 ## The URL base path to the directory containing the wiki;
 ## defaults for all runtime URL paths are based off of this.
@@ -29,7 +29,7 @@ $wgUsePathInfo     = true;
 $wgScriptExtension = ".php";
 
 ## The protocol and server name to use in fully-qualified URLs
-$wgServer = "https://{{wiki_host}}";
+$wgServer = "https://{{mediawiki.host}}";
 
 ## The relative URL path to the skins directory
 $wgStylePath = "$wgScriptPath/skins";
@@ -43,8 +43,8 @@ $wgLogo = "/logo.png";
 $wgEnableEmail = true;
 $wgEnableUserEmail = true; # UPO
 
-$wgEmergencyContact = "{{wiki_email}}";
-$wgPasswordSender = "{{wiki_email}}";
+$wgEmergencyContact = "{{mediawiki.email}}";
+$wgPasswordSender = "{{mediawiki.email}}";
 
 $wgEnotifUserTalk = true; # UPO
 $wgEnotifWatchlist = true; # UPO
@@ -53,8 +53,8 @@ $wgEmailAuthentication = true;
 ## Database settings
 $wgDBtype = "postgres";
 $wgDBserver = "{{postgresql.ip}}";
-$wgDBname = "{{wiki_dbname}}";
-$wgDBuser = "{{wiki_dbuser}}";
+$wgDBname = "{{mediawiki.dbname}}";
+$wgDBuser = "{{mediawiki.dbuser}}";
 $wgDBpassword = '{{ lookup('password', 'secrets/db/mediawiki encrypt=sha256_crypt') }}';
 
 # Postgres specific settings
@@ -89,11 +89,11 @@ $wgCacheDirectory = "$IP/cache";
 # Site language code, should be one of the list in ./languages/Names.php
 $wgLanguageCode = "en";
 
-$wgSecretKey = "{{wiki_secret}}";
+$wgSecretKey = "{{mediawiki.secret}}";
 
 # Site upgrade key. Must be set to a string (default provided) to turn on the
 # web installer while LocalSettings.php is in place
-$wgUpgradeKey = "{{wiki_upgrade}}";
+$wgUpgradeKey = "{{mediawiki.upgrade}}";
 
 ## Default skin: you can change the default skin. Use the internal symbolic
 ## names, ie 'standard', 'nostalgia', 'cologneblue', 'monobook', 'vector':

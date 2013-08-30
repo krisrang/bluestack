@@ -3,7 +3,7 @@
 
 server {
   listen 80;
-  server_name {{ wiki_host }};
+  server_name {{ mediawiki.host }};
   rewrite ^ https://$server_name$request_uri? permanent;
 }
 
@@ -11,8 +11,8 @@ server {
   listen 443 ssl;
   ssl on;
 
-  server_name {{ wiki_host }};
-  root /usr/share/nginx/{{ wiki_host }}/w;
+  server_name {{ mediawiki.host }};
+  root /usr/share/nginx/{{ mediawiki.host }}/w;
   index index.html index.htm index.php;
 
   # Add HSTS header. This must be sent via HTTPS.
@@ -88,6 +88,6 @@ server {
       try_files $uri /index.php;
   }
 
-  error_log   /var/log/nginx/{{ wiki_host }}-error.log;
-  access_log  /var/log/nginx/{{ wiki_host }}-access.log;
+  error_log   /var/log/nginx/{{ mediawiki.host }}-error.log;
+  access_log  /var/log/nginx/{{ mediawiki.host }}-access.log;
 }

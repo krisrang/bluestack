@@ -2,26 +2,45 @@
 locale: en_US.UTF-8
 timezone: Etc/UTC
 
-logentries_key: key
-
-tarsnap_version: 1.0.35
-tarsnap_hash: 6c9f6756bc43bc225b842f7e3a0ec7204e0cf606e10559d27704e1cc33098c9a
-
-wiki_login: kris
-wiki_pass: pass
-wiki_secret: secret
-wiki_upgrade: upgradekey
-
-jenkins:
-  user: user
-  password: pass
-
 ssh_users:
-  - user
+  - kris
 
 postgresql:
-  ip: db host ip
+  ip: host ip
   users:
     - user
   hosts:
     - client host ip
+
+fail2ban_email: email for alerts
+
+ssl:
+  wildcard_domain: domain
+
+logentries_key: key
+
+wiki:
+  login: login
+  pass: pass
+  secret: secret
+  upgrade: upgrade
+
+jenkins:
+  password: pass
+  user: user
+  host: domain
+
+mediawiki:
+  name: name
+  host: domain
+  email: email
+
+vpn:
+  country: ee
+  province: Harju
+  city: Tallinn
+  org: org
+  email: email
+  ou: unit
+  cn: common name
+  name: common name

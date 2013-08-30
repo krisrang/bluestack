@@ -1,27 +1,28 @@
 ---
-nginx_user: www-data
-nginx_pid: /var/run/nginx.pid
-nginx_dir: /etc/nginx
-nginx_log_dir: /var/log/nginx
-nginx_worker_connections: 1024
-nginx_multi_accept: true
-nginx_event: epoll
-nginx_naxsi: false
-nginx_enable_access_log: true
-nginx_sendfile: "on"
-nginx_keepalive_timeout: 65
-nginx_server_names_hash_bucket_size: 64
-nginx_types_hash_max_size: 2048
-nginx_types_hash_bucket_size: 64
-nginx_proxy_read_timeout: 86400s # 1 day
-nginx_client_max_body_size: 100m
-nginx_gzip: "on"
-nginx_gzip_http_version: "1.0"
-nginx_gzip_comp_level: "2"
-nginx_gzip_proxied: any
-nginx_gzip_vary: "off"
-# nginx_gzip_buffers: nil
-nginx_gzip_types:
+nginx:
+  user: www-data
+  pid: /var/run/nginx.pid
+  dir: /etc/nginx
+  log_dir: /var/log/nginx
+  worker_connections: 1024
+  multi_accept: true
+  event: epoll
+  naxsi: false
+  enable_access_log: true
+  sendfile: "on"
+  keepalive_timeout: 65
+  server_names_hash_bucket_size: 64
+  types_hash_max_size: 2048
+  types_hash_bucket_size: 64
+  proxy_read_timeout: 86400s # 1 day
+  client_max_body_size: 100m
+  gzip: "on"
+  gzip_http_version: "1.0"
+  gzip_comp_level: "2"
+  gzip_proxied: any
+  gzip_vary: "off"
+  # gzip_buffers: nil
+  gzip_types:
   - "text/plain"
   - "text/css"
   - "application/x-javascript"

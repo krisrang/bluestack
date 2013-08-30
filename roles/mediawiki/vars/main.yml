@@ -1,7 +1,5 @@
 ---
-wiki_version: wmf/1.22wmf15
-wiki_name: PebbleScape
-wiki_host: wiki.rang.ee
-wiki_email: wiki@rang.ee
-wiki_dbname: mediawiki
-wiki_dbuser: mediawiki
+mediawiki:
+  version: wmf/1.22wmf15
+  dbname: mediawiki
+  dbuser: mediawiki

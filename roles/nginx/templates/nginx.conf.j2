@@ -1,68 +1,68 @@
 # {{ ansible_managed }}
 
-user {{ nginx_user }} {{ nginx_user }};
+user {{ nginx.user }} {{ nginx.user }};
 worker_processes  {{ ansible_processor_cores }};
 
-error_log  {{ nginx_log_dir }}/error.log;
-pid        {{ nginx_pid }};
+error_log  {{ nginx.log_dir }}/error.log;
+pid        {{ nginx.pid }};
 
 events {
-  worker_connections  {{ nginx_worker_connections }};
-{% if nginx_multi_accept %}
+  worker_connections  {{ nginx.worker_connections }};
+{% if nginx.multi_accept %}
   multi_accept on;
 {% endif %}
 
-{% if nginx_event %}
-  use {{ nginx_event }};
+{% if nginx.event %}
+  use {{ nginx.event }};
 {% endif %}
 }
 
 http {
-  include       {{ nginx_dir }}/mime.types;
+  include       {{ nginx.dir }}/mime.types;
   default_type  application/octet-stream;
 
-  {% if nginx_enable_access_log %}
-  access_log  {{ nginx_log_dir }}/access.log;
+  {% if nginx.enable_access_log %}
+  access_log  {{ nginx.log_dir }}/access.log;
   {% endif %}
 
-  sendfile {{ nginx_sendfile }};
+  sendfile {{ nginx.sendfile }};
   tcp_nopush on;
   tcp_nodelay on;
 
-  {% if nginx_keepalive_timeout %}
-  keepalive_timeout {{ nginx_keepalive_timeout }};
+  {% if nginx.keepalive_timeout %}
+  keepalive_timeout {{ nginx.keepalive_timeout }};
   {% endif %}
 
   server_tokens off;
 
-  gzip {{ nginx_gzip }};
-  {% if nginx_gzip %}
-  gzip_http_version {{ nginx_gzip_http_version }};
-  gzip_comp_level {{ nginx_gzip_comp_level }};
-  gzip_proxied {{ nginx_gzip_proxied }};
-  gzip_vary {{ nginx_gzip_vary }};
-  {% if nginx_gzip_buffers %}
-  gzip_buffers {{ nginx_gzip_buffers }};
+  gzip {{ nginx.gzip }};
+  {% if nginx.gzip %}
+  gzip_http_version {{ nginx.gzip_http_version }};
+  gzip_comp_level {{ nginx.gzip_comp_level }};
+  gzip_proxied {{ nginx.gzip_proxied }};
+  gzip_vary {{ nginx.gzip_vary }};
+  {% if nginx.gzip_buffers %}
+  gzip_buffers {{ nginx.gzip_buffers }};
   {% endif %}
-  gzip_types {{ nginx_gzip_types|join(' ') }};
+  gzip_types {{ nginx.gzip_types|join(' ') }};
   gzip_min_length  1000;
   gzip_disable     "msie6";
   {% endif %}
 
-  server_names_hash_bucket_size {{ nginx_server_names_hash_bucket_size }};
-  types_hash_max_size {{ nginx_types_hash_max_size }};
-  types_hash_bucket_size {{ nginx_types_hash_bucket_size }};
-  {% if nginx_proxy_read_timeout %}
-  proxy_read_timeout {{ nginx_proxy_read_timeout }};
+  server_names_hash_bucket_size {{ nginx.server_names_hash_bucket_size }};
+  types_hash_max_size {{ nginx.types_hash_max_size }};
+  types_hash_bucket_size {{ nginx.types_hash_bucket_size }};
+  {% if nginx.proxy_read_timeout %}
+  proxy_read_timeout {{ nginx.proxy_read_timeout }};
   {% endif %}
-  {% if nginx_client_max_body_size %}
-  client_max_body_size {{ nginx_client_max_body_size }};
+  {% if nginx.client_max_body_size %}
+  client_max_body_size {{ nginx.client_max_body_size }};
   {% endif %}
 
-  {% if nginx_naxsi %}
+  {% if nginx.naxsi %}
   include /etc/nginx/naxsi_core.rules;
   {% endif %}
 
-  include {{ nginx_dir }}/conf.d/*.conf;
-  include {{ nginx_dir }}/sites-enabled/*;
+  include {{ nginx.dir }}/conf.d/*.conf;
+  include {{ nginx.dir }}/sites-enabled/*;
 }
