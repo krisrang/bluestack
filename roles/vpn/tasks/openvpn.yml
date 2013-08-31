@@ -1,4 +1,9 @@
 ---
+- name: Allow UFW
+  command: ufw allow 1194/udp
+- command: ufw allow 1194/tcp
+- command: ufw allow from 10.8.0.0/16
+
 - name: Install OpenVPN and dependencies from apt
   apt: pkg=$item state=installed
   with_items:
@@ -17,7 +22,7 @@
 #####
 
 - name: Copy genkeys.sh
-  copy: src=genkeys.sh dest=/etc/openvpn/easy-rsa/2.0/genkeys.sh mode=0755
+  template: src=genkeys.sh.j2 dest=/etc/openvpn/easy-rsa/2.0/genkeys.sh mode=0755
 
 - name: Generate server keys
   command: sh /etc/openvpn/easy-rsa/2.0/genkeys.sh  creates=/etc/openvpn/easy-rsa/2.0/keys/ca.crt
