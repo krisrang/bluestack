@@ -7,4 +7,4 @@
   notify: restart memcached
 
 - name: Start memcached
-  service: name=memcached state=started
+  service: name=memcached state=started enabled=yes
