@@ -1,0 +1,2 @@
+---
+- include: gome.yml tags=gome

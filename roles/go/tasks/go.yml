@@ -1,0 +1,15 @@
+---
+- name: Add go PPA
+  apt_repository: repo=ppa:duh/golang
+
+- name: Install packages 
+  apt: name={{ item }} state=installed update-cache=yes
+  with_items:
+    - mercurial
+    - golang
+
+- name: Copy go env
+  copy: src=go.sh dest=/etc/profile.d/go.sh mode=0644
+
+- name: Make sure go dir exists
+  file: path=/go state=directory owner=root group=root

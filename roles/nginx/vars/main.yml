@@ -21,7 +21,6 @@ nginx:
   gzip_comp_level: "2"
   gzip_proxied: any
   gzip_vary: "off"
-  # gzip_buffers: nil
   gzip_types:
   - "text/plain"
   - "text/css"

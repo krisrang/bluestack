@@ -44,3 +44,6 @@ vpn:
   ou: unit
   cn: common name
   name: common name
+
+gome:
+  host: site.ee

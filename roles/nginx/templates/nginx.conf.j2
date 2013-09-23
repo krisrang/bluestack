@@ -41,9 +41,6 @@ http {
   gzip_comp_level {{ nginx.gzip_comp_level }};
   gzip_proxied {{ nginx.gzip_proxied }};
   gzip_vary {{ nginx.gzip_vary }};
-  {% if nginx.gzip_buffers %}
-  gzip_buffers {{ nginx.gzip_buffers }};
-  {% endif %}
   gzip_types {{ nginx.gzip_types|join(' ') }};
   gzip_min_length  1000;
   gzip_disable     "msie6";

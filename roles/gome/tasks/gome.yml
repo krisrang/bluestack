@@ -1,0 +1,25 @@
+---
+- name: Checkout gome repo
+  command: go get -u github.com/krisrang/gome
+  environment:
+    GOPATH: /go
+
+- name: Install gome
+  command: go install chdir=/go/src/github.com/krisrang/gome
+  environment:
+    GOPATH: /go
+
+- name: Copy config.json
+  copy: src=../../../secrets/gome.json dest=/go/src/github.com/krisrang/gome/config.json owner=root mode=0600
+
+- name: Copy upstart script
+  copy: src=upstart.conf dest=/etc/init/gome.conf owner=root mode=0644
+  notify: restart gome
+
+- name: Copy nginx site configuration
+  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{gome.host}}.conf backup=yes
+  notify: restart nginx
+
+- name: Link nginx site configuration
+  file: src=/etc/nginx/sites-available/{{gome.host}}.conf path=/etc/nginx/sites-enabled/{{gome.host}}.conf state=link
+  notify: restart nginx

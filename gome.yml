@@ -1,0 +1,8 @@
+---
+- hosts: home
+  sudo: yes
+  roles:
+     - common
+     - go
+     - nginx
+     - gome
