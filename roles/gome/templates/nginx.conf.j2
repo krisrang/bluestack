@@ -7,6 +7,12 @@ upstream gome {
 
 server {
   listen 80;
+  server_name rang.ee pebblesinspace.com;
+  rewrite ^/(.*)$ http://{{ gome.host }}/$1 permanent;
+}
+
+server {
+  listen 80;
   server_name {{ gome.host }};
 
   location / {
