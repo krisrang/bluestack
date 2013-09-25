@@ -3,6 +3,7 @@
   command: go get -u github.com/krisrang/gome
   environment:
     GOPATH: /go
+  notify: restart gome
 
 - name: Install gome
   command: go install chdir=/go/src/github.com/krisrang/gome
@@ -11,6 +12,7 @@
 
 - name: Copy config.json
   copy: src=../../../secrets/gome.json dest=/go/src/github.com/krisrang/gome/config.json owner=root mode=0600
+  notify: restart gome
 
 - name: Copy upstart script
   copy: src=upstart.conf dest=/etc/init/gome.conf owner=root mode=0644
