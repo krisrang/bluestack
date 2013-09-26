@@ -1,6 +1,0 @@
----
-- hosts: vpn
-  sudo: yes
-  roles:
-     - common
-     - vpn

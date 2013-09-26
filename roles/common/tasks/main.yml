@@ -56,6 +56,4 @@
 
 - include: security.yml tags=security
 - include: ufw.yml tags=firewall
-- include: logentries.yml tags=logentries
-- include: tarsnap.yml tags=tarsnap
 - include: ssl.yml tags=ssl,nginx

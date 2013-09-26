@@ -6,4 +6,5 @@
      - php-fpm
      - nginx
      - memcached
+     - postgresql
      - mediawiki

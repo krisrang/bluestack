@@ -6,7 +6,7 @@
 # file, not there.
 #
 # Further documentation for configuration settings may be found at:
-# http://www.mediawiki.org/wiki/Manual:Configuration_settings
+# http://www.mediamediawiki.org/wiki/Manual:Configuration_settings
 
 # Protect against web entry
 if ( !defined( 'MEDIAWIKI' ) ) {
@@ -22,7 +22,7 @@ $wgSitename = "{{mediawiki.name}}";
 ## defaults for all runtime URL paths are based off of this.
 ## For more information on customizing the URLs
 ## (like /w/index.php/Page_title to /wiki/Page_title) please see:
-## http://www.mediawiki.org/wiki/Manual:Short_URL
+## http://www.mediamediawiki.org/wiki/Manual:Short_URL
 $wgScriptPath      = "";
 $wgArticlePath     = "/$1";
 $wgUsePathInfo     = true;
@@ -52,7 +52,7 @@ $wgEmailAuthentication = true;
 
 ## Database settings
 $wgDBtype = "postgres";
-$wgDBserver = "{{postgresql.ip}}";
+$wgDBserver = "{{mediawiki.dbip}}";
 $wgDBname = "{{mediawiki.dbname}}";
 $wgDBuser = "{{mediawiki.dbuser}}";
 $wgDBpassword = '{{ lookup('password', 'secrets/db/mediawiki encrypt=sha256_crypt') }}';

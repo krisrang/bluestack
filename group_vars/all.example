@@ -19,21 +19,22 @@ ssl:
 
 logentries_key: key
 
-wiki:
-  login: login
+mediawiki:
+  login: kris
   pass: pass
-  secret: secret
-  upgrade: upgrade
+  secret: sec
+  upgrade: sec
+  name: bla
+  host: dns
+  email: email
+  dbname: mediawiki
+  dbuser: mediawiki
+  dbip: localhost
 
 jenkins:
   password: pass
   user: user
   host: domain
-
-mediawiki:
-  name: name
-  host: domain
-  email: email
 
 vpn:
   country: ee

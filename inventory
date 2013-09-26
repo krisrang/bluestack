@@ -1,11 +1,2 @@
 [wiki]
 wiki.rang.ee ansible_ssh_user=kris
-
-[vpn]
-vpn.rang.ee ansible_ssh_user=kris
-
-[db]
-db.rang.ee ansible_ssh_user=kris
-
-[home]
-kristjanrang.eu ansible_ssh_user=kris
