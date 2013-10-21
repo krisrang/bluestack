@@ -50,6 +50,9 @@
   command: java -jar {{jenkins.cli_dest}} -s http://localhost:8080 safe-restart
   when: jenkins_updates.changed
 
+- name: Create Jenkins .ssh directory
+  file: path=/var/lib/jenkins/.ssh state=directory
+
 - name: Copy Jenkins ssh key
   copy: src=../../../secrets/jenkins dest=/var/lib/jenkins/.ssh/id_rsa owner=jenkins mode=0600
 

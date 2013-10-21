@@ -3,3 +3,11 @@
   sudo: yes
   roles:
      - common
+     - php-fpm
+     - nginx
+     - memcached
+     - redis
+     - postgresql
+     - mariadb
+     - jenkins
+     - mediawiki
