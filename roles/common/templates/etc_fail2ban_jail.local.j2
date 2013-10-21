@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 [DEFAULT]
-ignoreip  = 127.0.0.1 {{ ansible_eth0['ipv4']['address'] }}
+ignoreip  = 127.0.0.1 {{ ansible_default_ipv4['address'] }}
 bantime   = 86400
 destemail = {{ fail2ban_email }}
 banaction = iptables-multiport
@@ -25,12 +25,3 @@ enabled = true
 [postfix]
 enabled  = true
 maxretry = 1
-
-[dovecot-pop3imap]
-enabled = true
-filter = dovecot-pop3imap
-action = iptables-multiport[name=dovecot-pop3imap, port="pop3,imap", protocol=tcp]
-logpath = /var/log/maillog
-maxretry = 20
-findtime = 1200
-bantime = 1200

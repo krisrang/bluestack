@@ -51,9 +51,6 @@
     - bind9
     - consolekit
 
-- name: Copy resolv.conf
-  copy: src=resolv.conf dest=/etc/resolv.conf mode=0644
-
 - include: security.yml tags=security
 - include: ufw.yml tags=firewall
 - include: ssl.yml tags=ssl,nginx

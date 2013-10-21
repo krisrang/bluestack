@@ -1,0 +1,5 @@
+---
+- hosts: puma
+  sudo: yes
+  roles:
+     - common
