@@ -53,7 +53,7 @@ ChallengeResponseAuthentication no
 # Change to no to disable tunnelled clear text passwords
 PasswordAuthentication no
 
-AllowUsers {% for user in ssh_users %}{{user}}{% endfor %}
+AllowUsers {% for user in ssh_users %}{{user}} {% endfor %}
 
 X11Forwarding no
 X11DisplayOffset 10
