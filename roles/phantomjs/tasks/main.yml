@@ -1,0 +1,2 @@
+---
+- include: phantomjs.yml tags=phantomjs

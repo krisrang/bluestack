@@ -1,13 +1,12 @@
 ---
 - hosts: puma
+  accelerate: true
   sudo: yes
   roles:
      - common
+     - memcached
      - php-fpm
      - nginx
-     - memcached
-     - redis
-     - postgresql
-     - mariadb
+     - phantomjs
      - jenkins
-     - mediawiki
+     - mariadb

@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+# forward to loggly
+$template LogglyFormat,"<%pri%>%protocol-version% %timestamp:::date-rfc3339% %HOSTNAME% %app-name% %procid% %msgid% [{{ loggly_key }}] %msg%\n"
+
+*.* @@logs-01.loggly.com:514; LogglyFormat

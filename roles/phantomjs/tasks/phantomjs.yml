@@ -1,0 +1,18 @@
+---
+- name: Download PhantomJS
+  get_url: url=https://phantomjs.googlecode.com/files/phantomjs-1.9.2-linux-x86_64.tar.bz2 dest=/root/phantomjs.tar.bz2
+
+- name: Extract PhantomJS
+  command: tar xjf /root/phantomjs.tar.bz2 chdir=/root creates=/root/phantomjs-1.9.2-linux-x86_64/bin/phantomjs
+
+- name: Link PhantomJS
+  command: cp /root/phantomjs-1.9.2-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
+
+- name: Set PhantomJS mode
+  file: path=/usr/bin/phantomjs mode=0777
+
+- name: Link PhantomJS
+  file: src=/usr/bin/phantomjs path=/usr/local/share/phantomjs state=link
+
+- name: Link PhantomJS
+  file: src=/usr/bin/phantomjs path=/usr/local/bin/phantomjs state=link

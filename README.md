@@ -4,5 +4,15 @@ Ansible based configuration management
 
 ## Setup
 
-* Copy group_vars/all.example to group_vars/all and enter appropriate info
-* SSL: Add certs to secrets
+* Set up new user
+* Run appropriate OVH tasks if needed
+* In /etc/sudoers replace
+
+> %sudo ALL=(ALL) ALL
+
+with
+> %sudo ALL=(ALL) NOPASSWD:ALL
+
+## TODO
+
+* Fail2ban bug with email in jail.local

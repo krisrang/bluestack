@@ -1,3 +1,2 @@
+secrets
 group_vars/all
-group_vars/db
-secrets/*
