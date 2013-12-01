@@ -62,8 +62,8 @@
 - name: Copy Jenkins ssh known hosts
   copy: src=known_hosts dest=/var/lib/jenkins/.ssh/known_hosts owner=jenkins mode=0644
 
-# - name: Add jenkins htpasswd
-#   htpasswd: path=/etc/nginx/htpasswd/jenkins name={{jenkins.user}} password={{jenkins.password}} owner=root group=www-data mode=0640
+- name: Add jenkins htpasswd
+  htpasswd: path=/etc/nginx/htpasswd/jenkins name={{jenkins.user}} password={{jenkins.password}} owner=root group=www-data mode=0640
 
 - name: Copy nginx site configuration
   template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{jenkins.host}}.conf backup=yes

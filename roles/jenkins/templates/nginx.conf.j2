@@ -24,6 +24,9 @@ server {
   add_header X-Frame-Options DENY;
 
   location / {
+    auth_basic "Restricted";
+    auth_basic_user_file /etc/nginx/htpasswd/jenkins;
+    
     sendfile off;
     add_header Pragma "no-cache";
 
