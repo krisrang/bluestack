@@ -4,10 +4,9 @@
   sudo: yes
   roles:
      - common
-     - memcached
-     - php-fpm
      - nginx
      - jenkins
      - mariadb
-     - phantomjs
+     - memcached
      - redis
+     - phantomjs

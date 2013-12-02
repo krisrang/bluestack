@@ -13,6 +13,8 @@ Ansible based configuration management
 with
 > %sudo ALL=(ALL) NOPASSWD:ALL
 
+* Install python-keyczar for accelerated mode
+
 ## TODO
 
 * Fail2ban bug with email in jail.local
