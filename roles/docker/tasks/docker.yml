@@ -1,0 +1,13 @@
+---
+- name: Add postgresql repo key
+  apt_key: id=A88D21E9 url=https://get.docker.io/gpg state=present
+
+- name: Add postgresql repo
+  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+
+- name: Install packages
+  apt: name=lxc-docker state=installed update-cache=yes
+
+- name: Allow users in the sudo group to run sudo without a password
+  lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY="DROP"' line='DEFAULT_FORWARD_POLICY="ACCEPT"'
+  notify: reload ufw

@@ -5,6 +5,7 @@
   roles:
      - common
      - nginx
+     - docker
      - jenkins
      - mariadb
      - memcached
