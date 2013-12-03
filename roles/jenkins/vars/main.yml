@@ -19,3 +19,5 @@ jenkins:
     - 'brakeman'
     - 'xvfb'
     - 'rvm'
+    - 'envinject'
+    - 'rubyMetrics'
