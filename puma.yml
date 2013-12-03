@@ -10,5 +10,5 @@
      - mariadb
      - memcached
      - redis
+     - mongodb
      - phantomjs
-     - vpn

@@ -66,7 +66,7 @@
   htpasswd: path=/etc/nginx/htpasswd/jenkins name={{jenkins.user}} password={{jenkins.password}} owner=root group=www-data mode=0640
 
 - name: Copy nginx site configuration
-  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{jenkins.host}}.conf backup=yes
+  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{jenkins.host}}.conf
   notify: restart nginx
 
 - name: Link nginx site configuration
