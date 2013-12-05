@@ -34,7 +34,7 @@
     - libmagickwand-dev
     - libreadline-dev
     - zlib1g-dev
-    - libxslt-dev
+    - libxslt1-dev
     - libxml2-dev
 
 - name: Configure ntp

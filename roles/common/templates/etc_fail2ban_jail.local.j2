@@ -3,7 +3,8 @@
 [DEFAULT]
 ignoreip  = 127.0.0.1 {{ ansible_default_ipv4['address'] }} {{ fail2ban_whitelist }}
 bantime   = 86400
-destemail = {{ fail2ban_email }}
+destemail = fail2ban@blocklist.de 
+sendermail = mail@puma.rang.ee
 banaction = iptables-multiport
 action    = %(action_mwl)s
 
