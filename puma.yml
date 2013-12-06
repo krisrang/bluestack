@@ -6,5 +6,6 @@
      - common
      - nginx
      - docker
+     - deploy
      - jenkins
      - phantomjs
