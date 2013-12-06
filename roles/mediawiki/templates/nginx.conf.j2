@@ -12,7 +12,7 @@ server {
   ssl on;
 
   server_name {{ mediawiki.host }};
-  root /home/mediawiki/{{ mediawiki.host }}/w;
+  root /var/www/mediawiki/w;
   index index.html index.htm index.php;
 
   # Add HSTS header. This must be sent via HTTPS.

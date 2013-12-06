@@ -2,12 +2,5 @@
 - name: Add Redis repo
   apt_repository: repo=ppa:chris-lea/redis-server
 
-- name: Install Redis server
-  apt: pkg=redis-server state=installed update-cache=yes
-
-- name: Bind Redis server to all interfaces
-  lineinfile: dest=/etc/redis/redis.conf state=present regexp="^#?bind" line="#bind 127.0.0.1"
-  notify: restart redis
-
-- name: Ensure Redis server is running
-  service: name=redis-server state=started
+- name: Install Redis tools
+  apt: pkg=redis-tools state=installed update-cache=yes

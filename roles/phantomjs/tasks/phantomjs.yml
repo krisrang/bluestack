@@ -6,7 +6,7 @@
   command: tar xjf /root/phantomjs.tar.bz2 chdir=/root creates=/root/phantomjs-1.9.2-linux-x86_64/bin/phantomjs
 
 - name: Link PhantomJS
-  command: cp /root/phantomjs-1.9.2-linux-x86_64/bin/phantomjs /usr/bin/phantomjs
+  command: cp /root/phantomjs-1.9.2-linux-x86_64/bin/phantomjs /usr/bin/phantomjs creates=/usr/bin/phantomjs
 
 - name: Set PhantomJS mode
   file: path=/usr/bin/phantomjs mode=0777

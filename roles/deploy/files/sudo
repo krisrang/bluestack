@@ -1,1 +1,1 @@
-deploy ALL=NOPASSWD: /usr/bin/docker
+%deploy ALL=NOPASSWD: /usr/bin/docker

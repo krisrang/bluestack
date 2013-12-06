@@ -1,5 +1,2 @@
-[wiki]
-wiki.rang.ee ansible_ssh_user=kris
-
 [puma]
 puma.rang.ee ansible_ssh_user=kris

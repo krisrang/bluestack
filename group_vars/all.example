@@ -5,46 +5,21 @@ timezone: Etc/UTC
 ssh_users:
   - kris
 
-postgresql:
-  ip: host ip
-  users:
-    - user
-  hosts:
-    - client host ip
-
-fail2ban_email: email for alerts
+fail2ban_whitelist: ip/dns
 
 ssl:
-  wildcard_domain: domain
+  wildcard_domain: name
 
-logentries_key: key
+loggly_key: key
 
 mediawiki:
-  login: kris
-  pass: pass
   secret: sec
   upgrade: sec
-  name: bla
-  host: dns
+  name: name
+  host: hostname
   email: email
-  dbname: mediawiki
-  dbuser: mediawiki
-  dbip: localhost
 
 jenkins:
-  password: pass
+  host: hostname
   user: user
-  host: domain
-
-vpn:
-  country: ee
-  province: Harju
-  city: Tallinn
-  org: org
-  email: email
-  ou: unit
-  cn: common name
-  name: common name
-
-gome:
-  host: site.ee
+  password: pass

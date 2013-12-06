@@ -6,6 +6,11 @@
      - common
      - nginx
      - docker
+     - redis
+     - phantomjs
+     - postgresql
+     - mariadb
+     - php-fpm
      - deploy
      - jenkins
-     - phantomjs
+     - mediawiki

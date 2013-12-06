@@ -52,10 +52,10 @@ $wgEmailAuthentication = true;
 
 ## Database settings
 $wgDBtype = "postgres";
-$wgDBserver = "{{mediawiki.dbip}}";
-$wgDBname = "{{mediawiki.dbname}}";
-$wgDBuser = "{{mediawiki.dbuser}}";
-$wgDBpassword = '{{ lookup('password', 'secrets/db/mediawiki encrypt=sha256_crypt') }}';
+$wgDBserver = "localhost";
+$wgDBname = "mediawiki";
+$wgDBuser = "mediawiki";
+$wgDBpassword = "mediawiki";
 
 # Postgres specific settings
 $wgDBport = "5432";
@@ -137,15 +137,6 @@ $wgRevisionCacheExpiry = 3*24*3600; # 3 days
 $wgParserCacheExpireTime = 14*24*3600; # 14 days
 
 ## Extensions
-
-require_once("$IP/extensions/MobileFrontend/MobileFrontend.php");
-$wgMFAutodetectMobileView = true;
-
-require_once "$IP/extensions/Vector/Vector.php";
-$wgVectorFeatures['footercleanup']['global'] = true;
-$wgVectorFeatures['sectioneditlinks']['global'] = true;
-
-require_once( "$IP/extensions/CodeEditor/CodeEditor.php" );
 
 # Enables use of WikiEditor by default but still allow users to disable it in preferences
 $wgDefaultUserOptions['usebetatoolbar'] = 1;

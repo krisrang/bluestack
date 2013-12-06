@@ -8,9 +8,6 @@
 - name: Install mariadb
   apt: name={{item}} state=installed update-cache=yes
   with_items:
-    - mariadb-server
+    - mariadb-client
     - libmariadbclient-dev
     - python-mysqldb
-
-- name: Start mariadb and enable at boot
-  service: name=mysql enabled=yes state=started
