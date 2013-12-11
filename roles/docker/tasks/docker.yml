@@ -9,5 +9,5 @@
   apt: name=lxc-docker state=installed update-cache=yes
 
 - name: Allow firewall forwarding
-  lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY="DROP"' line='DEFAULT_FORWARD_POLICY="ACCEPT"'
+  lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY' line='DEFAULT_FORWARD_POLICY="ACCEPT"'
   notify: reload ufw
