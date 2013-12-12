@@ -1,21 +1,20 @@
 ---
-- name: Checkout gome repo
-  command: go get -u github.com/krisrang/gome
-  environment:
-    GOPATH: /go
+- name: Make sure gome dir exists
+  file: path=/home/deploy/gome recurse=yes state=directory owner=deploy group=deploy mode=0644
+
+- name: Download gome
+  get_url: url=https://github.com/krisrang/gome/releases/download/v0.1/gome dest=/home/deploy/gome/gome
   notify: restart gome
 
-- name: Install gome
-  command: go install chdir=/go/src/github.com/krisrang/gome
-  environment:
-    GOPATH: /go
+- name: Set permissions
+  file: path=/home/deploy/gome/gome state=file owner=deploy group=deploy mode=0755
 
 - name: Copy config.json
-  copy: src=../../../secrets/gome.json dest=/go/src/github.com/krisrang/gome/config.json owner=root mode=0600
+  copy: src=gome.json dest=/home/deploy/gome/config.json owner=root mode=0600
   notify: restart gome
 
 - name: Copy upstart script
-  copy: src=upstart.conf dest=/etc/init/gome.conf owner=root mode=0644
+  template: src=upstart.conf.j2 dest=/etc/init/gome.conf owner=root mode=0644
   notify: restart gome
 
 - name: Copy nginx site configuration

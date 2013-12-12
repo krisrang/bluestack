@@ -10,11 +10,13 @@ stop on runlevel [!2345]
 respawn
 respawn limit 5 60 #try 5 times within 60 seconds, or giveup
 
-chdir /go/src/github.com/krisrang/gome
+env PORT=4000
+
+chdir /home/deploy/gome
 
 script
     echo $$ > /var/run/gome.pid
-    exec /go/bin/gome >> /var/log/gome.log 2>&1
+    exec /home/deploy/gome/gome >> /var/log/gome.log 2>&1
 end script
 
 pre-start script

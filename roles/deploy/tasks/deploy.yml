@@ -4,3 +4,6 @@
 
 - name: Copy sudoers file
   copy: src=sudo dest=/etc/sudoers.d/deploy owner=root mode=0400
+
+- name: Download forego
+  get_url: url=https://godist.herokuapp.com/projects/ddollar/forego/releases/current/linux-amd64/forego dest=/usr/local/bin/forego mode=0755

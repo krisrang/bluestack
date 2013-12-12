@@ -23,3 +23,6 @@ jenkins:
   host: hostname
   user: user
   password: pass
+
+gome:
+  host: host
