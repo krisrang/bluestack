@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+# forward to logentries
+$template LogentriesFormat,"{{ log_token }} %HOSTNAME% %syslogtag%%msg%\n"
+
+*.* @@api.logentries.com:10000;LogentriesFormat

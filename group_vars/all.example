@@ -10,7 +10,7 @@ fail2ban_whitelist: ip/dns
 ssl:
   wildcard_domain: name
 
-loggly_key: key
+log_token: key
 
 mediawiki:
   secret: sec

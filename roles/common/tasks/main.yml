@@ -60,4 +60,4 @@
 - include: security.yml tags=security
 - include: ufw.yml tags=firewall
 - include: ssl.yml tags=ssl,nginx
-- include: loggly.yml tags=loggly
+- include: logs.yml tags=logs
