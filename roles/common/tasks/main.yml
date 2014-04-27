@@ -27,7 +27,6 @@
     - htop
     - iftop
     - iotop
-    - ruby1.9.3
     - screen
     - zsh
     - postfix
@@ -59,5 +58,3 @@
 
 - include: security.yml tags=security
 - include: ufw.yml tags=firewall
-- include: ssl.yml tags=ssl,nginx
-- include: logs.yml tags=logs

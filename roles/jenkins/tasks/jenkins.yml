@@ -20,7 +20,7 @@
   service: name=jenkins state=started
 
 - name: Wait for jenkins
-  wait_for: port=8080 delay=10
+  wait_for: port=8080 delay=15
 
 - name: "Create Jenkins CLI destination directory: {{jenkins.dest}}"
   file: path={{jenkins.dest}} state=directory

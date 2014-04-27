@@ -5,20 +5,21 @@ upstream jenkins {
     server 127.0.0.1:8080 fail_timeout=0;
 }
 
-server {
-  listen 80;
-  server_name {{ jenkins.host }};
-  rewrite ^ https://$server_name$request_uri? permanent;
-}
+# server {
+#   listen 80;
+#   server_name {{ jenkins.host }};
+#   rewrite ^ https://$server_name$request_uri? permanent;
+# }
 
 server {
-  listen 443 ssl;
-  ssl on;
+  # listen 443 ssl;
+  # ssl on;
+  listen 80;
 
   server_name {{ jenkins.host }};
 
   # Add HSTS header. This must be sent via HTTPS.
-  add_header Strict-Transport-Security max-age=31536000;
+  # add_header Strict-Transport-Security max-age=31536000;
 
   # Disable framing
   add_header X-Frame-Options DENY;
@@ -41,7 +42,7 @@ server {
     proxy_set_header        Host $host;
     proxy_set_header        X-Real-IP $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_redirect          http:// https://;
+    #proxy_redirect          http:// https://;
 
     proxy_connect_timeout      90;
     proxy_send_timeout         90;

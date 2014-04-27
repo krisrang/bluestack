@@ -10,8 +10,6 @@ fail2ban_whitelist: ip/dns
 ssl:
   wildcard_domain: name
 
-log_token: key
-
 mediawiki:
   secret: sec
   upgrade: sec
@@ -23,6 +21,3 @@ jenkins:
   host: hostname
   user: user
   password: pass
-
-gome:
-  host: host

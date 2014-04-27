@@ -1,0 +1,6 @@
+---
+- name: Add Ruby repo
+  apt_repository: repo=ppa:brightbox/ruby-ng
+
+- name: Install Ruby
+  apt: pkg=ruby2.1 state=installed update-cache=yes

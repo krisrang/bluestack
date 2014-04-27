@@ -1,6 +1,6 @@
 ---
-- hosts: puma
-  accelerate: true
+- hosts: tigris
+  # accelerate: true
   sudo: yes
   roles:
      - common

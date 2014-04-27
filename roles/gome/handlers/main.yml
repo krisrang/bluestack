@@ -1,3 +1,0 @@
----
-- name: restart gome
-  service: name=gome state=restarted

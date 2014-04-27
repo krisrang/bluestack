@@ -3,7 +3,7 @@
   apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xcbcb082a1bb943db state=present
 
 - name: Add mariadb repo
-  apt_repository: repo='deb http://mirror.netcologne.de/mariadb/repo/5.5/ubuntu raring main'
+  apt_repository: repo='deb http://mirror.netcologne.de/mariadb/repo/5.5/ubuntu trusty main'
 
 - name: Install mariadb
   apt: name={{item}} state=installed update-cache=yes

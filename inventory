@@ -1,2 +1,5 @@
 [puma]
 puma.rang.ee ansible_ssh_user=kris
+
+[tigris]
+tigris.rang.ee ansible_ssh_user=kris

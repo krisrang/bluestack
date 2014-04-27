@@ -14,5 +14,5 @@
 - name: firewall deny all
   command: ufw default deny
 
-- name:   firewall enable
+- name: firewall enable
   shell: yes | ufw enable
