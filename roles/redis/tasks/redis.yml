@@ -4,3 +4,6 @@
 
 - name: Install Redis tools
   apt: pkg=redis-tools state=installed update-cache=yes
+  
+- name: Start Redis container
+  docker: image=pebbles/redis name=redis ports=6379:6379 volumes=/data/redis:/var/lib/redis

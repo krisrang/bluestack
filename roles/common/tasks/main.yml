@@ -10,7 +10,13 @@
   notify: update tzdata
 
 - name: Install ansible dependencies
-  raw: apt-get install -y python-simplejson python-pycurl python-passlib python-psycopg2
+  raw: apt-get install -y python-simplejson python-pycurl python-passlib python-psycopg2 python-pip
+  
+- name: Install python modules
+  pip: name={{ item }}
+  with_items:
+    - docker-py
+    - virtualenv
 
 - name: Install packages
   apt: name={{ item }} state=installed

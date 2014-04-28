@@ -7,3 +7,6 @@
 
 - name: Install postgresql
   apt: name=postgresql-client-9.3 state=installed update-cache=yes
+  
+- name: Start postgresql container
+  docker: image=pebbles/postgresql name=postgresql ports=5432:5432 volumes=/data/postgres:/data/main
