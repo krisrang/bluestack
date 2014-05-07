@@ -1,6 +1,5 @@
 ---
 - hosts: puma
-  # accelerate: true
   sudo: yes
   roles:
      - common
