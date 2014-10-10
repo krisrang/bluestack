@@ -6,7 +6,10 @@
   apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main'
 
 - name: Install postgresql
-  apt: name=postgresql-client-9.3 state=installed update-cache=yes
+  apt: name={{ item }} state=installed update-cache=yes
+  with_items:
+    - postgresql-client-9.3
+    - libpq-dev
   
 - name: Start postgresql container
   docker: image=pebbles/postgresql name=postgresql ports=5432:5432 volumes=/data/postgres:/data/main

@@ -41,6 +41,15 @@
     - zlib1g-dev
     - libxslt1-dev
     - libxml2-dev
+    - libyaml-dev
+    - libsqlite3-dev
+    - sqlite3
+    - autoconf
+    - libgdbm-dev
+    - libncurses5-dev
+    - automake
+    - bison
+    - libffi-dev
 
 - name: Configure ntp
   template: src=ntp.conf.j2 dest=/etc/ntp.conf
@@ -64,3 +73,4 @@
 
 - include: security.yml tags=security
 - include: ufw.yml tags=firewall
+- include: ssl.yml tags=ssl

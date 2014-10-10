@@ -1,9 +1,13 @@
 ---
 - name: Write cert
-  copy: src=secrets/{{ ssl.wildcard_domain }}.crt dest={{ ssl.crt }} owner=root group=root mode=0644
+  copy: src=secrets/ssl/{{ item }}.crt dest=/etc/ssl/certs/{{ item }}.crt owner=root group=root mode=0644
+  with_items:
+    - "{{ ssl.certs }}"
 
 - name: Write key
-  copy: src=secrets/{{ ssl.wildcard_domain }}.key dest={{ ssl.key }} owner=root group="ssl-cert" mode=0640
+  copy: src=secrets/ssl/{{ item }}.key dest=/etc/ssl/private/{{ item }}.key owner=root group="ssl-cert" mode=0640
+  with_items:
+    - "{{ ssl.certs }}"
 
-- name: Write pem
-  copy: src=secrets/{{ ssl.wildcard_domain }}.pem dest={{ ssl.pem }} owner=root group="ssl-cert" mode=0640
+# - name: Write pem
+#   copy: src=secrets/{{ ssl.wildcard_domain }}.pem dest={{ ssl.pem }} owner=root group="ssl-cert" mode=0640

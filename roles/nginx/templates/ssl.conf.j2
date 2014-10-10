@@ -1,8 +1,5 @@
 # {{ ansible_managed }}
 
-ssl_certificate {{ ssl.crt }};
-ssl_certificate_key {{ ssl.key }};
-
 ssl_session_cache    shared:SSL:50m;
 ssl_session_timeout  8m;
 ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
