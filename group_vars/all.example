@@ -22,3 +22,5 @@ jenkins:
   host: hostname
   user: user
   password: pass
+
+nr_key: key
