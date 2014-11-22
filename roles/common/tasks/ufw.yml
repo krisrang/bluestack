@@ -6,10 +6,7 @@
   shell: yes | ufw reset
 
 - name: firewall allow ssh
-  command: ufw allow OpenSSH
-
-- name: firewall allow ansible accelerated
-  command: ufw allow 5099
+  command: ufw allow {{ssh_port}}
 
 - name: firewall deny all
   command: ufw default deny

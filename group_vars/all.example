@@ -2,6 +2,8 @@
 locale: en_US.UTF-8
 timezone: Etc/UTC
 
+ssh_port: 2341
+
 ssh_users:
   - kris
 
