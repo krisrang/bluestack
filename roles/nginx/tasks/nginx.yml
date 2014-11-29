@@ -21,6 +21,9 @@
 - name: Write ssl.conf
   template: src=ssl.conf.j2 dest=/etc/nginx/conf.d/ssl.conf
   notify: restart nginx
+  
+- name: Generate nginx dh params
+  command: openssl dhparam -outform pem -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem
 
 - name: Start nginx 
   service: name=nginx state=started

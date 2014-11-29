@@ -1,12 +1,12 @@
 ---
 - name: Download PhantomJS
-  get_url: url=https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.7-linux-x86_64.tar.bz2 dest=/root/phantomjs.tar.bz2
+  get_url: url=https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2 dest=/root/phantomjs.tar.bz2
   
 - name: Extract PhantomJS
-  command: tar xjf /root/phantomjs.tar.bz2 chdir=/root creates=/root/phantomjs-1.9.7-linux-x86_64/bin/phantomjs
+  command: tar xjf /root/phantomjs.tar.bz2 chdir=/root creates=/root/phantomjs-1.9.8-linux-x86_64/bin/phantomjs
 
 - name: Link PhantomJS
-  command: cp /root/phantomjs-1.9.7-linux-x86_64/bin/phantomjs /usr/bin/phantomjs creates=/usr/bin/phantomjs
+  command: cp /root/phantomjs-1.9.8-linux-x86_64/bin/phantomjs /usr/bin/phantomjs creates=/usr/bin/phantomjs
 
 - name: Set PhantomJS mode
   file: path=/usr/bin/phantomjs mode=0777
