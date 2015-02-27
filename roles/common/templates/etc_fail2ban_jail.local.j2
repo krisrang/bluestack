@@ -12,6 +12,7 @@ action    = %(action_mwl)s
 [ssh]
 enabled   = true
 maxretry  = 3
+port      = {{ssh_port}}
  
 [pam-generic]
 enabled   = true
@@ -19,9 +20,6 @@ banaction = iptables-allports
  
 [ssh-ddos]
 enabled   = true
-
-[apache]
-enabled = true
  
 [postfix]
 enabled  = true

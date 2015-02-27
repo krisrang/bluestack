@@ -8,8 +8,8 @@
 - name: Install postgresql
   apt: name={{ item }} state=installed update-cache=yes
   with_items:
-    - postgresql-client-9.3
+    - postgresql-client-9.4
     - libpq-dev
   
 - name: Start postgresql container
-  docker: image=pebbles/postgresql name=postgresql ports=5432:5432 volumes=/data/postgres:/data/main
+  docker: image=postgres name=postgres ports=5432:5432
