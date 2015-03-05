@@ -3,3 +3,6 @@ puma.rang.ee:2341 ansible_ssh_user=kris
 
 [probeus]
 probeus.rang.ee:2341 ansible_ssh_user=kris
+
+[probeuk]
+probeuk.rang.ee:2341 ansible_ssh_user=kris
