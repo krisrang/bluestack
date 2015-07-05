@@ -1,0 +1,11 @@
+---
+- name: Install packages
+  apt: name=dibbler-client state=installed
+  
+- name: Configure dibbler
+  copy: src=secrets/duid/{{ansible_hostname}} dest=/var/lib/dibbler/client-duid
+  notify: restart dibbler
+  
+- name: Copy conf
+  copy: src=dibbler.conf dest=/etc/dibbler/client.conf
+  notify: restart dibbler

@@ -13,4 +13,10 @@
     - python-mysqldb
 
 - name: Start mariadb container
-  docker: image=pebbles/mariadb10 name=mariadb ports=3306:3306 volumes=/data/mysql:/data/mysql
+  docker:
+    image: mariadb
+    name: mariadb
+    ports: 3606:3306
+    volumes: /data/mysql:/var/lib/mysql
+    env:
+      MYSQL_ROOT_PASSWORD: docker

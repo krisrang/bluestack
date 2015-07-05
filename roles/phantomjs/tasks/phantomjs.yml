@@ -10,9 +10,3 @@
 
 - name: Set PhantomJS mode
   file: path=/usr/bin/phantomjs mode=0777
-
-- name: Link PhantomJS
-  file: src=/usr/bin/phantomjs path=/usr/local/share/phantomjs state=link
-
-- name: Link PhantomJS
-  file: src=/usr/bin/phantomjs path=/usr/local/bin/phantomjs state=link

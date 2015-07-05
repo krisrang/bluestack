@@ -1,7 +1,0 @@
----
-- hosts: probeuk
-  sudo: yes
-  roles:
-     - common
-     - docker
-     - newrelic

@@ -1,13 +1,13 @@
 ---
 - name: Write cert
   copy: src=secrets/ssl/{{ item }}.crt dest=/etc/ssl/certs/{{ item }}.crt owner=root group=root mode=0644
-  when: ssl.certs
+  when: ssl.certs is defined
   with_items:
     - "{{ ssl.certs }}"
 
 - name: Write key
   copy: src=secrets/ssl/{{ item }}.key dest=/etc/ssl/private/{{ item }}.key owner=root group="ssl-cert" mode=0640
-  when: ssl.certs
+  when: ssl.certs is defined
   with_items:
     - "{{ ssl.certs }}"
 

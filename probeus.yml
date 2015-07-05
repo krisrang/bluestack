@@ -1,7 +1,0 @@
----
-- hosts: probeus
-  sudo: yes
-  roles:
-     - common
-     - docker
-     - newrelic

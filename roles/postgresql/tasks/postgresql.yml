@@ -11,5 +11,5 @@
     - postgresql-client-9.4
     - libpq-dev
   
-- name: Start postgresql container
-  docker: image=postgres name=postgres ports=5432:5432
+# - name: Start postgresql container
+#   docker: image=postgres name=postgres ports=5432:5432

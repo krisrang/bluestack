@@ -1,0 +1,13 @@
+---
+- hosts: tiger
+  sudo: yes
+  roles:
+     - common
+     - ruby
+     - nginx
+     - docker
+     - redis
+     - phantomjs
+     - postgresql
+     - mariadb
+     - jenkins

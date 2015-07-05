@@ -12,6 +12,9 @@
 - name: Install ansible dependencies
   raw: apt-get install -y python-simplejson python-pycurl python-passlib python-psycopg2 python-pip
   
+- name: Install pip
+  raw: easy_install -U pip
+  
 - name: Install python modules
   pip: name={{ item }}
   with_items:
@@ -61,11 +64,11 @@
 - name: DNS config
   template: src=resolv.conf.j2 dest=/etc/resolv.conf
 
-- name: Remove packages
-  apt: name={{ item }} state=absent
-  with_items:
-    - bind9
-    - consolekit
+# - name: Remove packages
+#   apt: name={{ item }} state=absent
+#   with_items:
+#     - bind9
+#     - consolekit
 
 - name: Copy resolv to postfix chroot
   command: cp /etc/resolv.conf /var/spool/postfix/etc
@@ -74,3 +77,4 @@
 - include: security.yml tags=security
 - include: ufw.yml tags=firewall
 - include: ssl.yml tags=ssl
+- include: ipv6.yml tags=ipv6
