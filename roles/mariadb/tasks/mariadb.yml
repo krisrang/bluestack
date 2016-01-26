@@ -16,6 +16,7 @@
   docker:
     image: mariadb
     name: mariadb
+    restart_policy: always
     ports: 3606:3306
     volumes: /data/mysql:/var/lib/mysql
     env:

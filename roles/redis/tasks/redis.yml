@@ -9,6 +9,5 @@
   docker:
     image: redis
     name: redis
+    restart_policy: always
     ports: 6379:6379
-    volumes: /data/redis:/data
-    command: redis-server --appendonly yes

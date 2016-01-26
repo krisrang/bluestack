@@ -1,11 +1,15 @@
 ---
+- name: Copy networking conf
+  template: src=interfaces.j2 dest=/etc/network/interfaces owner=root group=root mode=0644
+  notify: restart networking
+
 - name: Install packages
   apt: name=dibbler-client state=installed
-  
+
 - name: Configure dibbler
   copy: src=secrets/duid/{{ansible_hostname}} dest=/var/lib/dibbler/client-duid
   notify: restart dibbler
-  
+
 - name: Copy conf
   copy: src=dibbler.conf dest=/etc/dibbler/client.conf
   notify: restart dibbler

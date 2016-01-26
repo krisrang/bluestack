@@ -1,12 +1,12 @@
 ---
 - name: Add docker repo key
-  apt_key: id=A88D21E9 url=https://get.docker.io/gpg state=present
+  apt_key: id=2C52609D url=https://apt.dockerproject.org/gpg state=present
 
 - name: Add docker repo
-  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main'
 
 - name: Install packages
-  apt: name=lxc-docker state=installed update-cache=yes
+  apt: name=docker-engine state=installed update-cache=yes
 
 # - name: Allow firewall forwarding
 #   lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY' line='DEFAULT_FORWARD_POLICY="ACCEPT"'

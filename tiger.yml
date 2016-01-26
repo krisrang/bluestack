@@ -1,6 +1,6 @@
 ---
 - hosts: tiger
-  sudo: yes
+  become: yes
   roles:
      - common
      - ruby

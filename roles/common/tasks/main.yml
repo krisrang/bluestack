@@ -11,10 +11,10 @@
 
 - name: Install ansible dependencies
   raw: apt-get install -y python-simplejson python-pycurl python-passlib python-psycopg2 python-pip
-  
+
 - name: Install pip
   raw: easy_install -U pip
-  
+
 - name: Install python modules
   pip: name={{ item }}
   with_items:
@@ -74,7 +74,11 @@
   command: cp /etc/resolv.conf /var/spool/postfix/etc
   notify: restart postfix
 
-- include: security.yml tags=security
-- include: ufw.yml tags=firewall
-- include: ssl.yml tags=ssl
-- include: ipv6.yml tags=ipv6
+- include: security.yml
+  tags: security
+
+- include: ufw.yml
+  tags: firewall
+
+- include: ipv6.yml
+  tags: ipv6

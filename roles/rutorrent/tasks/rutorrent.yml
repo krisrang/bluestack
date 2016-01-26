@@ -1,0 +1,67 @@
+---
+- name: install dependencies
+  apt: name={{ item }} state=present
+  with_items:
+    - unzip
+    - unrar
+    - mediainfo
+    - curl
+    - php5-geoip
+
+- name: download rutorrent
+  get_url: url={{ rtorrent_rutorrent_url }} dest=/tmp/{{ rtorrent_rutorrent_archive }} force=yes
+
+# - name: download rutorrent plugins
+#   get_url: url={{ rtorrent_rutorrent_plugins_url }} dest=/tmp/{{ rtorrent_rutorrent_plugins_archive }} force=yes
+
+- name: create install directory
+  file: path={{ rtorrent_rutorrent_install_path|dirname }} state=directory owner=www-data group=www-data
+
+- name: unpack rutorrent archive
+  unarchive: >
+    src=/tmp/{{ rtorrent_rutorrent_archive }} dest={{ rtorrent_rutorrent_install_path|dirname }} copy=no
+    creates={{ rtorrent_rutorrent_install_path }}/plugins/_getdir
+  notify:
+    - restart rtorrent
+    - restart php5-fpm
+
+- name: move rutorrent directory to correct place
+  command: creates={{ rtorrent_rutorrent_install_path }}/plugins/_getdir mv {{ rtorrent_rutorrent_install_path|dirname }}/ruTorrent-{{ rtorrent_rutorrent_version }} {{ rtorrent_rutorrent_install_path }}
+
+- name: ensure correct ownership
+  command: chown www-data:www-data -R {{ rtorrent_rutorrent_install_path|dirname }}
+
+# - name: unpack rutorrent plugins archive
+#   unarchive: >
+#     src=/tmp/{{ rtorrent_rutorrent_plugins_archive }} dest={{ rtorrent_rutorrent_install_path }} copy=no
+#     creates={{ rtorrent_rutorrent_install_path }}/plugins/_getdir
+#   notify:
+#     - restart rtorrent
+#     - restart php5-fpm
+
+- name: adjust rutorrent autotools plugin inteval
+  lineinfile: >
+    dest={{ rtorrent_rutorrent_install_path }}/plugins/autotools/conf.php
+    regexp="^(\s*)\$autowatch_interval" line="\1$autowatch_interval = {{ rtorrent_rutorrent_autotools_interval }};"
+    backrefs=yes state=present
+  notify: restart rtorrent
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ rtorrent_rutorrent_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ rtorrent_rutorrent_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ rtorrent_rutorrent_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create htpasswd file
+  htpasswd: path=/etc/nginx/htpasswd/rutorrent name={{ rtorrent_rutorrent_user }} password={{ rtorrent_rutorrent_password }} owner=root group=www-data mode=0640
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ rtorrent_rutorrent_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ rtorrent_rutorrent_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ rtorrent_rutorrent_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

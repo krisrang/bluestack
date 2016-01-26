@@ -3,4 +3,4 @@
   apt_repository: repo=ppa:brightbox/ruby-ng
 
 - name: Install Ruby
-  apt: pkg=ruby2.2 state=installed update-cache=yes
+  apt: pkg=ruby2.3 state=installed update-cache=yes

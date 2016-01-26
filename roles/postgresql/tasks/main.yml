@@ -1,2 +1,3 @@
 ---
-- include: postgresql.yml tags=postgresql
+- include: postgresql.yml
+  tags: postgresql

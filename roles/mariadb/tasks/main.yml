@@ -1,2 +1,7 @@
 ---
-- include: mariadb.yml tags=mail,postfix,dovecot,mariadb
+- include: mariadb.yml
+  tags:
+    - mail
+    - postfix
+    - dovecot
+    - mariadb

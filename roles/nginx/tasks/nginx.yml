@@ -2,30 +2,45 @@
 - name: Add nginx PPA
   apt_repository: repo=ppa:nginx/stable
 
-- name: Install nginx 
+- name: Install nginx
   apt: name=nginx state=installed update-cache=yes
   when: nginx.naxsi == false
 
-- name: Install nginx_naxsi 
+- name: Install nginx_naxsi
   apt: name=nginx_naxsi state=installed
   when: nginx.naxsi == true
 
 - name: Disable default site
   file: path=/etc/nginx/sites-enabled/default state=absent
-  notify: restart nginx
+  notify: reload nginx
 
-- name: Write nginx.conf 
+- name: Write default site
+  template: src=default.conf.j2 dest=/etc/nginx/sites-available/00-default.conf
+  notify: reload nginx
+
+- name: Link default site
+  file: src=/etc/nginx/sites-available/00-default.conf dest=/etc/nginx/sites-enabled/00-default.conf state=link
+  notify: reload nginx
+
+- name: Write nginx.conf
   template: src=nginx.conf.j2 dest=/etc/nginx/nginx.conf
   notify: restart nginx
 
 - name: Write ssl.conf
   template: src=ssl.conf.j2 dest=/etc/nginx/conf.d/ssl.conf
   notify: restart nginx
-  
+
+- name: Write ssl.conf
+  template: src=le.conf.j2 dest=/etc/nginx/snippets/le.conf
+  notify: restart nginx
+
 - name: Generate nginx dh params
   command: openssl dhparam -outform pem -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem
 
-- name: Start nginx 
+- name: Create htpasswd directory
+  file: path=/etc/nginx/htpasswd owner=root group=root mode=640 state=directory
+
+- name: Start nginx
   service: name=nginx state=started
 
 - name: firewall allow nginx

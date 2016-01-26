@@ -1,2 +1,3 @@
 ---
-- include: php.yml tags=php
+- include: php.yml
+  tags: php

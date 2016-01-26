@@ -1,2 +1,3 @@
 ---
-- include: newrelic.yml tags=newrelic
+- include: newrelic.yml
+  tags: newrelic

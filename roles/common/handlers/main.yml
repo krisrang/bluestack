@@ -19,6 +19,9 @@
 
 - name: restart postfix
   service: name=postfix state=restarted
-  
+
 - name: restart dibbler
   service: name=dibbler-client state=restarted
+
+- name: restart networking
+  service: name=networking state=restarted
