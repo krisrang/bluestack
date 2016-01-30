@@ -1,0 +1,13 @@
+---
+- hosts: cheetah
+  become: true
+  roles:
+    - common
+    - ruby
+    - nginx
+    - le
+    - php-fpm
+    - docker
+    - rutorrent
+    - deluge
+    - moe

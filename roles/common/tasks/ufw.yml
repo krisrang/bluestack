@@ -8,17 +8,11 @@
 - name: copy ssh conf
   template: src=ufw_openssh.j2 dest=/etc/ufw/applications.d/openssh-server owner=root group=root mode=0644
 
-- name: copy dibbler conf
-  template: src=ufw_dibbler.j2 dest=/etc/ufw/applications.d/dibbler owner=root group=root mode=0644
-
 - name: firewall allow ssh
   command: ufw allow openssh
-
-- name: firewall allow dibbler
-  command: ufw allow dibbler
 
 - name: firewall deny all
   command: ufw default deny
 
-- name: firewall enable
-  shell: yes | ufw enable
+# - name: firewall enable
+#   shell: yes | ufw enable

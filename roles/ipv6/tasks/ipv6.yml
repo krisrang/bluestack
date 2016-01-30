@@ -13,3 +13,9 @@
 - name: Copy conf
   copy: src=dibbler.conf dest=/etc/dibbler/client.conf
   notify: restart dibbler
+
+- name: copy dibbler conf
+  template: src=ufw_dibbler.j2 dest=/etc/ufw/applications.d/dibbler owner=root group=root mode=0644
+
+- name: firewall allow dibbler
+  command: ufw allow dibbler

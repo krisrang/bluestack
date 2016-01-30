@@ -79,6 +79,3 @@
 
 - include: ufw.yml
   tags: firewall
-
-- include: ipv6.yml
-  tags: ipv6

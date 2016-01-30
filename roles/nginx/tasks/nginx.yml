@@ -30,7 +30,7 @@
   template: src=ssl.conf.j2 dest=/etc/nginx/conf.d/ssl.conf
   notify: restart nginx
 
-- name: Write ssl.conf
+- name: Write le.conf
   template: src=le.conf.j2 dest=/etc/nginx/snippets/le.conf
   notify: restart nginx
 
@@ -38,10 +38,16 @@
   command: openssl dhparam -outform pem -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem
 
 - name: Create htpasswd directory
-  file: path=/etc/nginx/htpasswd owner=root group=root mode=640 state=directory
+  file: path=/etc/nginx/htpasswd owner=root group=root mode=750 state=directory
+
+- name: Create acme directory
+  file: path=/var/www/acme/.well-known/acme-challenge owner=www-data group=www-data mode=755 state=directory
+
+- name: Ensure permissions
+  command: chmod -R 755 /var/www/acme
 
 - name: Start nginx
-  service: name=nginx state=started
+  service: name=nginx state=restarted
 
 - name: firewall allow nginx
   command: ufw allow "Nginx Full"

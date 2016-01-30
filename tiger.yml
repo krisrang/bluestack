@@ -1,13 +1,13 @@
 ---
 - hosts: tiger
-  become: yes
+  become: true
   roles:
-     - common
-     - ruby
-     - nginx
-     - docker
-     - redis
-     - phantomjs
-     - postgresql
-     - mariadb
-     - jenkins
+    - common
+    - ruby
+    - nginx
+    - docker
+    - redis
+    - phantomjs
+    - postgresql
+    - mariadb
+    - jenkins

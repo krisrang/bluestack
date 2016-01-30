@@ -1,0 +1,43 @@
+---
+- name: Add Deluge repo
+  apt_repository: repo=ppa:deluge-team/ppa
+
+- name: install deluge
+  apt: name=deluged update_cache=yes state=latest cache_valid_time=86400
+
+- name: create {{ deluge_user }} user
+  user: name={{ deluge_user }} home={{ deluge_data_dir }} system=yes shell=/bin/bash
+
+- name: create deluge log dir
+  file: path=/var/log/deluge owner={{ deluge_user }} group={{ deluge_user }} mode=750 state=directory
+
+- name: create deluge torrent dirs
+  file: path={{ item }} owner={{ deluge_user }} group={{ deluge_user }} mode=750 state=directory
+  with_items:
+    - "{{ deluge_data_dir }}/watch"
+    - "{{ deluge_data_dir }}/torrents"
+    - "{{ deluge_data_dir }}/download"
+
+- name: create deluge init
+  template: src=deluged.conf.j2 dest=/etc/init/deluged.conf mode=755
+  notify: restart deluged
+
+- name: create deluge conf dir
+  file: path={{ deluge_config_dir }} owner={{ deluge_user }} group={{ deluge_user }} mode=755 state=directory
+
+- name: create deluge conf
+  template: src=core.conf.j2 dest={{ deluge_config_dir }}/core.conf mode=755
+  notify: restart deluged
+
+- name: create deluge auth
+  template: src=auth.j2 dest={{ deluge_config_dir }}/auth mode=600
+  notify: restart deluged
+
+- name: copy deluge ufw conf
+  template: src=ufw.j2 dest=/etc/ufw/applications.d/deluge owner=root group=root mode=0644
+
+- name: firewall allow deluge
+  command: ufw allow deluge
+
+- name: Copy logrotate conf
+  copy: src=logrotate dest=/etc/logrotate.d/deluge

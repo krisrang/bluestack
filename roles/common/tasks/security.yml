@@ -2,7 +2,6 @@
 - name: Install security-related packages
   apt: name={{item}} state=installed
   with_items:
-    - fail2ban
     - lynis
 
 - name: Remove foreign keys
@@ -12,6 +11,6 @@
   template: src=ssh.j2 dest=/etc/ssh/sshd_config owner=root group=root mode=0644
   notify: restart ssh
 
-- name: Copy fail2ban configuration files into place
-  template: src=etc_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local
-  notify: restart fail2ban
+# - name: Copy fail2ban configuration files into place
+#   template: src=etc_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local
+#   notify: restart fail2ban

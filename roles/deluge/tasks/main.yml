@@ -1,0 +1,3 @@
+---
+- include: deluge.yml
+  tags: deluge
