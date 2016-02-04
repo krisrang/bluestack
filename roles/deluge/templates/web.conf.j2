@@ -1,0 +1,23 @@
+{"file":1,"format":1}{
+  "sidebar_show_zero": false,
+  "pkey": "ssl/daemon.pkey",
+  "show_sidebar": true,
+  "sessions": { },
+  "sidebar_show_trackers": true,
+  "base": "/",
+  "pwd_salt": "{{ deluge_web_salt }}",
+  "port": {{ deluge_web_port }},
+  "show_session_speed": false,
+  "enabled_plugins": [
+
+  ],
+  "first_login": false,
+  "show_keyword_search": false,
+  "theme": "gray",
+  "cert": "ssl/daemon.cert",
+  "session_timeout": 3600,
+  "https": false,
+  "default_daemon": "",
+  "sidebar_multiple_filters": true,
+  "pwd_sha1": "{{ deluge_remote_password|password_hash('sha1', deluge_web_salt) }}"
+}

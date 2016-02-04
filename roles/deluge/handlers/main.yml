@@ -1,3 +1,6 @@
 ---
 - name: restart deluged
   service: name=deluged state=restarted
+
+- name: restart deluge-web
+  service: name=deluge-web state=restarted

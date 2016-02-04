@@ -3,7 +3,10 @@
   apt_repository: repo=ppa:deluge-team/ppa
 
 - name: install deluge
-  apt: name=deluged update_cache=yes state=latest cache_valid_time=86400
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - deluged
+    - deluge-web
 
 - name: create {{ deluge_user }} user
   user: name={{ deluge_user }} home={{ deluge_data_dir }} system=yes shell=/bin/bash
@@ -21,6 +24,27 @@
 - name: create deluge init
   template: src=deluged.conf.j2 dest=/etc/init/deluged.conf mode=755
   notify: restart deluged
+
+- name: create deluge init
+  template: src=deluge-web.conf.j2 dest=/etc/init/deluge-web.conf mode=755
+  notify: restart deluge-web
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ deluge_web_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ deluge_web_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ deluge_web_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ deluge_web_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ deluge_web_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ deluge_web_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"
 
 - name: create deluge conf dir
   file: path={{ deluge_config_dir }} owner={{ deluge_user }} group={{ deluge_user }} mode=755 state=directory

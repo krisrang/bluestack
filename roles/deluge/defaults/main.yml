@@ -5,6 +5,9 @@ deluge_config_dir: /home/{{ deluge_user }}/config
 deluge_umask: 007
 deluge_daemon_port: 58846
 deluge_listen_port: 54425
+deluge_web_port: 3692
+deluge_web_domain: deluge.kris.moe
 
 # deluge_remote_user:
 # deluge_remote_password:
+# deluge_web_salt:
