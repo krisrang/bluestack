@@ -1,0 +1,57 @@
+---
+- name: install dependencies
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - git-core
+    - python-lxml
+
+- name: create {{ couchpotato_user }} user
+  user: name={{ couchpotato_user }} home={{ couchpotato_data_dir }} createhome=no system=yes shell=/bin/bash
+
+- name: create directories
+  file: path={{ item.path }} owner={{ couchpotato_user }} group={{ couchpotato_user }} mode={{ item.mode|default("755") }} state=directory
+  with_items:
+    - path: "{{ couchpotato_install_dir }}"
+    - path: "{{ couchpotato_data_dir }}"
+    - path: "{{ couchpotato_config_dir }}"
+    - path: "{{ couchpotato_pid_dir }}"
+    - path: "{{ couchpotato_manage_library }}"
+    - path: "{{ couchpotato_movies_dir }}"
+
+- name: clone couchpotato repo
+  git: repo={{ couchpotato_repo }} dest={{ couchpotato_install_dir }}
+  notify: restart couchpotato
+
+- name: fix repo permissions
+  file: path={{ couchpotato_install_dir }} owner={{ couchpotato_user }} group={{ couchpotato_user }} recurse=yes
+
+- name: symlink couchpotato init
+  file: src={{ couchpotato_install_dir }}/init/ubuntu dest=/etc/init.d/couchpotato state=link mode=755
+
+- name: enable couchpotato service
+  service: name=couchpotato enabled=yes
+
+- name: default config file
+  template: src=couchpotato.default.j2 dest=/etc/default/couchpotato
+  notify: restart couchpotato
+
+- name: update configuration
+  template: src=settings.conf.j2 dest={{ couchpotato_config_file }} owner={{ couchpotato_user }} group={{ couchpotato_user }}
+  notify: restart couchpotato
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ couchpotato_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ couchpotato_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ couchpotato_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ couchpotato_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ couchpotato_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ couchpotato_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

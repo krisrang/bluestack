@@ -1,5 +1,5 @@
 ---
-moe_root: /var/www/moe
+moe_root: /home/kris/moe
 moe_archive: moe.zip
 moe_release_url: https://github.com/krisrang/moe/releases/download/v1.0/v1.0.zip
 moe_domain: kris.moe

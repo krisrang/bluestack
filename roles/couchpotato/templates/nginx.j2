@@ -1,0 +1,65 @@
+# {{ ansible_managed }}
+
+upstream potato {
+    server 127.0.0.1:{{ couchpotato_port }} fail_timeout=0;
+}
+
+server {
+  listen [::]:80;
+  listen 80;
+
+  server_name {{ couchpotato_domain }};
+  rewrite ^ https://$server_name$request_uri? permanent;
+
+  include snippets/le.conf;
+}
+
+server {
+  listen 443 ssl;
+  listen [::]:443 ssl;
+  ssl on;
+
+  ssl_certificate {{ simp_le_root }}{{ couchpotato_domain }}/fullchain.pem;
+  ssl_certificate_key {{ simp_le_root }}{{ couchpotato_domain }}/key.pem;
+
+  server_name {{ couchpotato_domain }};
+
+  root {{ couchpotato_data_dir }}/;
+  index index.html index.htm;
+
+  add_header Strict-Transport-Security max-age=31536000;
+
+  error_log   /var/log/nginx/{{ couchpotato_domain }}-error.log;
+  access_log  /var/log/nginx/{{ couchpotato_domain }}-access.log;
+
+  location / {
+    try_files $uri @potato;
+  }
+
+  location @potato {
+    proxy_set_header        Host $host;
+    proxy_set_header        X-Real-IP $remote_addr;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto https;
+
+    proxy_connect_timeout      90;
+    proxy_send_timeout         90;
+    proxy_read_timeout         90;
+
+    proxy_buffer_size          4k;
+    proxy_buffers              4 32k;
+    proxy_busy_buffers_size    64k;
+    proxy_temp_file_write_size 64k;
+    proxy_max_temp_file_size 0;
+
+    client_max_body_size    10m;
+    client_body_buffer_size 128k;
+
+    if (!-f $request_filename) {
+      proxy_pass http://potato;
+      break;
+    }
+  }
+
+  include snippets/le.conf;
+}

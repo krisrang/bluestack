@@ -5,9 +5,12 @@
     - common
     - ruby
     - nginx
+    - le
     - docker
     - redis
     - phantomjs
     - postgresql
     - mariadb
     - jenkins
+    - php-fpm
+    - moe
