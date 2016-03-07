@@ -1,8 +1,5 @@
 [tiger]
 tiger.rang.ee:2341 ansible_ssh_user=kris
 
-[moe]
-moe.rang.ee:2341 ansible_ssh_user=kris
-
-[cheetah]
-cheetah.rang.ee:2341 ansible_ssh_user=kris
+[lynx]
+lynx.rang.ee:2341 ansible_ssh_user=kris

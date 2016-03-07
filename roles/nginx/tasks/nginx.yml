@@ -3,12 +3,7 @@
   apt_repository: repo=ppa:nginx/stable
 
 - name: Install nginx
-  apt: name=nginx state=installed update-cache=yes
-  when: nginx.naxsi == false
-
-- name: Install nginx_naxsi
-  apt: name=nginx_naxsi state=installed
-  when: nginx.naxsi == true
+  apt: name=nginx update_cache=yes state=latest cache_valid_time=86400
 
 - name: Disable default site
   file: path=/etc/nginx/sites-enabled/default state=absent
@@ -32,7 +27,7 @@
 
 - name: Write le.conf
   template: src=le.conf.j2 dest=/etc/nginx/snippets/le.conf
-  notify: restart nginx
+  register: leconf
 
 - name: Generate nginx dh params
   command: openssl dhparam -outform pem -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem
@@ -41,13 +36,17 @@
   file: path=/etc/nginx/htpasswd owner=root group=root mode=750 state=directory
 
 - name: Create acme directory
-  file: path=/var/www/acme/.well-known/acme-challenge owner=www-data group=www-data mode=755 state=directory
+  file: path=/var/www/acme/.well-known/acme-challenge owner=www-data group=www-data mode=775 state=directory
 
 - name: Ensure permissions
-  command: chmod -R 755 /var/www/acme
+  command: chmod -R 775 /var/www/acme
 
-- name: Start nginx
+- name: Ensure permissions
+  command: chown -R www-data:www-data /var/www/acme
+
+- name: Restart nginx
   service: name=nginx state=restarted
+  when: leconf.changed
 
 - name: firewall allow nginx
   command: ufw allow "Nginx Full"

@@ -1,4 +1,11 @@
 ---
+
+- name: Install packages for h5ai
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - libav-tools
+    - zip
+
 - name: download moe
   get_url: url={{ moe_release_url }} dest=/tmp/{{ moe_archive }}
 
@@ -10,12 +17,6 @@
     src=/tmp/{{ moe_archive }} dest={{ moe_root }} copy=no
     creates={{ moe_root }}/robots.txt
   notify: reload nginx
-
-- name: Install packages for h5ai
-  apt: name={{ item }} state=installed
-  with_items:
-    - libav-tools
-    - zip
 
 - name: download h5ai
   get_url: url={{ moe_stuff_url }} dest=/tmp/{{ moe_stuff_archive }} force=yes validate_certs=False

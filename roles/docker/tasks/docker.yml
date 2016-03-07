@@ -6,7 +6,7 @@
   apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main'
 
 - name: Install packages
-  apt: name=docker-engine state=installed update-cache=yes
+  apt: name=docker-engine update_cache=yes state=installed cache_valid_time=86400
 
 # - name: Allow firewall forwarding
 #   lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY' line='DEFAULT_FORWARD_POLICY="ACCEPT"'

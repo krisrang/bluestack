@@ -1,6 +1,6 @@
 ---
 - name: Install security-related packages
-  apt: name={{item}} state=installed
+  apt: name={{item}} update_cache=yes state=latest cache_valid_time=86400
   with_items:
     - lynis
 

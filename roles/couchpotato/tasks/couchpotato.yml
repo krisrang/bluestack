@@ -1,6 +1,6 @@
 ---
 - name: install dependencies
-  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  apt: name={{ item }} update_cache=yes state=installed cache_valid_time=86400
   with_items:
     - git-core
     - python-lxml

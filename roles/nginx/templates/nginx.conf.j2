@@ -56,10 +56,6 @@ http {
   client_max_body_size {{ nginx.client_max_body_size }};
   {% endif %}
 
-  {% if nginx.naxsi %}
-  include /etc/nginx/naxsi_core.rules;
-  {% endif %}
-
   include {{ nginx.dir }}/conf.d/*.conf;
   include {{ nginx.dir }}/sites-enabled/*;
 }

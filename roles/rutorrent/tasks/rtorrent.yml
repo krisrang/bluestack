@@ -3,7 +3,7 @@
   apt_repository: repo='ppa:jalaziz/rtorrent' update_cache=no
 
 - name: install rtorrent
-  apt: name=rtorrent update_cache=yes state=latest
+  apt: name=rtorrent update_cache=yes state=latest cache_valid_time=86400
 
 - name: create {{ rtorrent_user }} user
   user: name={{ rtorrent_user }} home={{ rtorrent_data_dir }} system=yes shell=/bin/bash
@@ -31,7 +31,7 @@
   command: ufw allow rtorrent
 
 - name: install screen
-  apt: name=screen state=present
+  apt: name=screen update_cache=yes state=latest cache_valid_time=86400
   when: rtorrent_service_enable
 
 - name: create rtorrent init

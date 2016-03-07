@@ -1,0 +1,13 @@
+---
+- hosts: lynx
+  become: true
+  roles:
+    - common
+    - ipv6
+    - newrelic
+    - ruby
+    - nginx
+    - le
+    - docker
+    - php-fpm
+    - moe

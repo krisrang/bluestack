@@ -3,8 +3,8 @@
   apt_repository: repo=ppa:chris-lea/redis-server
 
 - name: Install Redis tools
-  apt: pkg=redis-tools state=installed update-cache=yes
-  
+  apt: pkg=redis-tools update_cache=yes state=latest cache_valid_time=86400
+
 - name: Start Redis container
   docker:
     image: redis

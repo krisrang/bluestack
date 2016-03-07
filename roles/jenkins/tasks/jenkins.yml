@@ -9,7 +9,7 @@
   command: sed --in-place '/deb-src.*pkg.jenkins-ci/d' /etc/apt/sources.list
 
 - name: Install dependencies
-  apt: pkg={{item}} state=installed update-cache=yes
+  apt: pkg={{item}} update_cache=yes state=latest cache_valid_time=86400
   with_items:
     - 'default-jre'
     - 'default-jdk'
@@ -19,7 +19,7 @@
     - 'xvfb'
 
 - name: Install Jenkins
-  apt: pkg=jenkins state=latest update-cache=yes
+  apt: pkg=jenkins update_cache=yes state=installed cache_valid_time=86400
   register: jenkins_install
 
 - name: Start jenkins

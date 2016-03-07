@@ -1,6 +1,6 @@
 ---
 - name: Install dependencies for Tarsnap
-  apt: pkg=$item state=installed
+  apt: pkg={{ item }} update_cache=yes state=latest cache_valid_time=86400
   with_items:
     - libssl-dev
     - zlib1g-dev

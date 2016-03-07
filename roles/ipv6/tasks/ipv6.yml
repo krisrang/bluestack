@@ -4,7 +4,7 @@
   notify: restart networking
 
 - name: Install packages
-  apt: name=dibbler-client state=installed
+  apt: name=dibbler-client update_cache=yes state=latest cache_valid_time=86400
 
 - name: Configure dibbler
   copy: src=secrets/duid/{{ansible_hostname}} dest=/var/lib/dibbler/client-duid
