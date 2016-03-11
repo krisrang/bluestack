@@ -6,17 +6,23 @@
     - python-lxml
 
 - name: create {{ couchpotato_user }} user
-  user: name={{ couchpotato_user }} home={{ couchpotato_data_dir }} createhome=no system=yes shell=/bin/bash
+  user: name={{ couchpotato_user }} home={{ couchpotato_data_dir }} createhome=no system=yes shell=/bin/bash groups=media
 
 - name: create directories
-  file: path={{ item.path }} owner={{ couchpotato_user }} group={{ couchpotato_user }} mode={{ item.mode|default("755") }} state=directory
+  file: path={{ item.path }} owner={{ item.user|default(couchpotato_user) }} group={{ item.group|default(couchpotato_user) }} mode={{ item.mode|default("755") }} state=directory
   with_items:
     - path: "{{ couchpotato_install_dir }}"
     - path: "{{ couchpotato_data_dir }}"
     - path: "{{ couchpotato_config_dir }}"
     - path: "{{ couchpotato_pid_dir }}"
     - path: "{{ couchpotato_manage_library }}"
+      mode: 775
+      user: media
+      group: media
     - path: "{{ couchpotato_movies_dir }}"
+      mode: 775
+      user: media
+      group: media
 
 - name: clone couchpotato repo
   git: repo={{ couchpotato_repo }} dest={{ couchpotato_install_dir }}
@@ -37,6 +43,10 @@
 
 - name: update configuration
   template: src=settings.conf.j2 dest={{ couchpotato_config_file }} owner={{ couchpotato_user }} group={{ couchpotato_user }}
+  notify: restart couchpotato
+
+- name: update configuration
+  template: src=init.j2 dest=/etc/init.d/couchpotato mode=755
   notify: restart couchpotato
 
 - name: Write site

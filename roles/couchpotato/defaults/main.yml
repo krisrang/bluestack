@@ -8,8 +8,6 @@ couchpotato_config_file: "{{ couchpotato_config_dir }}/settings.conf"
 couchpotato_pid_dir: /var/run/couchpotato
 couchpotato_manage_library: /var/media
 couchpotato_movies_dir: "{{ couchpotato_manage_library }}/movies"
-couchpotato_renamer_to: ""
-couchpotato_downloads_dir: ""
 
 couchpotato_port: 5050
 couchpotato_user: couchpotato

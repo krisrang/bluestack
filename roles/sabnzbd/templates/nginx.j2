@@ -1,14 +1,14 @@
 # {{ ansible_managed }}
 
-upstream potato {
-    server 127.0.0.1:{{ couchpotato_port }} fail_timeout=0;
+upstream sab {
+    server 127.0.0.1:{{ sabnzbd_port }} fail_timeout=0;
 }
 
 server {
   listen [::]:80;
   listen 80;
 
-  server_name {{ couchpotato_domain }};
+  server_name {{ sabnzbd_domain }};
   rewrite ^ https://$server_name$request_uri? permanent;
 
   include snippets/le.conf;
@@ -19,28 +19,29 @@ server {
   listen [::]:443 ssl;
   ssl on;
 
-  ssl_certificate {{ simp_le_root }}{{ couchpotato_domain }}/fullchain.pem;
-  ssl_certificate_key {{ simp_le_root }}{{ couchpotato_domain }}/key.pem;
+  ssl_certificate {{ simp_le_root }}{{ sabnzbd_domain }}/fullchain.pem;
+  ssl_certificate_key {{ simp_le_root }}{{ sabnzbd_domain }}/key.pem;
 
-  server_name {{ couchpotato_domain }};
+  server_name {{ sabnzbd_domain }};
 
-  root {{ couchpotato_data_dir }}/;
+  root {{ sabnzbd_data_dir }}/;
   index index.html index.htm;
 
   add_header Strict-Transport-Security max-age=31536000;
 
-  error_log   /var/log/nginx/{{ couchpotato_domain }}-error.log;
-  access_log  /var/log/nginx/{{ couchpotato_domain }}-access.log;
+  error_log   /var/log/nginx/{{ sabnzbd_domain }}-error.log;
+  access_log  /var/log/nginx/{{ sabnzbd_domain }}-access.log;
 
   location / {
-    try_files $uri @potato;
+    try_files $uri @sab;
   }
 
-  location @potato {
+  location @sab {
     proxy_set_header        Host $host;
     proxy_set_header        X-Real-IP $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
     proxy_set_header        X-Forwarded-Proto https;
+    proxy_redirect          http:// https://;
 
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
 
@@ -58,7 +59,7 @@ server {
     client_body_buffer_size 128k;
 
     if (!-f $request_filename) {
-      proxy_pass http://potato;
+      proxy_pass http://sab;
       break;
     }
   }

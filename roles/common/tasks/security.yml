@@ -3,6 +3,7 @@
   apt: name={{item}} update_cache=yes state=latest cache_valid_time=86400
   with_items:
     - lynis
+    - ufw
 
 - name: Remove foreign keys
   file: path=/root/.ssh/authorized_keys2 state=absent

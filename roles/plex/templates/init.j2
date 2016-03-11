@@ -1,0 +1,22 @@
+# plexpms - service job file
+
+description "Plex Media Server"
+author "https://plex.tv/"
+
+# Start the media server after network and filesystem
+# Otherwise this lead to a unresponsive server
+start on filesystem and net-device-up IFACE!=lo
+
+# When to stop the service
+stop on runlevel [016]
+
+# Automatically restart process if crashed
+respawn
+
+# What to execute
+script
+    if [ -r /etc/default/plexmediaserver ]; then
+        . /etc/default/plexmediaserver
+    fi
+    start-stop-daemon --start -c $PLEX_MEDIA_SERVER_USER -g media --exec /usr/sbin/start_pms
+end script

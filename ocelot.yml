@@ -1,9 +1,8 @@
 ---
-- hosts: lynx
+- hosts: ocelot
   become: true
   roles:
     - common
-    - ipv6
     - newrelic
     - ruby
     - nginx
@@ -11,3 +10,7 @@
     - docker
     - php-fpm
     - moe
+    - plex
+    - couchpotato
+    - sabnzbd
+    - sonarr

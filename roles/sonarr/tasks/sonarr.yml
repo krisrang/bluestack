@@ -1,0 +1,49 @@
+---
+- name: install sonarr apt key
+  apt_key: keyserver=keyserver.ubuntu.com id={{ sonarr_apt_key_id }} state=present
+
+- name: install sonarr repp
+  apt_repository: repo={{ sonarr_apt_repo }} update_cache=yes state=present
+
+- name: install sonarr
+  apt: name=nzbdrone update_cache=yes state=latest cache_valid_time=86400
+
+- name: create sonarr user
+  user: name={{ sonarr_user }} home={{ sonarr_data_dir }} createhome=no system=yes shell=/bin/bash groups=media append=yes
+
+- name: create directories
+  file: path={{ item.path }} owner={{ sonarr_user }} group={{ sonarr_user }} mode={{ item.mode|default("755") }} state=directory
+  with_items:
+    - path: "{{ sonarr_data_dir }}"
+    - path: "{{ sonarr_config_dir }}"
+
+- name: test config file existence
+  file: path={{ sonarr_config_dir }}/config.xml state=file owner={{ sonarr_user }} group={{ sonarr_user }}
+  register: config_file_result
+  ignore_errors: yes
+
+- name: create config file
+  template: src=sonarr.config.j2 dest={{ sonarr_config_dir }}/config.xml owner={{ sonarr_user }} group={{ sonarr_user }}
+  when: config_file_result|failed
+  notify: restart sonarr
+
+- name: install sonarr upstart
+  template: src=sonarr.upstart.j2 dest=/etc/init/sonarr.conf
+  notify: restart sonarr
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ sonarr_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ sonarr_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ sonarr_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ sonarr_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ sonarr_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ sonarr_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

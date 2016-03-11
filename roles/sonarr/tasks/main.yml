@@ -1,0 +1,3 @@
+---
+- include: sonarr.yml
+  tags: sonarr

@@ -10,16 +10,21 @@
   notify: update tzdata
 
 - name: Install ansible dependencies
-  raw: apt-get install -y python-simplejson python-pycurl python-passlib python-psycopg2 python-pip
-
-- name: Install pip
-  raw: easy_install -U pip
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - python-simplejson
+    - python-pycurl
+    - python-passlib
+    - python-psycopg2
+    - python-pip
+    - python-dev
 
 - name: Install python modules
   pip: name={{ item }}
   with_items:
     - docker-py
     - virtualenv
+    - glances
 
 - name: Install packages
   apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
@@ -35,6 +40,7 @@
     - git
     - htop
     - iftop
+    - iptraf-ng
     - iotop
     - screen
     - zsh
@@ -61,17 +67,8 @@
 - name: NTP should be running
   service: name=ntp state=running enabled=yes
 
-- name: DNS config
-  template: src=resolv.conf.j2 dest=/etc/resolv.conf
-
-# - name: Remove packages
-#   apt: name={{ item }} state=absent
-#   with_items:
-#     - bind9
-#     - consolekit
-
 - name: Copy resolv to postfix chroot
-  command: cp /etc/resolv.conf /var/spool/postfix/etc
+  command: cp /etc/resolv.conf /var/spool/postfix/etc creates=/var/spool/postfix/etc/resolv.conf
   notify: restart postfix
 
 - include: security.yml

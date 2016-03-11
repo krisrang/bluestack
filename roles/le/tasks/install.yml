@@ -19,4 +19,4 @@
   file: path={{ simp_le_root }} owner=root group=root mode=640 state=directory
 
 - name: Create LE directory
-  file: path={{ simp_le_webroot }} owner=www-data group=www-data mode=640 state=directory
+  file: path={{ simp_le_webroot }} owner=www-data group=www-data mode=775 state=directory
