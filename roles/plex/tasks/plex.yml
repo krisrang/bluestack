@@ -21,6 +21,7 @@
     - path: /var/media
     - path: /var/media/tv
     - path: /var/media/movies
+    - path: /var/media/download
 
 - name: add plex user to media
   user: name=plex groups=plex,media append=yes

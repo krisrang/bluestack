@@ -35,7 +35,7 @@ case "$1" in
         log_daemon_msg "Starting rtorrent."
         start-stop-daemon --start --background --oknodo \
             --pidfile "$PIDFILE" --make-pidfile \
-            --chuid $USER \
+            --chuid $USER --group media \
             --exec $SCREEN -- -D -m -S $SCREEN_NAME $RTORRENT
         log_end_msg $?
         ;;

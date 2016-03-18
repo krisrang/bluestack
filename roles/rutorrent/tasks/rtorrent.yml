@@ -9,11 +9,12 @@
   user: name={{ rtorrent_user }} home={{ rtorrent_data_dir }} system=yes shell=/bin/bash
 
 - name: create rtorrent directories
-  file: path={{ item.path }} owner={{ rtorrent_user }} group={{ rtorrent_user }} mode={{ item.mode|default("755") }} state=directory
+  file: path={{ item.path }} owner={{ rtorrent_user }} group={{ item.group|default(rtorrent_user) }} mode={{ item.mode|default("755") }} state=directory
   with_items:
     - path: "{{ rtorrent_session_dir }}"
     - path: "{{ rtorrent_download_dir }}"
-      mode: 775
+      group: media
+      mode: 2775
     - path: "{{ rtorrent_watch_dir }}"
       mode: 775
 

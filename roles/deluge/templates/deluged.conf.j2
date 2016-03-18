@@ -14,7 +14,7 @@ respawn
 respawn limit 5 30
 
 env uid={{ deluge_user }}
-env gid={{ deluge_user }}
+env gid=media
 env umask={{ deluge_umask }}
 
 exec start-stop-daemon -S -c $uid:$gid -k $umask -x /usr/bin/deluged -- -d -c {{ deluge_config_dir }} -l /var/log/deluge/daemon.log -L warning -

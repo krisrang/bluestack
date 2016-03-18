@@ -50,11 +50,11 @@
   file: path={{ deluge_config_dir }} owner={{ deluge_user }} group={{ deluge_user }} mode=755 state=directory
 
 - name: create deluge conf
-  template: src=core.conf.j2 dest={{ deluge_config_dir }}/core.conf mode=755
+  template: src=core.conf.j2 dest={{ deluge_config_dir }}/core.conf mode=755 owner={{ deluge_user }} group={{ deluge_user }}
   notify: restart deluged
 
 - name: create deluge auth
-  template: src=auth.j2 dest={{ deluge_config_dir }}/auth mode=600
+  template: src=auth.j2 dest={{ deluge_config_dir }}/auth mode=600 owner={{ deluge_user }} group={{ deluge_user }}
   notify: restart deluged
 
 - name: copy deluge ufw conf

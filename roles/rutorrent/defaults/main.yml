@@ -1,7 +1,7 @@
 ---
 rtorrent_user: rtorrent
 rtorrent_data_dir: /var/lib/rtorrent
-rtorrent_download_dir: "{{ rtorrent_data_dir }}/download"
+rtorrent_download_dir: "/var/media/download/rtorrent"
 rtorrent_session_dir: "{{ rtorrent_data_dir }}/session"
 rtorrent_watch_dir: "{{ rtorrent_data_dir }}/watch"
 rtorrent_port: 49164

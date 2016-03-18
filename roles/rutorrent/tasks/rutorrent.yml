@@ -54,6 +54,9 @@
   file: src=/etc/nginx/sites-available/01-{{ rtorrent_rutorrent_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ rtorrent_rutorrent_domain }}.conf state=link
   notify: reload nginx
 
+- name: Ensure htpasswd directory
+  file: path=/etc/nginx/htpasswd state=directory owner=www-data group=www-data mode=2775
+
 - name: Create htpasswd file
   htpasswd: path=/etc/nginx/htpasswd/rutorrent name={{ rtorrent_rutorrent_user }} password={{ rtorrent_rutorrent_password }} owner=root group=www-data mode=0640
 
