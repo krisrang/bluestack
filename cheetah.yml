@@ -1,0 +1,17 @@
+---
+- hosts: cheetah
+  become: true
+  roles:
+    - common
+    - newrelic
+    - ruby
+    - nginx
+    - le
+    - docker
+    - php-fpm
+    - moe
+    - plex
+    - couchpotato
+    - sabnzbd
+    - sonarr
+    - deluge

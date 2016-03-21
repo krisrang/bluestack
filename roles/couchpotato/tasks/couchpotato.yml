@@ -16,11 +16,11 @@
     - path: "{{ couchpotato_config_dir }}"
     - path: "{{ couchpotato_pid_dir }}"
     - path: "{{ couchpotato_manage_library }}"
-      mode: 775
+      mode: 2775
       user: media
       group: media
     - path: "{{ couchpotato_movies_dir }}"
-      mode: 775
+      mode: 2775
       user: media
       group: media
 
