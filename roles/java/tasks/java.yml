@@ -1,0 +1,9 @@
+---
+- name: install java apt key
+  apt_key: keyserver=keyserver.ubuntu.com id=EEA14886 state=present
+
+- name: install java repo
+  apt_repository: repo=ppa:webupd8team/java update_cache=yes state=present
+
+- name: install java
+  apt: name=oracle-java8-installer update_cache=yes state=latest cache_valid_time=86400

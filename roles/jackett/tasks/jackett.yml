@@ -1,0 +1,53 @@
+---
+- name: create jackett user
+  user: name={{ jackett_user }} home={{ jackett_data_dir }} createhome=no system=yes shell=/bin/bash
+
+- name: create directories
+  file: path={{ item.path }} owner={{ jackett_user }} group={{ jackett_user }} mode={{ item.mode|default("755") }} state=directory
+  with_items:
+    - path: "{{ jackett_install_dir }}"
+    - path: "{{ jackett_data_dir }}"
+    - path: "{{ jackett_config_dir }}"
+
+- name: download jackett
+  get_url: url={{ jackett_release_url }} dest=/tmp/{{ jackett_archive }}
+
+- name: unpack jackett archive
+  unarchive: >
+    src=/tmp/{{ jackett_archive }} dest=/opt copy=no
+    creates={{ jackett_install_dir }}/JackettConsole.exe
+  notify: restart jackett
+
+- name: fix permissions
+  file: path={{ jackett_install_dir }} owner={{ jackett_user }} group={{ jackett_user }} recurse=yes
+
+- name: test config file existence
+  file: path={{ jackett_config_dir }}ServerConfig.json state=file owner={{ jackett_user }} group={{ jackett_user }}
+  register: config_file_result
+  ignore_errors: yes
+
+- name: create config file
+  template: src=jackett.json.j2 dest={{ jackett_config_dir }}ServerConfig.json owner={{ jackett_user }} group={{ jackett_user }}
+  when: config_file_result|failed
+  notify: restart jackett
+
+- name: install jackett upstart
+  template: src=jackett.upstart.j2 dest=/etc/init/jackett.conf
+  notify: restart jackett
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ jackett_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ jackett_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ jackett_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ jackett_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ jackett_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ jackett_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

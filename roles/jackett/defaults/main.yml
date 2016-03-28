@@ -1,0 +1,13 @@
+---
+jackett_user: jackett
+jackett_archive: jackett.tar.gz
+jackett_release_url: https://github.com/Jackett/Jackett/releases/download/v0.7.200/Jackett.Binaries.Mono.tar.gz
+jackett_install_dir: /opt/Jackett
+jackett_data_dir: /var/lib/jackett
+jackett_config_dir: "{{ jackett_data_dir }}/.config/Jackett/"
+jackett_host: localhost
+jackett_port: 9117
+jackett_url_base: ""
+jackett_api_key: ""
+jackett_domain: ""
+jackett_password: ""
