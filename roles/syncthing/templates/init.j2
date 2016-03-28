@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+env DIR={{ syncthing_config_root }}
+env HOME={{ syncthing_config_root }}
+setuid {{ syncthing_user }}
+setgid {{ syncthing_user }}
+
+chdir {{ syncthing_config_root }}
+
+respawn
+
+exec syncthing -no-browser -home="$DIR" -gui-address="http://127.0.0.1:{{ syncthing_port }}"

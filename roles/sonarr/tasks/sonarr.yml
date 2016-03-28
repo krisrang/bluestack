@@ -2,7 +2,7 @@
 - name: install sonarr apt key
   apt_key: keyserver=keyserver.ubuntu.com id={{ sonarr_apt_key_id }} state=present
 
-- name: install sonarr repp
+- name: install sonarr repo
   apt_repository: repo={{ sonarr_apt_repo }} update_cache=yes state=present
 
 - name: install sonarr

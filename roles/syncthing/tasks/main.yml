@@ -1,0 +1,3 @@
+---
+- include: syncthing.yml
+  tags: syncthing

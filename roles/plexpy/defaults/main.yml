@@ -1,0 +1,11 @@
+---
+plexpy_version: HEAD
+plexpy_repo: https://github.com/drzoidberg33/plexpy.git
+plexpy_user: plexpy
+plexpy_install_dir: /opt/plexpy
+plexpy_data_dir: /var/lib/plexpy
+plexpy_host: localhost
+plexpy_port: 8181
+plexpy_url_base: ""
+plexpy_api_key: ""
+plexpy_domain: ""

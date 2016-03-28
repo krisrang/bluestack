@@ -1,0 +1,50 @@
+---
+- name: install dependencies
+  apt: name={{ item }} update_cache=yes state=installed cache_valid_time=86400
+  with_items:
+    - git-core
+    - python-lxml
+
+- name: create {{ plexpy_user }} user
+  user: name={{ plexpy_user }} home={{ plexpy_data_dir }} createhome=no system=yes shell=/bin/bash groups=media
+
+- name: create directories
+  file: path={{ item.path }} owner={{ plexpy_user }} group={{ plexpy_user }} mode={{ item.mode|default("755") }} state=directory
+  with_items:
+    - path: "{{ plexpy_install_dir }}"
+    - path: "{{ plexpy_data_dir }}"
+
+- name: clone plexpy repo
+  git: repo={{ plexpy_repo }} dest={{ plexpy_install_dir }}
+  notify: restart plexpy
+
+- name: fix repo permissions
+  file: path={{ plexpy_install_dir }} owner={{ plexpy_user }} group={{ plexpy_user }} recurse=yes
+
+- name: update init
+  template: src=init.j2 dest=/etc/init/plexpy.conf
+  notify: restart plexpy
+
+- name: enable plexpy service
+  service: name=plexpy enabled=yes
+
+# - name: update configuration
+#   template: src=settings.conf.j2 dest={{ couchpotato_config_file }} owner={{ plexpy_user }} group={{ plexpy_user }}
+#   notify: restart plexpy
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ plexpy_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ plexpy_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ plexpy_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ plexpy_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ plexpy_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ plexpy_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

@@ -1,0 +1,45 @@
+---
+- name: install syncthing apt key
+  apt_key: url={{ syncthing_apt_key }} state=present
+
+- name: install syncthing repo
+  apt_repository: repo={{ syncthing_apt_repo }} update_cache=yes state=present
+
+- name: install syncthing
+  apt: name=syncthing update_cache=yes state=latest cache_valid_time=86400
+
+- name: create syncthing user
+  user: name={{ syncthing_user }} home={{ syncthing_config_root }} system=yes shell=/bin/bash groups=media append=yes
+
+- name: create directories
+  file: path={{ item.path }} owner={{ syncthing_user }} group={{ syncthing_user }} mode={{ item.mode|default("755") }} state=directory
+  with_items:
+    - path: "{{ syncthing_config_root }}"
+    - path: "{{ syncthing_config_dir }}"
+
+- name: install syncthing upstart
+  template: src=init.j2 dest=/etc/init/syncthing.conf
+  notify: restart syncthing
+
+- name: copy syncthing ufw conf
+  template: src=ufw.j2 dest=/etc/ufw/applications.d/syncthing owner=root group=root mode=0644
+
+- name: firewall allow syncthing
+  command: ufw allow syncthing
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ syncthing_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ syncthing_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ syncthing_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ syncthing_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ syncthing_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ syncthing_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"
