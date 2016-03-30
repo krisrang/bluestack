@@ -11,7 +11,7 @@
   notify: restart dibbler
 
 - name: Copy conf
-  copy: src=dibbler.conf dest=/etc/dibbler/client.conf
+  template: src=dibbler.conf.j2 dest=/etc/dibbler/client.conf
   notify: restart dibbler
 
 - name: copy dibbler conf

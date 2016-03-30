@@ -11,8 +11,8 @@ server {
 }
 
 server {
-  listen 443 ssl;
-  listen [::]:443 ssl;
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
   ssl on;
 
   ssl_certificate {{ simp_le_root }}{{ rtorrent_rutorrent_domain }}/fullchain.pem;

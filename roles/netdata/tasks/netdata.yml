@@ -1,0 +1,31 @@
+---
+- name: install netdata upstart
+  template: src=upstart.j2 dest=/etc/init/netdata.conf
+  notify: restart netdata
+
+- name: Write site
+  template: src=netdata.conf.j2 dest={{ netdata_conf }}/netdata.conf
+  notify: restart netdata
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ netdata_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ netdata_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ netdata_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Ensure htpasswd directory
+  file: path=/etc/nginx/htpasswd state=directory owner=www-data group=www-data mode=2775
+
+- name: Create htpasswd file
+  htpasswd: path=/etc/nginx/htpasswd/netdata name={{ netdata_user }} password={{ netdata_pass }} owner=root group=www-data mode=0640
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ netdata_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ netdata_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ netdata_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

@@ -12,10 +12,10 @@ server {
 }
 
 server {
-  listen 443 ssl;
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
   ssl on;
-  # listen 80;
-  
+
   ssl_certificate /etc/ssl/certs/ci.rang.ee.crt;
   ssl_certificate_key /etc/ssl/private/ci.rang.ee.key;
 
@@ -31,7 +31,7 @@ server {
     try_files             $uri @jenkins;
   }
 
-  location @jenkins {    
+  location @jenkins {
     sendfile off;
     add_header Pragma "no-cache";
 

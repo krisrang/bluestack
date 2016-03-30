@@ -1,5 +1,0 @@
----
-mediawiki:
-  version: wmf/1.22wmf20
-  dbname: mediawiki
-  dbuser: mediawiki

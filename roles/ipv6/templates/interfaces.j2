@@ -4,9 +4,9 @@ auto lo
 iface lo inet loopback
 
 # The primary network interface
-auto em1
-iface em1 inet dhcp
+auto {{ ansible_default_ipv4.alias }}
+iface {{ ansible_default_ipv4.alias }} inet dhcp
 
-iface em1 inet6 static
+iface {{ ansible_default_ipv4.alias }} inet6 static
     address {{ipv6ip}}
     netmask 56

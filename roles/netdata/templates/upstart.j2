@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+
+start on runlevel [2345]
+stop on runlevel [016]
+
+respawn
+
+exec /usr/sbin/netdata

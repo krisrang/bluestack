@@ -18,3 +18,5 @@
     - jackett
     - java
     - plexpy
+    - netdata
+    - ipv6

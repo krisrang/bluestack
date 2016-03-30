@@ -1,42 +1,46 @@
 # {{ ansible_managed }}
 
-upstream syncthing {
-    server 127.0.0.1:{{ syncthing_port }} fail_timeout=0;
+upstream netdata {
+    server 127.0.0.1:{{ netdata_port }} fail_timeout=0;
+    keepalive 64;
 }
 
 server {
   listen [::]:80;
   listen 80;
 
-  server_name {{ syncthing_domain }};
+  server_name {{ netdata_domain }};
   rewrite ^ https://$server_name$request_uri? permanent;
 
   include snippets/le.conf;
 }
 
 server {
-  listen 443 ssl;
-  listen [::]:443 ssl;
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate {{ simp_le_root }}{{ syncthing_domain }}/fullchain.pem;
-  ssl_certificate_key {{ simp_le_root }}{{ syncthing_domain }}/key.pem;
+  ssl_certificate {{ simp_le_root }}{{ netdata_domain }}/fullchain.pem;
+  ssl_certificate_key {{ simp_le_root }}{{ netdata_domain }}/key.pem;
 
-  server_name {{ syncthing_domain }};
+  server_name {{ netdata_domain }};
 
-  root {{ syncthing_config_root }}/;
+  root {{ netdata_conf }}/;
   index index.html index.htm;
 
   add_header Strict-Transport-Security max-age=31536000;
 
-  error_log   /var/log/nginx/{{ syncthing_domain }}-error.log;
-  access_log  /var/log/nginx/{{ syncthing_domain }}-access.log;
+  error_log   /var/log/nginx/{{ netdata_domain }}-error.log;
+  access_log  /var/log/nginx/{{ netdata_domain }}-access.log;
+
+  auth_basic              "Stats";
+  auth_basic_user_file    /etc/nginx/htpasswd/netdata;
 
   location / {
-    try_files $uri @syncthing;
+    try_files $uri @netdata;
   }
 
-  location @syncthing {
+  location @netdata {
     proxy_set_header        Host $host;
     proxy_set_header        X-Real-IP $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -59,7 +63,7 @@ server {
     client_body_buffer_size 128k;
 
     if (!-f $request_filename) {
-      proxy_pass http://syncthing;
+      proxy_pass http://netdata;
       break;
     }
   }

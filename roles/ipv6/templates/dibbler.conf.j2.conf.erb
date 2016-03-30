@@ -4,6 +4,6 @@ auth-methods digest-hmac-md5
 duid-type duid-ll
 inactive-mode
 log-level 8
-iface em1 {
+iface {{ ansible_default_ipv4.alias }} {
     pd
 }
