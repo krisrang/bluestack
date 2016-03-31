@@ -1,6 +1,12 @@
 ---
-- name: Add nginx PPA
-  apt_repository: repo=ppa:nginx/stable
+- name: Add nginx repo key
+  apt_key: url=http://nginx.org/keys/nginx_signing.key
+
+- name: Add nginx repo
+  apt_repository: repo="deb http://nginx.org/packages/mainline/ubuntu/ {{ ansible_distribution_release }} nginx" state=present
+
+- name: Add nginx-src repo
+  apt_repository: repo="deb-src http://nginx.org/packages/mainline/ubuntu/ {{ ansible_distribution_release }} nginx" state=present
 
 - name: Install nginx
   apt: name=nginx update_cache=yes state=latest cache_valid_time=86400
