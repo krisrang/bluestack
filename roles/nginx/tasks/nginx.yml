@@ -11,6 +11,13 @@
 - name: Install nginx
   apt: name=nginx update_cache=yes state=latest cache_valid_time=86400
 
+- name: Create directories
+  file: path={{ item }} owner=root group=root mode=755 state=directory
+  with_items:
+    - /etc/nginx/snippets
+    - /etc/nginx/sites-available
+    - /etc/nginx/sites-enabled
+
 - name: Disable default site
   file: path=/etc/nginx/sites-enabled/default state=absent
   notify: reload nginx
@@ -53,6 +60,9 @@
 - name: Restart nginx
   service: name=nginx state=restarted
   when: leconf.changed
+
+- name: Copy ufw conf
+  copy: src=ufw dest=/etc/ufw/applications.d/nginx
 
 - name: firewall allow nginx
   command: ufw allow "Nginx Full"

@@ -5,5 +5,8 @@
 - name: install java repo
   apt_repository: repo=ppa:webupd8team/java update_cache=yes state=present
 
+- name: automatically select the Oracle License
+  shell: echo debconf shared/accepted-oracle-license-v1-1 select true | sudo debconf-set-selections
+
 - name: install java
   apt: name=oracle-java8-installer update_cache=yes state=latest cache_valid_time=86400

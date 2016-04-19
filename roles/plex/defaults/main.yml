@@ -1,5 +1,10 @@
 ---
-plex_version: 0.9.16.3.1840-cece46d
+plex_version: 0.9.16.4.1911-ee6e505
 plex_deb_package: plexmediaserver_{{ plex_version }}_amd64.deb
 plex_download_url: https://downloads.plex.tv/plex-media-server/{{ plex_version }}/{{ plex_deb_package }}
 plex_application_support_dir: "${HOME}/Library/Application\ Support"
+
+plex_lib: "/var/lib/plexmediaserver/Library/Application Support/Plex Media Server"
+plex_hama_src: https://15254b2dcaab7f5478ab-24461f391e20b7336331d5789078af53.ssl.cf1.rackcdn.com/plex.vanillacommunity.com/ipb/monthly_08_2014/HAMA%20_%20Absolute%20Series%20Scanner%202014-08-04%2000h37.zip
+plex_hama_bundle: https://raw.githubusercontent.com/ZeroQI/Hama.bundle/master/Contents/Code/__init__.py
+plex_hama_scanner: https://raw.githubusercontent.com/ZeroQI/Absolute-Series-Scanner/master/Scanners/Series/Absolute%20Series%20Scanner.py

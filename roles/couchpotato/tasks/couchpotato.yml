@@ -25,7 +25,7 @@
       group: media
 
 - name: clone couchpotato repo
-  git: repo={{ couchpotato_repo }} dest={{ couchpotato_install_dir }}
+  git: repo={{ couchpotato_repo }} dest={{ couchpotato_install_dir }} update=no
   notify: restart couchpotato
 
 - name: fix repo permissions
