@@ -21,8 +21,8 @@
 - name: fix repo permissions
   file: path={{ plexpy_install_dir }} owner={{ plexpy_user }} group={{ plexpy_user }} recurse=yes
 
-- name: update init
-  template: src=init.j2 dest=/etc/init/plexpy.conf
+- name: install service
+  template: src=service.j2 dest=/etc/systemd/system/plexpy.service
   notify: restart plexpy
 
 - name: enable plexpy service

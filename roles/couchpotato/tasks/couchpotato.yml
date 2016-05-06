@@ -15,14 +15,6 @@
     - path: "{{ couchpotato_data_dir }}"
     - path: "{{ couchpotato_config_dir }}"
     - path: "{{ couchpotato_pid_dir }}"
-    - path: "{{ couchpotato_manage_library }}"
-      mode: 2775
-      user: media
-      group: media
-    - path: "{{ couchpotato_movies_dir }}"
-      mode: 2775
-      user: media
-      group: media
 
 - name: clone couchpotato repo
   git: repo={{ couchpotato_repo }} dest={{ couchpotato_install_dir }} update=no

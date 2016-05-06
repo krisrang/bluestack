@@ -1,0 +1,38 @@
+---
+- name: Add nzbget user
+  user: name={{ nzbget_user }} group={{ nzbget_group }} home={{ nzbget_lib }} state=present system=yes shell=/bin/bash
+
+- name: Create dst dir
+  file: path={{ item }} owner={{ nzbget_user }} group={{ nzbget_group }} state=directory mode=2777
+  with_items:
+    - "{{ nzbget_lib }}"
+    - "{{ nzbget_dst_path }}"
+
+- name: Install nzbget
+  apt: name={{ nzbget }} state=present
+
+- name: Copy default config files
+  template: src=nzbget.conf dest=/etc/nzbget.conf owner={{ nzbget_user }} group={{ nzbget_group }}
+
+- name: Copy init file
+  template: src=nzbget.service dest=/etc/systemd/system/nzbget.service owner=root group=root mode=644
+
+- name: Start service
+  service: name=nzbget state=started enabled=yes
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ nzbget_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ nzbget_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ nzbget_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ nzbget_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ nzbget_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ nzbget_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

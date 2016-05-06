@@ -1,6 +1,6 @@
 ---
-- name: Add Ruby repo
-  apt_repository: repo=ppa:brightbox/ruby-ng
+# - name: Add Ruby repo
+#   apt_repository: repo=ppa:brightbox/ruby-ng
 
 - name: Install Ruby
   apt: pkg=ruby2.3 update_cache=yes state=latest cache_valid_time=86400

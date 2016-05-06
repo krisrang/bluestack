@@ -1,5 +1,5 @@
 ---
-- hosts: king
+- hosts: cass
   become: true
   roles:
     - common
@@ -12,10 +12,9 @@
     - moe
     - plex
     - couchpotato
-    - sabnzbd
+    - nzbget
     - sonarr
     - deluge
     - jackett
     - java
     - plexpy
-    - netdata

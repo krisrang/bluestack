@@ -1,0 +1,20 @@
+[Unit]
+Description=deluged
+After=network-online.target
+
+[Service]
+Environment=LC_ALL=en_US.UTF-8
+Environment=LANG=en_US.UTF-8
+ExecStart=/usr/bin/deluged -d -c {{ deluge_config_dir }}
+Type=simple
+User={{ deluge_user }}
+Group=media
+UMask=007
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+TimeoutStopSec=300
+
+[Install]
+WantedBy=multi-user.target

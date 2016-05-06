@@ -3,10 +3,13 @@
   apt_key: id=2C52609D url=https://apt.dockerproject.org/gpg state=present
 
 - name: Add docker repo
-  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-trusty main'
+  apt_repository: repo='deb https://apt.dockerproject.org/repo ubuntu-{{ ansible_distribution_release }} main'
 
 - name: Install packages
-  apt: name=docker-engine update_cache=yes state=installed cache_valid_time=86400
+  apt: name={{ item }} update_cache=yes state=installed cache_valid_time=86400
+  with_items:
+    - linux-image-extra-{{ ansible_kernel }}
+    - docker-engine
 
 # - name: Allow firewall forwarding
 #   lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY' line='DEFAULT_FORWARD_POLICY="ACCEPT"'

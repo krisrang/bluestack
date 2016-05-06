@@ -1,0 +1,9 @@
+nzbget_user: nzbget
+nzbget_group: media
+nzbget_dst_path: /var/media/download/nzbget
+nzbget_lib: /var/lib/nzbget
+
+nzbget_port: 6060
+nzbget_domain: nzb.kris.moe
+# nzbget_username:
+# nzbget_password:

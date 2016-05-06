@@ -27,8 +27,8 @@
   when: config_file_result|failed
   notify: restart sonarr
 
-- name: install sonarr upstart
-  template: src=sonarr.upstart.j2 dest=/etc/init/sonarr.conf
+- name: install sonarr service
+  template: src=sonarr.service.j2 dest=/etc/systemd/system/sonarr.service
   notify: restart sonarr
 
 - name: Write site

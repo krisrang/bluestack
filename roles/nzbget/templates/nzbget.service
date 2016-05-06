@@ -1,0 +1,18 @@
+[Unit]
+Description=nzbget
+After=network.target
+
+[Service]
+Environment=LC_ALL=en_US.UTF-8
+Environment=LANG=en_US.UTF-8
+ExecStart=/bin/sh -c '/usr/bin/nzbget -s'
+Type=simple
+User={{ nzbget_user }}
+Group={{ nzbget_group }}
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target

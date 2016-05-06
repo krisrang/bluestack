@@ -24,7 +24,7 @@ server {
 
   server_name {{ sonarr_domain }};
 
-  root {{ sabnzbd_data_dir }}/;
+  root {{ sonarr_data_dir }}/;
   index index.html index.htm;
 
   add_header Strict-Transport-Security max-age=31536000;

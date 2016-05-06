@@ -1,6 +1,6 @@
 ---
-- name: Add Deluge repo
-  apt_repository: repo=ppa:deluge-team/ppa
+# - name: Add Deluge repo
+#   apt_repository: repo=ppa:deluge-team/ppa
 
 - name: install deluge
   apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
@@ -22,11 +22,11 @@
     - "{{ deluge_data_dir }}/download"
 
 - name: create deluge init
-  template: src=deluged.conf.j2 dest=/etc/init/deluged.conf mode=755
+  template: src=deluged.service.j2 dest=/etc/systemd/system/deluged.service mode=644
   notify: restart deluged
 
 - name: create deluge init
-  template: src=deluge-web.conf.j2 dest=/etc/init/deluge-web.conf mode=755
+  template: src=deluge-web.service.j2 dest=/etc/systemd/system/deluge-web.service mode=644
   notify: restart deluge-web
 
 - name: Write site
@@ -47,14 +47,14 @@
   changed_when: "simp_le_output.rc == 0"
 
 - name: create deluge conf dir
-  file: path={{ deluge_config_dir }} owner={{ deluge_user }} group={{ deluge_user }} mode=755 state=directory
+  file: path={{ deluge_config_dir }} owner={{ deluge_user }} group=media mode=775 state=directory
 
 - name: create deluge conf
-  template: src=core.conf.j2 dest={{ deluge_config_dir }}/core.conf mode=755 owner={{ deluge_user }} group={{ deluge_user }}
+  template: src=core.conf.j2 dest={{ deluge_config_dir }}/core.conf mode=755 owner={{ deluge_user }} group=media
   notify: restart deluged
 
 - name: create deluge auth
-  template: src=auth.j2 dest={{ deluge_config_dir }}/auth mode=600 owner={{ deluge_user }} group={{ deluge_user }}
+  template: src=auth.j2 dest={{ deluge_config_dir }}/auth mode=600 owner={{ deluge_user }} group=media
   notify: restart deluged
 
 - name: copy deluge ufw conf
