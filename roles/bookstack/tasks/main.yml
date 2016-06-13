@@ -1,0 +1,3 @@
+---
+- include: bookstack.yml
+  tags: bookstack

@@ -16,8 +16,8 @@ server {
   listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate /etc/ssl/certs/ci.rang.ee.crt;
-  ssl_certificate_key /etc/ssl/private/ci.rang.ee.key;
+  ssl_certificate {{ simp_le_root }}{{ jenkins.host }}/fullchain.pem;
+  ssl_certificate_key {{ simp_le_root }}{{ jenkins.host }}/key.pem;
 
   server_name {{ jenkins.host }};
 

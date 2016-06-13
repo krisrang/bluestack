@@ -1,5 +1,2 @@
 [tiger]
 tiger.rang.ee:2341 ansible_ssh_user=kris
-
-[cass]
-cass.rang.ee:2341 ansible_ssh_user=kris
