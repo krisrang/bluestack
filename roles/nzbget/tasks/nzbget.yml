@@ -9,7 +9,7 @@
     - "{{ nzbget_dst_path }}"
 
 - name: Install nzbget
-  apt: name={{ nzbget }} state=present
+  apt: name=nzbget state=present
 
 - name: Copy default config files
   template: src=nzbget.conf dest=/etc/nzbget.conf owner={{ nzbget_user }} group={{ nzbget_group }}

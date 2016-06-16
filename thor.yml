@@ -1,0 +1,20 @@
+---
+- hosts: thor
+  become: true
+  roles:
+    - common
+    - ruby
+    - java
+    - newrelic
+    - nginx
+    - le
+    - docker
+    - php-fpm
+    - moe
+    - plex
+    - plexpy
+    - deluge
+    - jackett
+    - nzbget
+    - sonarr
+    - couchpotato

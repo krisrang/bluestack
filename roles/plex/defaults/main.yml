@@ -1,5 +1,5 @@
 ---
-plex_version: 0.9.16.6.1993-5089475
+plex_version: 0.9.17.2.2159-2bd156c
 plex_deb_package: plexmediaserver_{{ plex_version }}_amd64.deb
 plex_download_url: https://downloads.plex.tv/plex-media-server/{{ plex_version }}/{{ plex_deb_package }}
 plex_application_support_dir: "${HOME}/Library/Application\ Support"
