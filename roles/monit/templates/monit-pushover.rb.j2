@@ -1,0 +1,27 @@
+#!env ruby
+require 'net/https'
+require 'json'
+
+pushover_application="{{monit_app_key}}"
+pushover_user="{{monit_user_key}}"
+pushover_enabled=true
+
+def log(message)
+  open('/var/log/monit.log', 'a') { |f|
+    f.puts message
+  }
+end
+
+if pushover_enabled
+  begin
+    uri = URI.parse("https://api.pushover.net/1/messages.json")
+    Net::HTTP.start(uri.host, uri.port, {use_ssl: true}) { |http|
+      request = Net::HTTP::Post.new(uri.request_uri, {'Content-Type' => 'multipart/form-data'})
+      request.set_form_data(token: pushover_application, user: pushover_user, message: "[#{ENV['MONIT_HOST']}] #{ENV['MONIT_SERVICE']} - #{ENV['MONIT_DESCRIPTION']}")
+      response = http.request(request)
+      log("Response from Pushover [#{response.code}] [#{response.body}]")
+    }
+  rescue Exception => e
+    log("Exception while calling Pushover [#{e.message}]")
+  end
+end

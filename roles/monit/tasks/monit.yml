@@ -1,0 +1,14 @@
+---
+- name: install monit
+  apt: name=monit update_cache=yes state=latest cache_valid_time=86400
+
+- name: write conf
+  template: src=daemon.j2 dest=/etc/monit/conf.d/daemon
+  notify: restart monit
+
+- name: write conf
+  template: src=ssh-logins.j2 dest=/etc/monit/conf.d/ssh-logins
+  notify: restart monit
+
+- name: write conf
+  template: src=monit-pushover.rb.j2 dest=/etc/monit/monit-pushover.rb mode=777
