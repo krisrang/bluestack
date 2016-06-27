@@ -4,7 +4,7 @@ server {
   listen [::]:80;
   listen 80;
 
-  server_name {{ bookstack_domain }};
+  server_name {{ lychee_domain }};
   rewrite ^ https://$server_name$request_uri? permanent;
 
   include snippets/le.conf;
@@ -15,16 +15,16 @@ server {
   listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate {{ simp_le_root }}{{ bookstack_domain }}/fullchain.pem;
-  ssl_certificate_key {{ simp_le_root }}{{ bookstack_domain }}/key.pem;
+  ssl_certificate {{ simp_le_root }}{{ lychee_domain }}/fullchain.pem;
+  ssl_certificate_key {{ simp_le_root }}{{ lychee_domain }}/key.pem;
 
-  server_name {{ bookstack_domain }};
+  server_name {{ lychee_domain }};
 
-  root {{ bookstack_root }}/public/;
+  root {{ lychee_root }}/;
   index index.html index.htm index.php;
 
-  error_log   /var/log/nginx/{{ bookstack_domain }}-error.log;
-  access_log  /var/log/nginx/{{ bookstack_domain }}-access.log;
+  error_log   /var/log/nginx/{{ lychee_domain }}-error.log;
+  access_log  /var/log/nginx/{{ lychee_domain }}-access.log;
 
   proxy_set_header Host $host;
   proxy_set_header X-Real-IP $remote_addr;
@@ -37,8 +37,12 @@ server {
   proxy_no_cache $cookie_session;
   proxy_buffers 32 4k;
 
+  client_max_body_size 0; #max size disabled
+  client_header_timeout 30m;
+  client_body_timeout 30m;
+
   location / {
-    try_files $uri $uri/ /index.php?$query_string;
+    try_files $uri $uri/ /index.php?$query_string =404;
   }
 
   location ~ \.php$ {
@@ -49,6 +53,11 @@ server {
     fastcgi_index index.php;
     fastcgi_param PATH /usr/local/bin:/usr/bin:/bin;
     fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_param PHP_VALUE "max_execution_time=1800
+                            post_max_size=1500M
+                            upload_max_filesize=32M
+                            max_input_time=1800
+                            max_file_uploads=300";
     include fastcgi_params;
   }
 

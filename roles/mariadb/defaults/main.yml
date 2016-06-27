@@ -1,0 +1,4 @@
+---
+mariadb_data: "/opt/mariadb"
+
+mariadb_pw: ""

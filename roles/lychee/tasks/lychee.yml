@@ -1,0 +1,26 @@
+---
+- name: clone repo
+  git: repo={{ lychee_repo }} dest={{ lychee_root }} update=no
+
+- name: ensure permissions
+  command: find {{ lychee_root }}/data -type d -exec chown www-data:www-data {} \;
+
+- name: ensure permissions
+  command: find {{ lychee_root }}/uploads -type d -exec chown www-data:www-data {} \;
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ lychee_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ lychee_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ lychee_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ lychee_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ lychee_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ lychee_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"

@@ -1,0 +1,5 @@
+---
+lychee_repo: "https://github.com/electerious/Lychee.git"
+lychee_root: "/opt/lychee"
+
+lychee_domain: ""

@@ -1,0 +1,4 @@
+---
+
+- name: install composer
+  get_url: url={{ composer_url }} dest={{ composer_target }} mode=0755

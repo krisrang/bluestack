@@ -6,11 +6,13 @@
     - ruby
     - monit
     - java
+    - mariadb
     - newrelic
     - nginx
     - le
     - docker
     - php-fpm
+    - php-composer
     - moe
     - plex
     - plexpy
@@ -19,3 +21,4 @@
     - nzbget
     - sonarr
     - couchpotato
+    - bookstack
