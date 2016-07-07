@@ -1,0 +1,40 @@
+# {{ ansible_managed }}
+
+server {
+  listen [::]:80;
+  listen 80;
+
+  server_name {{ unifi_domain }};
+  rewrite ^ https://$server_name$request_uri? permanent;
+
+  include snippets/le.conf;
+}
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  ssl on;
+
+  ssl_certificate {{ simp_le_root }}{{ unifi_domain }}/fullchain.pem;
+  ssl_certificate_key {{ simp_le_root }}{{ unifi_domain }}/key.pem;
+  ssl_trusted_certificate {{ simp_le_root }}{{ unifi_domain }}/unifi.pem;
+
+  server_name {{ unifi_domain }};
+
+  root {{ unifi_root }}/;
+  index index.html index.htm;
+
+  add_header Strict-Transport-Security max-age=31536000;
+
+  error_log   /var/log/nginx/{{ unifi_domain }}-error.log;
+  access_log  /var/log/nginx/{{ unifi_domain }}-access.log;
+
+  location / {
+    proxy_pass https://localhost:8443;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forward-For $proxy_add_x_forwarded_for;
+  }
+
+  include snippets/le.conf;
+}

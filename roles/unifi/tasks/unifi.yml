@@ -1,0 +1,37 @@
+---
+- name: add repo key
+  apt_key: keyserver=keyserver.ubuntu.com id=C0A52C50
+
+- name: add repository
+  apt_repository: repo='deb http://www.ubnt.com/downloads/unifi/debian unifi5 ubiquiti' state=present
+
+- name: install unifi
+  apt: name=unifi update_cache=yes state=latest cache_valid_time=86400
+
+- name: copy ufw conf
+  template: src=ufw.j2 dest=/etc/ufw/applications.d/unifi owner=root group=root mode=0644
+
+- name: firewall allow unifi
+  command: ufw allow unifi
+
+# sudo keytool -list -v -keystore keystore
+# sudo keytool -export -keystore keystore -alias unifi -file cert.cer
+# sudo openssl x509 -inform der -in cert.cer -out unifi.pem
+# ssl_trusted_certificate /etc/nginx/ssl/default/unifi.pem;
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ unifi_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ unifi_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ unifi_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Create LE directory
+  file: path={{ simp_le_root }}{{ unifi_domain }} owner=root group=root mode=640 state=directory
+
+- name: Generate SSL cert
+  command: chdir={{ simp_le_root }}{{ unifi_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ unifi_domain }} --default_root {{ simp_le_webroot }}
+  register: simp_le_output
+  failed_when: "simp_le_output.rc == 2"
+  changed_when: "simp_le_output.rc == 0"
