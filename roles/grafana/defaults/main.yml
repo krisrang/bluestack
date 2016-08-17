@@ -1,0 +1,4 @@
+---
+grafana_domain: "dash.kris.moe"
+grafana_port: 3000
+grafana_pw: ""

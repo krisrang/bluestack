@@ -44,11 +44,5 @@
   file: src=/etc/nginx/sites-available/01-{{ sabnzbd_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ sabnzbd_domain }}.conf state=link
   notify: reload nginx
 
-- name: Create LE directory
-  file: path={{ simp_le_root }}{{ sabnzbd_domain }} owner=root group=root mode=640 state=directory
-
 - name: Generate SSL cert
-  command: chdir={{ simp_le_root }}{{ sabnzbd_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ sabnzbd_domain }} --default_root {{ simp_le_webroot }}
-  register: simp_le_output
-  failed_when: "simp_le_output.rc == 2"
-  changed_when: "simp_le_output.rc == 0"
+  command: "{{ le_cmd }} -d {{ sabnzbd_domain }}"

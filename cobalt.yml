@@ -1,12 +1,10 @@
 ---
-- hosts: thor
+- hosts: cobalt
   become: true
   roles:
     - common
     - ruby
-    - monit
     - java
-    - mariadb
     - newrelic
     - nginx
     - le
@@ -21,8 +19,6 @@
     - nzbget
     - sonarr
     - couchpotato
-    - bookstack
-    - unifi
     - grafana
     - influxdb
     - telegraf

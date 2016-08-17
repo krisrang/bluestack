@@ -19,8 +19,8 @@ server {
   listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate {{ simp_le_root }}{{ sonarr_domain }}/fullchain.pem;
-  ssl_certificate_key {{ simp_le_root }}{{ sonarr_domain }}/key.pem;
+  ssl_certificate {{ le_root }}{{ sonarr_domain }}/fullchain.pem;
+  ssl_certificate_key {{ le_root }}{{ sonarr_domain }}/privkey.pem;
 
   server_name {{ sonarr_domain }};
 

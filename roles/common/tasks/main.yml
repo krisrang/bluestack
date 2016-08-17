@@ -66,10 +66,10 @@
   apt_repository: repo="{{ item }}"
   register: multiverse_installed
   with_items:
-   - "deb http://ubuntu.mirrors.ovh.net/ftp.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
-   - "deb-src http://ubuntu.mirrors.ovh.net/ftp.ubuntu.com/ubuntu {{ ansible_distribution_release }} multiverse"
-   - "deb http://ubuntu.mirrors.ovh.net/ftp.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse"
-   - "deb-src http://ubuntu.mirrors.ovh.net/ftp.ubuntu.com/ubuntu {{ ansible_distribution_release }}-updates multiverse"
+   - "deb http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }} multiverse"
+   - "deb-src http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }} multiverse"
+   - "deb http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }}-updates multiverse"
+   - "deb-src http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }}-updates multiverse"
 
 - name: Update apt cache
   apt: update_cache=true

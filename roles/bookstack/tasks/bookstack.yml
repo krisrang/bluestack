@@ -45,11 +45,5 @@
   file: src=/etc/nginx/sites-available/01-{{ bookstack_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ bookstack_domain }}.conf state=link
   notify: reload nginx
 
-- name: Create LE directory
-  file: path={{ simp_le_root }}{{ bookstack_domain }} owner=root group=root mode=640 state=directory
-
 - name: Generate SSL cert
-  command: chdir={{ simp_le_root }}{{ bookstack_domain }} {{ simp_le_cmd }} --email {{ simp_le_email }} -f account_key.json -f fullchain.pem -f key.pem -d {{ bookstack_domain }} --default_root {{ simp_le_webroot }}
-  register: simp_le_output
-  failed_when: "simp_le_output.rc == 2"
-  changed_when: "simp_le_output.rc == 0"
+  command: "{{ le_cmd }} -d {{ bookstack_domain }}"

@@ -15,8 +15,8 @@ server {
   listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate {{ simp_le_root }}{{ bookstack_domain }}/fullchain.pem;
-  ssl_certificate_key {{ simp_le_root }}{{ bookstack_domain }}/key.pem;
+  ssl_certificate {{ le_root }}{{ bookstack_domain }}/fullchain.pem;
+  ssl_certificate_key {{ le_root }}{{ bookstack_domain }}/privkey.pem;
 
   server_name {{ bookstack_domain }};
 
