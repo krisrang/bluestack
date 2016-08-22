@@ -1,3 +1,0 @@
----
-- include: monit.yml
-  tags: monit

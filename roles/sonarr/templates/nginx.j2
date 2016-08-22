@@ -22,6 +22,8 @@ server {
   ssl_certificate {{ le_root }}{{ sonarr_domain }}/fullchain.pem;
   ssl_certificate_key {{ le_root }}{{ sonarr_domain }}/privkey.pem;
 
+  include snippets/moepass.conf;
+
   server_name {{ sonarr_domain }};
 
   root {{ sonarr_data_dir }}/;

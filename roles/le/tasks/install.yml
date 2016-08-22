@@ -6,7 +6,7 @@
   file: path={{ le_dest }} mode=o+rx
 
 - name: renewal cron
-  cron: name="LE renew" minute="0" hour="5,15" job="{{ le_dest }} renew"
+  cron: name="LE renew" minute="0" hour="5,15" job="{{ le_dest }} renew > /var/log/certbot.log"
 
 - name: Create LE directory
   file: path={{ le_webroot }} owner=www-data group=www-data mode=775 state=directory

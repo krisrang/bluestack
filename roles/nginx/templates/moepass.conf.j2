@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+
+satisfy  any;
+allow  192.168.1.0/24;
+deny   all;
+
+auth_basic            "Moe";
+auth_basic_user_file  htpasswd/moe;

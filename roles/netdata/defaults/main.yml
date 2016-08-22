@@ -1,6 +1,0 @@
----
-netdata_conf: /etc/netdata
-netdata_port: 19999
-netdata_domain: ""
-netdata_user: ""
-netdata_pass: ""

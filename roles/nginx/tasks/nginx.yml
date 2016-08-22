@@ -48,6 +48,13 @@
 - name: Create htpasswd directory
   file: path=/etc/nginx/htpasswd owner=root group=root mode=750 state=directory
 
+- name: Create htpasswd file
+  htpasswd: path=/etc/nginx/htpasswd/moe name={{ item.user }} password={{ item.pass }} owner=root group=www-data mode=0640
+  with_items: "{{ moe_passusers }}"
+
+- name: Write moepass.conf
+  template: src=moepass.conf.j2 dest=/etc/nginx/snippets/moepass.conf
+
 - name: Create acme directory
   file: path=/var/www/acme/.well-known/acme-challenge owner=www-data group=www-data mode=775 state=directory
 

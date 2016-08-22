@@ -35,6 +35,9 @@
   template: src=jackett.service.j2 dest=/etc/systemd/system/jackett.service mode=644
   notify: restart jackett
 
+- name: enable service
+  service: name=jackett state=started enabled=yes
+
 - name: Write site
   template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ jackett_domain }}.conf
   notify: reload nginx

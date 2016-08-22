@@ -5,5 +5,3 @@ nzbget_lib: /var/lib/nzbget
 
 nzbget_port: 6060
 nzbget_domain: nzb.kris.moe
-# nzbget_username:
-# nzbget_password:

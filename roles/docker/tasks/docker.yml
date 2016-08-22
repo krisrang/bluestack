@@ -11,6 +11,6 @@
     - linux-image-extra-{{ ansible_kernel }}
     - docker-engine
 
-# - name: Allow firewall forwarding
-#   lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY' line='DEFAULT_FORWARD_POLICY="ACCEPT"'
-#   notify: reload ufw
+- name: Allow firewall forwarding
+  lineinfile: dest=/etc/default/ufw regexp='^\DEFAULT_FORWARD_POLICY' line='DEFAULT_FORWARD_POLICY="ACCEPT"'
+  notify: reload ufw

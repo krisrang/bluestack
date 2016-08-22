@@ -9,3 +9,5 @@
   apt: name=telegraf update_cache=yes state=installed cache_valid_time=86400
   notify: restart telegraf
 
+- name: enable service
+  service: name=telegraf state=started enabled=yes
