@@ -7,7 +7,7 @@ upstream jenkins {
 
 server {
   listen 80;
-  server_name {{ jenkins.host }};
+  server_name {{ jenkins_host }};
   rewrite ^ https://$server_name$request_uri? permanent;
 }
 
@@ -16,10 +16,10 @@ server {
   listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate {{ le_root }}{{ jenkins.host }}/fullchain.pem;
-  ssl_certificate_key {{ le_root }}{{ jenkins.host }}/privkey.pem;
+  ssl_certificate {{ le_root }}{{ jenkins_host }}/fullchain.pem;
+  ssl_certificate_key {{ le_root }}{{ jenkins_host }}/privkey.pem;
 
-  server_name {{ jenkins.host }};
+  server_name {{ jenkins_host }};
 
   # Add HSTS header. This must be sent via HTTPS.
   add_header Strict-Transport-Security max-age=31536000;
@@ -59,6 +59,6 @@ server {
     }
   }
 
-  error_log   /var/log/nginx/{{ jenkins.host }}-error.log;
-  access_log  /var/log/nginx/{{ jenkins.host }}-access.log;
+  error_log   /var/log/nginx/{{ jenkins_host }}-error.log;
+  access_log  /var/log/nginx/{{ jenkins_host }}-access.log;
 }

@@ -22,4 +22,6 @@
     - grafana
     - influxdb
     - telegraf
-    - gamecache
+    - mariadb
+    - redis
+    - jenkins

@@ -1,0 +1,4 @@
+---
+jenkins_host: ci.domain.com
+jenkins_user: ''
+jenkins_password: ''

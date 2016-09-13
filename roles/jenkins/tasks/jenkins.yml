@@ -1,81 +1,48 @@
 ---
-# - name: Add jenkins apt-key
-#   apt_key: url='http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key' state=present
+- name: Add jenkins apt-key
+  apt_key: url='http://pkg.jenkins-ci.org/debian/jenkins-ci.org.key' state=present
 
-# - name: Add Jenkins repository
-#   apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' state=present
+- name: Add Jenkins repository
+  apt_repository: repo='deb http://pkg.jenkins-ci.org/debian binary/' state=present
 
-# - name: Remove invalid Jenkins src repository
-#   command: sed --in-place '/deb-src.*pkg.jenkins-ci/d' /etc/apt/sources.list
+- name: Remove invalid Jenkins src repository
+  command: sed --in-place '/deb-src.*pkg.jenkins-ci/d' /etc/apt/sources.list
 
-# - name: Install dependencies
-#   apt: pkg={{item}} update_cache=yes state=latest cache_valid_time=86400
-#   with_items:
-#     - 'default-jre'
-#     - 'default-jdk'
-#     - 'git'
-#     - 'curl'
-#     - 'firefox'
-#     - 'xvfb'
+- name: Install dependencies
+  apt: pkg={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - git
+    - curl
+    - firefox
+    - xvfb
 
-# - name: Install Jenkins
-#   apt: pkg=jenkins update_cache=yes state=installed cache_valid_time=86400
-#   register: jenkins_install
+- name: Install Jenkins
+  apt: pkg=jenkins update_cache=yes state=installed cache_valid_time=86400
+  register: jenkins_install
 
-# - name: Start jenkins
-#   service: name=jenkins state=started
+- name: Start jenkins
+  service: name=jenkins state=started
 
-# - name: Wait for jenkins
-#   wait_for: port=8080 delay=15
+- name: Create Jenkins CLI destination directory
+  file: path=/var/lib/jenkins state=directory
 
-# - name: Create Jenkins CLI destination directory
-#   file: path=/var/lib/jenkins state=directory
+- name: Create Jenkins .ssh directory
+  file: path=/var/lib/jenkins/.ssh state=directory owner=jenkins group=jenkins
 
-# - name: Get Jenkins CLI
-#   get_url: url=http://localhost:8080/jnlpJars/jenkins-cli.jar dest=/var/lib/jenkins/jenkins-cli.jar mode=0440
+- name: Copy Jenkins ssh key
+  copy: src=../../../secrets/jenkins dest=/var/lib/jenkins/.ssh/id_rsa owner=jenkins group=jenkins mode=0600
 
-# - name: Get Jenkins updates
-#   get_url: url=http://updates.jenkins-ci.org/update-center.json dest=/var/lib/jenkins/updates_jenkins.json thirsty=yes mode=0440
-#   register: jenkins_updates
-
-# - name: Update-center Jenkins
-#   shell: "cat /var/lib/jenkins/updates_jenkins.json | sed '1d;$d' | curl -X POST -H 'Accept: application/json' -d @- http://localhost:8080/updateCenter/byId/default/postBack"
-#   when: jenkins_updates.changed
-
-# # - name: Install/update plugins
-# #   command: java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 install-plugin {{item}}
-# #   when: jenkins.plugins is defined and jenkins_updates.changed
-# #   with_items: jenkins.plugins
-
-# # # Wait for Jenkins to install plugins, assuming 10s should be sufficiant
-# # - name: 10s delay while installing plugins
-# #   wait_for: port=8080 delay=10
-# #   when: jenkins_updates.changed
-
-# # - name: Safe-restart Jenkins
-# #   command: java -jar /var/lib/jenkins/jenkins-cli.jar -s http://localhost:8080 safe-restart
-# #   when: jenkins_updates.changed
-
-# - name: Create Jenkins .ssh directory
-#   file: path=/var/lib/jenkins/.ssh state=directory owner=jenkins group=jenkins
-
-# - name: Copy Jenkins ssh key
-#   copy: src=../../../secrets/jenkins dest=/var/lib/jenkins/.ssh/id_rsa owner=jenkins group=jenkins mode=0600
-
-# - name: Copy Jenkins ssh public key
-#   copy: src=../../../secrets/jenkins.pub dest=/var/lib/jenkins/.ssh/id_rsa.pub owner=jenkins group=jenkins mode=0644
-
-# - name: Add jenkins htpasswd
-#   htpasswd: path=/etc/nginx/htpasswd/jenkins name={{jenkins.user}} password={{jenkins.password}} owner=root group=www-data mode=0640
+- name: Copy Jenkins ssh public key
+  copy: src=../../../secrets/jenkins.pub dest=/var/lib/jenkins/.ssh/id_rsa.pub owner=jenkins group=jenkins mode=0644
 
 - name: Copy nginx site configuration
-  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/{{jenkins.host}}.conf
+  template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/01-{{ jenkins_host }}.conf
   notify: restart nginx
 
 - name: Link nginx site configuration
-  file: src=/etc/nginx/sites-available/{{jenkins.host}}.conf path=/etc/nginx/sites-enabled/{{jenkins.host}}.conf state=link
+  file: src=/etc/nginx/sites-available/01-{{ jenkins_host }}.conf path=/etc/nginx/sites-enabled/01-{{ jenkins_host }}.conf state=link
   notify: restart nginx
 
 - name: Generate SSL cert
-  command: "{{ le_cmd }} -d {{ jenkins.host }}"
+  command: "{{ le_cmd }} -d {{ jenkins_host }}"
 

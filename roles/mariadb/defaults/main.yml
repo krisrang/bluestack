@@ -1,4 +1,4 @@
 ---
 mariadb_data: "/opt/mariadb"
-
+mariadb_config: "/opt/mariadb-config"
 mariadb_pw: ""
