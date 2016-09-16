@@ -9,5 +9,19 @@
   apt: name=telegraf update_cache=yes state=installed cache_valid_time=86400
   notify: restart telegraf
 
+- name: add user to groups
+  user: name=telegraf groups=telegraf,docker,www-data append=yes
+
+- name: copy conf
+  template: src=data.conf.j2 dest=/etc/telegraf/telegraf.d/data.conf owner=root group=root mode=0644
+  notify: restart telegraf
+
+- name: create scripts directory
+  file: path={{ telegraf_scripts_path }} state=directory owner=telegraf group=telegraf
+
+- name: copy script
+  copy: src=plex.rb dest={{ telegraf_scripts_path }}/plex.rb owner=telegraf group=telegraf mode=0755
+  notify: restart telegraf
+
 - name: enable service
   service: name=telegraf state=started enabled=yes
