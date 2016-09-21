@@ -30,5 +30,9 @@
   copy: src=drives.rb dest={{ telegraf_scripts_path }}/drives.rb owner=telegraf group=telegraf mode=0755
   notify: restart telegraf
 
+- name: copy script
+  copy: src=ups.rb dest={{ telegraf_scripts_path }}/ups.rb owner=telegraf group=telegraf mode=0755
+  notify: restart telegraf
+
 - name: enable service
   service: name=telegraf state=started enabled=yes
