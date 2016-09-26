@@ -147,3 +147,17 @@
 #    # auto populate table's fields using the MIB
 #    oid = "HOST-RESOURCES-MIB::hrNetworkTable"
 
+# Monitor sensors, requires lm-sensors package
+[[inputs.sensors]]
+  ## Remove numbers from field names.
+  ## If true, a field name like 'temp1_input' will be changed to 'temp_input'.
+  # remove_numbers = true
+
+[[inputs.ipmi_sensor]]
+  ## specify servers via a url matching:
+  ##  [username[:password]@][protocol[(address)]]
+  ##  e.g.
+  ##    root:passwd@lan(127.0.0.1)
+  ##
+  servers = ["{{ telegraf_ipmi_user }}:{{ telegraf_ipmi_password }}@lanplus(192.168.1.201)"]
+

@@ -6,8 +6,13 @@
   apt_repository: repo='deb https://repos.influxdata.com/debian jessie stable'
 
 - name: Install packages
-  apt: name=telegraf update_cache=yes state=installed cache_valid_time=86400
+  apt: name={{ item }} update_cache=yes state=installed cache_valid_time=86400
   notify: restart telegraf
+  with_items:
+    - telegraf
+    - lm-sensors
+    - snmp
+    - ipmitool
 
 - name: add user to groups
   user: name=telegraf groups=telegraf,docker,www-data append=yes

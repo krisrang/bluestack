@@ -1,3 +1,5 @@
 ---
 telegraf_dns_domain: kris.moe
 telegraf_scripts_path: /var/lib/telegraf
+# telegraf_ipmi_user:
+# telegraf_ipmi_password:
