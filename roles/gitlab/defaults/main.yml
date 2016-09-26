@@ -1,0 +1,4 @@
+---
+gitlab_domain: git.rang.ee
+
+gitlab_url: 'https://{{ gitlab_domain }}'

@@ -1,0 +1,61 @@
+# {{ ansible_managed }}
+
+upstream gitlab-workhorse {
+  server unix:/var/opt/gitlab/gitlab-workhorse/socket fail_timeout=0;
+}
+
+server {
+  listen [::]:80;
+  listen 80;
+
+  server_name {{ gitlab_domain }};
+  rewrite ^ https://$server_name$request_uri? permanent;
+
+  include snippets/le.conf;
+}
+
+
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  ssl on;
+
+  ssl_certificate {{ le_root }}{{ gitlab_domain }}/fullchain.pem;
+  ssl_certificate_key {{ le_root }}{{ gitlab_domain }}/privkey.pem;
+
+  server_name {{ gitlab_domain }};
+
+  root /opt/gitlab/embedded/service/gitlab-rails/public;
+  index index.html index.htm;
+
+  add_header Strict-Transport-Security max-age=31536000;
+
+  error_log   /var/log/nginx/{{ gitlab_domain }}-error.log;
+  access_log  /var/log/nginx/{{ gitlab_domain }}-access.log;
+
+  location / {
+    try_files $uri @gitlab;
+  }
+
+  location @gitlab {
+    client_max_body_size 0;
+    gzip off;
+
+    ## https://github.com/gitlabhq/gitlabhq/issues/694
+    ## Some requests take more than 30 seconds.
+    proxy_read_timeout      300;
+    proxy_connect_timeout   300;
+    proxy_redirect          off;
+
+    proxy_http_version 1.1;
+
+    proxy_set_header    Host                $http_host;
+    proxy_set_header    X-Real-IP           $remote_addr;
+    proxy_set_header    X-Forwarded-Ssl     on;
+    proxy_set_header    X-Forwarded-For     $proxy_add_x_forwarded_for;
+    proxy_set_header    X-Forwarded-Proto   $scheme;
+    proxy_pass http://gitlab-workhorse;
+  }
+
+  include snippets/le.conf;
+}

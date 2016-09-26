@@ -1,0 +1,26 @@
+---
+- name: Add repo key
+  apt_key: url=https://packages.gitlab.com/gitlab/gitlab-ce/gpgkey state=present
+
+- name: Add repo
+  apt_repository: repo='deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/ xenial main'
+
+- name: Install packages
+  apt: name=gitlab-ce update_cache=yes state=installed cache_valid_time=86400
+  notify: restart gitlab
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ gitlab_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ gitlab_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ gitlab_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ gitlab_domain }}"
+  notify: reload nginx
+
+- name: Write config
+  template: src=gitlab.rb.j2 dest=/etc/gitlab/gitlab.rb mode=0600
+  notify: reconfigure gitlab
