@@ -5,9 +5,15 @@
 - name: Add repo
   apt_repository: repo='deb https://packages.gitlab.com/gitlab/gitlab-ce/ubuntu/ xenial main'
 
+- name: Add repo
+  apt_repository: repo='deb https://packages.gitlab.com/runner/gitlab-ci-multi-runner/ubuntu/ xenial main'
+
 - name: Install packages
-  apt: name=gitlab-ce update_cache=yes state=installed cache_valid_time=86400
+  apt: name={{ item }} update_cache=yes state=installed cache_valid_time=86400
   notify: restart gitlab
+  with_items:
+    - gitlab-ce
+    - gitlab-ci-multi-runner
 
 - name: Write site
   template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ gitlab_domain }}.conf
@@ -20,6 +26,22 @@
 - name: Generate SSL cert
   command: "{{ le_cmd }} -d {{ gitlab_domain }}"
   notify: reload nginx
+
+- name: Create directories
+  file: path={{ item.path }} owner={{ item.owner|default("git") }} group={{ item.group|default("root") }} mode={{ item.mode|default("0700") }} state=directory
+  with_items:
+    - path: "{{ gitlab_repo_path }}"
+    - path: "{{ gitlab_repo_path }}/repositories"
+      mode: "2770"
+      group: git
+    - path: "{{ gitlab_shared_path }}"
+      mode: "0751"
+      group: gitlab-www
+    - path: "{{ gitlab_shared_path }}/artifacts"
+    - path: "{{ gitlab_shared_path }}/lfs-objects"
+    - path: "{{ gitlab_shared_path }}/pages"
+      mode: "0750"
+      group: gitlab-www
 
 - name: Write config
   template: src=gitlab.rb.j2 dest=/etc/gitlab/gitlab.rb mode=0600

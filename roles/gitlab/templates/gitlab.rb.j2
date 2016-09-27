@@ -169,21 +169,28 @@ gitlab_rails['trusted_proxies'] = [ '192.168.1.0/24', '192.168.2.1', '2001:0db8:
 ## For setting up omniauth
 ## see https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#omniauth-google-twitter-github-login
 
-# gitlab_rails['omniauth_enabled'] = false
+gitlab_rails['omniauth_enabled'] = true
 # gitlab_rails['omniauth_allow_single_sign_on'] = ['saml']
 # gitlab_rails['omniauth_auto_sign_in_with_provider'] = 'saml'
 # gitlab_rails['omniauth_block_auto_created_users'] = true
 # gitlab_rails['omniauth_auto_link_ldap_user'] = false
 # gitlab_rails['omniauth_auto_link_saml_user'] = false
 # gitlab_rails['omniauth_external_providers'] = ['twitter', 'google_oauth2']
-# gitlab_rails['omniauth_providers'] = [
-#   {
-#     "name" => "google_oauth2",
-#     "app_id" => "YOUR APP ID",
-#     "app_secret" => "YOUR APP SECRET",
-#     "args" => { "access_type" => "offline", "approval_prompt" => "" }
-#   }
-# ]
+gitlab_rails['omniauth_providers'] = [
+  {
+    "name" => "github",
+    "app_id" => "{{ gitlab_github_key }}",
+    "app_secret" => "{{ gitlab_github_secret }}",
+    "url" => "https://github.com/",
+    "args" => { "scope" => "user:email" }
+  },
+  {
+    "name" => "google_oauth2",
+    "app_id" => "{{ gitlab_google_key }}",
+    "app_secret" => "{{ gitlab_google_secret }}",
+    "args" => { "access_type" => "offline", "approval_prompt" => '' }
+  }
+]
 #
 # If you setup bitbucket importer under omniauth providers you will need to add the keys
 # which will allow connection between bitbucket and gitlab.
@@ -218,11 +225,11 @@ gitlab_rails['trusted_proxies'] = [ '192.168.1.0/24', '192.168.2.1', '2001:0db8:
 ## see https://gitlab.com/gitlab-org/omnibus-gitlab/blob/master/README.md#storing-git-data-in-an-alternative-directory
 ## If you want to use a single non-default directory to store git data use
 ## a path that doesn't contain symlinks.
-# git_data_dirs({"default" => "/var/opt/gitlab/git-data"})
+git_data_dirs({"default" => "{{ gitlab_repo_path }}"})
 
 ## For storing GitLab application uploads, eg. LFS objects, build artifacts
 ## see https://gitlab.com/gitlab-org/gitlab-ce/blob/master/doc/development/shared_files.md
-# gitlab_rails['shared_path'] = '/var/opt/gitlab/gitlab-rails/shared'
+gitlab_rails['shared_path'] = '{{ gitlab_shared_path }}'
 
 # DEPRECATED: gitlab_rails['satellites_timeout'] = 30
 

@@ -1,4 +1,11 @@
 ---
 gitlab_domain: git.rang.ee
+gitlab_repo_path: /var/media/gitlab/git-data
+gitlab_shared_path: /var/media/gitlab/shared
 
 gitlab_url: 'https://{{ gitlab_domain }}'
+
+gitlab_github_key: ''
+gitlab_github_secret: ''
+gitlab_google_key: ''
+gitlab_google_secret: ''
