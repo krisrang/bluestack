@@ -5,7 +5,7 @@ moe_release_url: https://github.com/krisrang/moe/releases/download/v1.0/v1.0.zip
 moe_domain: kris.moe
 moe_user: kris
 moe_files: stuff
-moe_stuff_version: 0.28.1
+moe_stuff_version: 0.29.0
 moe_stuff_url: https://release.larsjung.de/h5ai/h5ai-{{ moe_stuff_version }}.zip
 moe_stuff_archive: h5ai-{{ moe_stuff_version }}.zip
 

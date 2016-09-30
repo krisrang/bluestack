@@ -13,6 +13,7 @@
     - lm-sensors
     - snmp
     - ipmitool
+    - smartmontools
 
 - name: add user to groups
   user: name=telegraf groups=telegraf,docker,www-data append=yes

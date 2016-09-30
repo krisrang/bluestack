@@ -8,6 +8,12 @@
 - name: Add repo
   apt_repository: repo='deb https://packages.gitlab.com/runner/gitlab-ci-multi-runner/ubuntu/ xenial main'
 
+- name: Create users
+  user: name={{ item }} system=yes
+  with_items:
+    - git
+    - gitlab-www
+
 - name: Install packages
   apt: name={{ item }} update_cache=yes state=installed cache_valid_time=86400
   notify: restart gitlab

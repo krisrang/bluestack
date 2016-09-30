@@ -1,6 +1,3 @@
 ---
 - include: plex.yml
   tags: plex
-
-- include: hama.yml
-  tags: [plex, hama]

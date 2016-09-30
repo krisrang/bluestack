@@ -1,13 +1,13 @@
 ---
-- name: Set locale
-  command: "/usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}"
+# - name: Set locale
+#   command: "/usr/sbin/update-locale LANG={{locale}} LC_ALL={{locale}}"
 
-- name: Set /etc/localtime
-  command: "/bin/cp /usr/share/zoneinfo/{{timezone}} /etc/localtime"
+# - name: Set /etc/localtime
+#   command: "/bin/cp /usr/share/zoneinfo/{{timezone}} /etc/localtime"
 
-- name: Set /etc/timezone
-  template: src=timezone.j2 dest=/etc/timezone
-  notify: update tzdata
+# - name: Set /etc/timezone
+#   template: src=timezone.j2 dest=/etc/timezone
+#   notify: update tzdata
 
 - name: Install ansible dependencies
   apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
@@ -67,10 +67,10 @@
   apt_repository: repo="{{ item }}"
   register: multiverse_installed
   with_items:
-   - "deb http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }} multiverse"
-   - "deb-src http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }} multiverse"
-   - "deb http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }}-updates multiverse"
-   - "deb-src http://ubuntu.mirror.su.se/ubuntu/ {{ ansible_distribution_release }}-updates multiverse"
+   - "deb http://ee.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} multiverse"
+   - "deb-src http://ee.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }} multiverse"
+   - "deb http://ee.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-updates multiverse"
+   - "deb-src http://ee.archive.ubuntu.com/ubuntu/ {{ ansible_distribution_release }}-updates multiverse"
 
 - name: Update apt cache
   apt: update_cache=true
