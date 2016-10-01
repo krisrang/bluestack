@@ -15,16 +15,9 @@ rtorrent_log_file: /var/log/rtorrent.log
 rtorrent_screen_name: rtorrent
 
 rtorrent_install_rutorrent: yes
-rtorrent_install_rutorrent_plugins: yes
-rtorrent_rutorrent_version: ac2db1536302bdc5b27aff6b15d54b0e9837fa59
-rtorrent_rutorrent_archive: ruTorrent-{{ rtorrent_rutorrent_version }}.zip
-rtorrent_rutorrent_url: https://github.com/Novik/ruTorrent/archive/{{rtorrent_rutorrent_version}}.zip
+rtorrent_rutorrent_version: master
+rtorrent_rutorrent_repo: https://github.com/Novik/ruTorrent.git
 rtorrent_rutorrent_install_path: /var/www/rutorrent
 rtorrent_rutorrent_autotools_interval: 300
 
 rtorrent_rutorrent_domain: rt.kris.moe
-rtorrent_rutorrent_ssl_cert: /etc/ssl/certs/{{ rtorrent_rutorrent_domain }}.pem
-rtorrent_rutorrent_ssl_key: /etc/ssl/private/{{ rtorrent_rutorrent_domain }}.key
-
-# rtorrent_rutorrent_user:
-# rtorrent_rutorrent_password:

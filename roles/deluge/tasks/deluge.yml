@@ -29,6 +29,12 @@
   template: src=deluge-web.service.j2 dest=/etc/systemd/system/deluge-web.service mode=644
   notify: restart deluge-web
 
+- name: enable service
+  service: name=deluged state=started enabled=yes
+
+- name: enable service
+  service: name=deluge-web state=started enabled=yes
+
 - name: Write site
   template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ deluge_web_domain }}.conf
   notify: reload nginx

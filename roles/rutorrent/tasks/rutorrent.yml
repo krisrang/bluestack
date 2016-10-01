@@ -6,38 +6,21 @@
     - unrar
     - mediainfo
     - curl
-    - php5-geoip
-
-- name: download rutorrent
-  get_url: url={{ rtorrent_rutorrent_url }} dest=/tmp/{{ rtorrent_rutorrent_archive }} force=yes
-
-# - name: download rutorrent plugins
-#   get_url: url={{ rtorrent_rutorrent_plugins_url }} dest=/tmp/{{ rtorrent_rutorrent_plugins_archive }} force=yes
+    - php-geoip
 
 - name: create install directory
   file: path={{ rtorrent_rutorrent_install_path|dirname }} state=directory owner=www-data group=www-data
 
-- name: unpack rutorrent archive
-  unarchive: >
-    src=/tmp/{{ rtorrent_rutorrent_archive }} dest={{ rtorrent_rutorrent_install_path|dirname }} copy=no
-    creates={{ rtorrent_rutorrent_install_path }}/plugins/_getdir
+- name: download rutorrent
+  git: >
+    repo={{ rtorrent_rutorrent_repo }} dest={{ rtorrent_rutorrent_install_path }}
+    version={{ rtorrent_rutorrent_version }} update=yes force=yes
   notify:
     - restart rtorrent
-    - restart php5-fpm
-
-- name: move rutorrent directory to correct place
-  command: creates={{ rtorrent_rutorrent_install_path }}/plugins/_getdir mv {{ rtorrent_rutorrent_install_path|dirname }}/ruTorrent-{{ rtorrent_rutorrent_version }} {{ rtorrent_rutorrent_install_path }}
+    - restart php-fpm
 
 - name: ensure correct ownership
   command: chown www-data:www-data -R {{ rtorrent_rutorrent_install_path|dirname }}
-
-# - name: unpack rutorrent plugins archive
-#   unarchive: >
-#     src=/tmp/{{ rtorrent_rutorrent_plugins_archive }} dest={{ rtorrent_rutorrent_install_path }} copy=no
-#     creates={{ rtorrent_rutorrent_install_path }}/plugins/_getdir
-#   notify:
-#     - restart rtorrent
-#     - restart php5-fpm
 
 - name: adjust rutorrent autotools plugin inteval
   lineinfile: >
@@ -46,6 +29,9 @@
     backrefs=yes state=present
   notify: restart rtorrent
 
+- name: enable service
+  service: name=rtorrent state=started enabled=yes
+
 - name: Write site
   template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ rtorrent_rutorrent_domain }}.conf
   notify: reload nginx
@@ -53,12 +39,6 @@
 - name: Link site
   file: src=/etc/nginx/sites-available/01-{{ rtorrent_rutorrent_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ rtorrent_rutorrent_domain }}.conf state=link
   notify: reload nginx
-
-- name: Ensure htpasswd directory
-  file: path=/etc/nginx/htpasswd state=directory owner=www-data group=www-data mode=2775
-
-- name: Create htpasswd file
-  htpasswd: path=/etc/nginx/htpasswd/rutorrent name={{ rtorrent_rutorrent_user }} password={{ rtorrent_rutorrent_password }} owner=root group=www-data mode=0640
 
 - name: Generate SSL cert
   command: "{{ le_cmd }} -d {{ rtorrent_rutorrent_domain }}"

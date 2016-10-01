@@ -2,6 +2,3 @@
 - name: restart rtorrent
   service: name=rtorrent state=restarted
   when: rtorrent_service_enable
-
-- name: restart php5-fpm
-  service: name=php5-fpm state=restarted
