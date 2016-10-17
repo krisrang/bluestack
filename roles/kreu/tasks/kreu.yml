@@ -24,4 +24,4 @@
   notify: reload nginx
 
 - name: Generate SSL cert
-  command: "{{ le_cmd }} -d {{ kreu_domain }}"
+  command: "{{ le_cmd }} -d {{ kreu_domain }} -d www.{{ kreu_domain }}"
