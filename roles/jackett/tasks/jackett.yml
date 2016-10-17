@@ -5,9 +5,11 @@
 - name: create directories
   file: path={{ item.path }} owner={{ jackett_user }} group={{ jackett_user }} mode={{ item.mode|default("755") }} state=directory
   with_items:
-    - path: "{{ jackett_install_dir }}"
     - path: "{{ jackett_data_dir }}"
     - path: "{{ jackett_config_dir }}"
+
+- name: delete jackett directory
+  file: path={{ jackett_install_dir }} state=absent
 
 - name: download jackett
   get_url: url={{ jackett_release_url }} dest=/tmp/{{ jackett_archive }}
@@ -27,7 +29,7 @@
   ignore_errors: yes
 
 - name: create config file
-  template: src=jackett.json.j2 dest={{ jackett_config_dir }}ServerConfig.json owner={{ jackett_user }} group={{ jackett_user }}
+  template: src=jackett.json.j2 dest={{ jackett_config_dir }}ServerConfig.json owner={{ jackett_user }} group={{ jackett_user }} mode=0644
   when: config_file_result|failed
   notify: restart jackett
 
