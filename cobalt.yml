@@ -12,6 +12,7 @@
     - php-fpm
     - php-composer
     - moe
+    - kreu
     - plex
     - plexpy
     - rutorrent

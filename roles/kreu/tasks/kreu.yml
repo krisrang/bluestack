@@ -1,0 +1,27 @@
+---
+
+- name: download
+  get_url: url={{ kreu_release_url }} dest=/tmp/{{ kreu_archive }}
+
+- name: create directory
+  file: path={{ kreu_root }} state=directory owner=www-data group=www-data
+
+- name: unpack archive
+  unarchive: >
+    src=/tmp/{{ kreu_archive }} dest={{ kreu_root }} copy=no
+    creates={{ kreu_root }}/index.html
+  notify: reload nginx
+
+- name: ensure correct ownership
+  file: path={{ kreu_root }} owner=www-data group=www-data recurse=true state=directory
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ kreu_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ kreu_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ kreu_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ kreu_domain }}"
