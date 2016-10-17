@@ -1,0 +1,19 @@
+[Unit]
+Description=dropbox
+After=network-online.target
+
+[Service]
+Environment=LC_ALL=en_US.UTF-8
+Environment=LANG=en_US.UTF-8
+ExecStart={{ dropbox_dest }}/.dropbox-dist/dropboxd
+Type=simple
+User=dropbox
+Group=media
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+TimeoutStopSec=300
+
+[Install]
+WantedBy=multi-user.target

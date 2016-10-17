@@ -1,0 +1,3 @@
+---
+- name: restart dropboxd
+  service: name=dropboxd state=restarted

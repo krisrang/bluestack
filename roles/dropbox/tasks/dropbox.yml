@@ -1,0 +1,28 @@
+---
+- name: download archive
+  get_url: url={{ dropbox_url }} dest=/tmp/{{ dropbox_archive }}
+
+- name: create user
+  user: name=dropbox createhome=yes system=yes groups=dropbox,media
+
+- name: create directory
+  file: path={{ dropbox_dest }} state=directory owner=dropbox group=dropbox
+
+- name: unpack archive
+  unarchive: src=/tmp/{{ dropbox_archive }} dest={{ dropbox_dest }} copy=no
+
+- name: download helper
+  get_url: url={{ dropbox_helper }} dest=/usr/local/bin/dropbox.py mode=0755 owner=root group=root
+
+- name: create dropbox folder
+  file: path={{ dropbox_folder }} state=directory owner=dropbox group=media mode=2775
+
+- name: create dropbox link
+  file: src={{ dropbox_folder }} dest=/home/dropbox/Dropbox state=link
+
+- name: install service
+  template: src=dropboxd.service.j2 dest=/etc/systemd/system/dropboxd.service mode=644
+  notify: restart dropboxd
+
+- name: enable service
+  service: name=dropboxd state=started enabled=yes

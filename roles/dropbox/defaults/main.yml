@@ -1,0 +1,7 @@
+---
+dropbox_dest: /opt/dropbox
+dropbox_archive: dropbox.tar.gz
+dropbox_url: https://www.dropbox.com/download?plat=lnx.x86_64
+dropbox_helper: https://www.dropbox.com/download?dl=packages/dropbox.py
+
+dropbox_folder: /var/media/dropbox
