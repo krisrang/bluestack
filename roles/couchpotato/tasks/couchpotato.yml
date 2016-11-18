@@ -17,17 +17,11 @@
     - path: "{{ couchpotato_pid_dir }}"
 
 - name: clone couchpotato repo
-  git: repo={{ couchpotato_repo }} dest={{ couchpotato_install_dir }} update=no
+  git: repo={{ couchpotato_repo }} dest={{ couchpotato_install_dir }} update=yes
   notify: restart couchpotato
 
 - name: fix repo permissions
   file: path={{ couchpotato_install_dir }} owner={{ couchpotato_user }} group={{ couchpotato_user }} recurse=yes
-
-- name: symlink couchpotato init
-  file: src={{ couchpotato_install_dir }}/init/ubuntu dest=/etc/init.d/couchpotato state=link mode=755
-
-- name: enable couchpotato service
-  service: name=couchpotato enabled=yes
 
 - name: default config file
   template: src=couchpotato.default.j2 dest=/etc/default/couchpotato
@@ -40,6 +34,9 @@
 - name: update configuration
   template: src=init.j2 dest=/etc/init.d/couchpotato mode=755
   notify: restart couchpotato
+
+- name: enable couchpotato service
+  service: name=couchpotato enabled=yes
 
 - name: Write site
   template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ couchpotato_domain }}.conf
