@@ -1,0 +1,19 @@
+[Unit]
+Description=skyltmax
+After=network.target
+
+[Service]
+Environment=PORT={{ dev_skyltmax_port }}
+Environment=RAILS_ENV=development
+WorkingDirectory={{ dev_skyltmax_dir }}
+ExecStart=/bin/sh -c 'forego start'
+Type=simple
+User={{ dev_user }}
+Group={{ dev_user }}
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=60s
+StartLimitBurst=3
+
+[Install]
+WantedBy=multi-user.target

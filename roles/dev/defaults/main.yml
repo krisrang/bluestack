@@ -1,0 +1,10 @@
+---
+dev_path: /home/kris/code
+dev_user: kris
+dev_skyltmax_domain: skyltmax.rang.ee
+dev_skyltmax_port: 5544
+dev_skyltmax_dir: "{{ dev_path }}/skyltmax"
+dev_skyltmax_repo: git@github.com:skyltmax/skyltmax.git
+dev_skyltmax_db: skyltmax
+dev_skyltmax_db_user: skyltmax
+dev_skyltmax_db_pass: ''

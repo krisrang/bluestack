@@ -1,0 +1,12 @@
+---
+- name: download forego
+  get_url: url=https://bin.equinox.io/c/ekMN3bCZFUn/forego-stable-linux-amd64.tgz dest=/root/forego.tgz
+
+- name: extract forego
+  command: tar xzf /root/forego.tgz chdir=/root creates=/root/forego
+
+- name: copy forego
+  command: cp /root/forego /usr/bin/forego creates=/usr/bin/forego
+
+- name: set forego mode
+  file: path=/usr/bin/forego mode=0777

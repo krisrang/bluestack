@@ -1,0 +1,62 @@
+---
+- name: install packages for skyltmax
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - librsvg2-common
+    - librsvg2-dev
+    - ghostscript
+    - imagemagick
+
+# - name: install bundler
+#   gem: name=bundler state=latest user_install=no
+
+- name: create directories
+  become: false
+  file: path={{ dev_path }} src=/var/media/code owner={{ dev_user }} group={{ dev_user }} mode=755 state=link
+
+- name: create directories
+  become: false
+  file: path={{ item.path }} owner={{ item.user|default(dev_user) }} group={{ item.group|default(dev_user) }} mode={{ item.mode|default("755") }} state=directory
+  with_items:
+    - path: "{{ dev_skyltmax_dir }}"
+
+# - name: clone skyltmax repo
+#   become: false
+#   git: repo={{ dev_skyltmax_repo }} dest={{ dev_skyltmax_dir }} update=yes accept_hostkey=true
+#   notify: restart skyltmax
+
+# - name: install gems
+#   become: false
+#   bundler: state=present chdir={{ dev_skyltmax_dir }}
+
+- name: create db
+  mysql_db: name={{ dev_skyltmax_db }} state=present encoding=utf8 login_user=root login_password={{ mariadb_pw }} login_host=127.0.0.1
+
+- name: create db user
+  mysql_user: name={{ dev_skyltmax_db_user }} password={{ dev_skyltmax_db_pass }} host={{ ansible_docker0.ipv4.address }} priv={{ dev_skyltmax_db }}.*:ALL state=present login_user=root login_password={{ mariadb_pw }} login_host=127.0.0.1
+
+- name: install database.yml
+  template: src=database.yml.j2 dest={{ dev_skyltmax_dir }}/config/database.yml
+  notify: restart skyltmax
+
+- name: install redis.yml
+  template: src=redis.yml.j2 dest={{ dev_skyltmax_dir }}/config/redis.yml
+  notify: restart skyltmax
+
+- name: install skyltmax service
+  template: src=skyltmax.service.j2 dest=/etc/systemd/system/skyltmax.service
+  notify: restart skyltmax
+
+- name: enable service
+  service: name=skyltmax state=started enabled=yes
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ dev_skyltmax_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ dev_skyltmax_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ dev_skyltmax_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ dev_skyltmax_domain }}"

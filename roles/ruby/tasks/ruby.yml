@@ -1,3 +1,6 @@
 ---
-- name: Install Ruby
+- name: install ruby
   apt: pkg=ruby update_cache=yes state=latest cache_valid_time=86400
+
+- name: install ruby headers
+  apt: pkg=ruby-dev update_cache=yes state=latest cache_valid_time=86400

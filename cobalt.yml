@@ -4,6 +4,7 @@
   roles:
     - common
     - ruby
+    - forego
     - java
     - newrelic
     - nginx
@@ -27,3 +28,4 @@
     - redis
     - jenkins
     - gitlab
+    - dev
