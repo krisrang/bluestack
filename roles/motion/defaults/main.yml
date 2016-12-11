@@ -1,0 +1,8 @@
+---
+motion_port: 8765
+motion_user: motioneye
+motion_domain: eye.rang.ee
+motion_conf_path: /etc/motioneye
+motion_log_path: /var/log/motioneye
+motion_run_path: /var/run/motioneye
+motion_media_path: /var/media/eye

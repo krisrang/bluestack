@@ -20,7 +20,7 @@
     - python-dev
 
 - name: Install python modules
-  pip: name={{ item }}
+  pip: name={{ item }} state=latest
   with_items:
     - docker-py
     - virtualenv

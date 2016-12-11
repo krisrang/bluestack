@@ -6,7 +6,7 @@ After=network.target
 Environment=PORT={{ dev_skyltmax_port }}
 Environment=RAILS_ENV=development
 WorkingDirectory={{ dev_skyltmax_dir }}
-ExecStart=/bin/sh -c 'forego start'
+ExecStart=/bin/bash -lc 'forego start'
 Type=simple
 User={{ dev_user }}
 Group={{ dev_user }}
