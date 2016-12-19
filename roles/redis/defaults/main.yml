@@ -1,0 +1,3 @@
+---
+redis_public_ip: ""
+redis_ssl_port: 6380

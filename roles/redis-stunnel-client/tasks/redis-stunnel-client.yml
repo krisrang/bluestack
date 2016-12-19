@@ -5,7 +5,6 @@
 - name: Install Redis
   apt: pkg={{ item }} update_cache=yes state=latest cache_valid_time=86400
   with_items:
-    - redis-server
     - redis-tools
     - stunnel4
 
@@ -15,22 +14,6 @@
 - name: Copy redis cert
   copy: src=../../../secrets/redis.crt dest=/etc/stunnel/redis.crt mode=0644
 
-- name: Copy redis key
-  copy: src=../../../secrets/redis.key dest=/etc/stunnel/redis.key mode=0600
-
 - name: install redis stunnel conf
   template: src=redis.conf.j2 dest=/etc/stunnel/redis.conf
   notify: restart stunnel
-
-- name: Copy ufw conf
-  template: src=ufw.j2 dest=/etc/ufw/applications.d/redis
-
-- name: firewall allow redis
-  command: ufw allow "Redis"
-
-# - name: Start Redis container
-#   docker:
-#     image: redis
-#     name: redis
-#     restart_policy: always
-#     ports: 6379:6379

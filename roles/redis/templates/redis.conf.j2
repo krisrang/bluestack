@@ -1,0 +1,7 @@
+pid = /run/stunnel-redis.pid
+
+[redis-server]
+cert = /etc/stunnel/redis.crt
+key = /etc/stunnel/redis.key
+accept = {{ redis_public_ip }}:{{ redis_ssl_port }}
+connect = 127.0.0.1:6379

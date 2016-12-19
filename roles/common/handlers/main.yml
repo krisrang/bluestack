@@ -25,3 +25,6 @@
 
 - name: restart networking
   service: name=networking state=restarted
+
+- name: regenerate aliases
+  command: /usr/bin/newaliases

@@ -1,0 +1,89 @@
+---
+- name: install repo key
+  apt_key: url=https://packages.elastic.co/GPG-KEY-elasticsearch state=present
+
+- name: add repos
+  apt_repository: repo={{ item }} state=present
+  with_items:
+    - "deb http://packages.elastic.co/elasticsearch/2.x/debian stable main"
+    - "deb http://packages.elastic.co/kibana/4.5/debian stable main"
+    - "deb http://packages.elastic.co/logstash/2.3/debian stable main"
+
+- name: install packages
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - elasticsearch
+    - kibana
+    - logstash
+
+- name: create directories
+  file: path={{ item }} owner=elasticsearch group=elasticsearch mode=0755 state=directory
+  with_items:
+    - "{{ logs_es_dir }}/data"
+    - "{{ logs_es_dir }}/logs"
+
+- name: create directories
+  file: path={{ item }} state=directory
+  with_items:
+    - /etc/pki/tls
+    - /etc/pki/tls/private
+    - /etc/pki/tls/certs
+
+- name: update configuration
+  template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml group=elasticsearch mode=750
+  notify: restart elasticsearch
+
+- name: update configuration
+  template: src=kibana.yml.j2 dest=/opt/kibana/config/kibana.yml mode=664
+  notify: restart kibana
+
+- name: update configuration
+  template: src={{ item }}.j2 dest=/etc/logstash/conf.d/{{ item }} mode=664
+  notify: restart logstash
+  with_items:
+    - 02-beats-input.conf
+    - 10-filters.conf
+    - 30-elasticsearch-output.conf
+
+- name: update configuration
+  template: src=patterns-rails.j2 dest=/etc/logstash/conf.d/patterns/rails mode=664
+  notify: restart logstash
+
+- name: create certificate
+  command: openssl req -subj '/CN={{ logs_domain }}/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/logstash-forwarder.key -out certs/logstash-forwarder.crt
+  args:
+    chdir: /etc/pki/tls
+    creates: /etc/pki/tls/certs/logstash-forwarder.crt
+
+- name: Copy ufw conf
+  template: src=ufw.j2 dest=/etc/ufw/applications.d/logstash
+
+- name: firewall allow nginx
+  command: ufw allow "Logstash"
+
+- name: enable service
+  service: name=elasticsearch state=started enabled=yes
+
+- name: enable service
+  service: name=kibana state=started enabled=yes
+
+- name: enable service
+  service: name=logstash state=started enabled=yes
+
+- name: Create htpasswd file
+  htpasswd: path=/etc/nginx/htpasswd/logs name={{ item.user }} password={{ item.pass }} owner=root group=www-data mode=0640
+  with_items: "{{ logs_passusers }}"
+
+- name: Write logspass.conf
+  template: src=logspass.conf.j2 dest=/etc/nginx/snippets/logspass.conf
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ logs_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ logs_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ logs_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ logs_domain }}"

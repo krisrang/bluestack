@@ -1,5 +1,5 @@
-[tiger]
-tiger.rang.ee:2341 ansible_ssh_user=kris
-
 [cobalt]
 192.168.1.200:2341 ansible_ssh_user=kris
+
+[helium]
+helium.rang.ee:2341 ansible_ssh_user=kris

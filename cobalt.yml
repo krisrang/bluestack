@@ -26,7 +26,8 @@
     - telegraf
     - mariadb
     - redis
+    - redis-stunnel-client
     - jenkins
     - gitlab
     - dev
-    - motion
+    - logs

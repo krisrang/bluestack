@@ -1,0 +1,3 @@
+---
+- include: redis-stunnel-client.yml
+  tags: redis-stunnel-client

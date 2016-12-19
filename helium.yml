@@ -1,0 +1,7 @@
+---
+- hosts: helium
+  become: true
+  roles:
+    - common
+    - newrelic
+    - redis
