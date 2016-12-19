@@ -3,7 +3,6 @@ output {
     hosts => ["localhost:{{ logs_es_port }}"]
     sniffing => true
     manage_template => false
-    index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-    document_type => "%{[@metadata][type]}"
+    index => "filebeat-%{+YYYY.MM.dd}"
   }
 }

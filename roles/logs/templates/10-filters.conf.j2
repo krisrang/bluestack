@@ -12,7 +12,23 @@ filter {
   } else if [type] == "rails" {
     grok {
       patterns_dir => ["/etc/logstash/conf.d/patterns"]
-      match => { "message" => "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Started %{WORD:method} .*" }
+      match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] %{RAILSACTION:action}?.*$" ]
+    }
+
+    aggregate {
+      task_id => "%{uuid}"
+      code =>  '
+        map.merge!(event) if map.empty?
+        map["full_message"] ||= ""
+        map["full_message"] += "\n" + event["message"]
+      '
+      timeout => 40
+      push_map_as_event_on_timeout => true
+      timeout_code => "event.tag('aggregated')"
+    }
+
+    if "aggregated" not in [tags] {
+      drop {}
     }
   }
 }

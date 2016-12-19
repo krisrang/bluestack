@@ -41,19 +41,13 @@
   template: src={{ item }}.j2 dest=/etc/logstash/conf.d/{{ item }} mode=664
   notify: restart logstash
   with_items:
-    - 02-beats-input.conf
+    - 02-input.conf
     - 10-filters.conf
     - 30-elasticsearch-output.conf
 
 - name: update configuration
   template: src=patterns-rails.j2 dest=/etc/logstash/conf.d/patterns/rails mode=664
   notify: restart logstash
-
-- name: create certificate
-  command: openssl req -subj '/CN={{ logs_domain }}/' -x509 -days 3650 -batch -nodes -newkey rsa:2048 -keyout private/logstash-forwarder.key -out certs/logstash-forwarder.crt
-  args:
-    chdir: /etc/pki/tls
-    creates: /etc/pki/tls/certs/logstash-forwarder.crt
 
 - name: Copy ufw conf
   template: src=ufw.j2 dest=/etc/ufw/applications.d/logstash
