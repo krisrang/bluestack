@@ -1,18 +1,11 @@
 output {
-  if [uuid] {
+  if [type] == "rails" {
     elasticsearch {
       hosts => ["localhost:{{ logs_es_port }}"]
       sniffing => false
       manage_template => false
-      index => "filebeat-%{+YYYY.MM.dd}"
+      index => "rails-%{+YYYY.MM.dd}"
       document_id => "%{type}-%{uuid}"
-    }
-  } else {
-    elasticsearch {
-      hosts => ["localhost:{{ logs_es_port }}"]
-      sniffing => false
-      manage_template => false
-      index => "filebeat-%{+YYYY.MM.dd}"
     }
   }
 }
