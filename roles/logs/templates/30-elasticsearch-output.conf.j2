@@ -1,8 +1,18 @@
 output {
-  elasticsearch {
-    hosts => ["localhost:{{ logs_es_port }}"]
-    sniffing => false
-    manage_template => false
-    index => "filebeat-%{+YYYY.MM.dd}"
+  if [uuid] {
+    elasticsearch {
+      hosts => ["localhost:{{ logs_es_port }}"]
+      sniffing => false
+      manage_template => false
+      index => "filebeat-%{+YYYY.MM.dd}"
+      document_id => "%{type}-%{uuid}"
+    }
+  } else {
+    elasticsearch {
+      hosts => ["localhost:{{ logs_es_port }}"]
+      sniffing => false
+      manage_template => false
+      index => "filebeat-%{+YYYY.MM.dd}"
+    }
   }
 }

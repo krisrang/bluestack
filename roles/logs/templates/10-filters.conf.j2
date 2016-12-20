@@ -1,34 +1,67 @@
 filter {
-  if [type] == "syslog" {
-    grok {
-      match => { "message" => "%{SYSLOGTIMESTAMP:syslog_timestamp} %{SYSLOGHOST:syslog_hostname} %{DATA:syslog_program}(?:\[%{POSINT:syslog_pid}\])?: %{GREEDYDATA:syslog_message}" }
-      add_field => [ "received_at", "%{@timestamp}" ]
-      add_field => [ "received_from", "%{host}" ]
-    }
-    syslog_pri { }
-    date {
-      match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
-    }
-  } else if [type] == "rails" {
-    grok {
-      patterns_dir => ["/etc/logstash/conf.d/patterns"]
-      match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] %{RAILSACTION:action}?.*$" ]
-    }
-
-    aggregate {
-      task_id => "%{uuid}"
-      code =>  '
-        map.merge!(event) if map.empty?
-        map["full_message"] ||= ""
-        map["full_message"] += "\n" + event.get("message")
-      '
-      timeout => 60
-      push_map_as_event_on_timeout => true
-      timeout_code => "event.tag('aggregated')"
-      aggregate_maps_path => "/var/lib/logstash/aggregate_maps"
+  if [type] == "rails" {
+    if [message] =~ "^.* Started .*$" {
+      grok {
+        patterns_dir => ["/etc/logstash/conf.d/patterns"]
+        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Started %{WORD:method} \"%{DATA:path}\" for %{IP:remoteip}.*$" ]
+      }
+    } else if [message] =~ "^.* Completed .*$" {
+      grok {
+        patterns_dir => ["/etc/logstash/conf.d/patterns"]
+        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Completed %{NUMBER:httpstatus} .*in %{DATA:totaltiming}.*$" ]
+      }
+    } else {
+      grok {
+        patterns_dir => ["/etc/logstash/conf.d/patterns"]
+        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\].*$" ]
+      }
     }
 
-    if "aggregated" not in [tags] {
+    if [message] =~ "^.* Completed .*$" {
+      aggregate {
+        task_id => "%{uuid}"
+        code => '
+          map["loglines"] << [event.get("log_timestamp"), event.get("message")]
+          event.set("message", map["loglines"].sort.map {|l| l[1] }.join("\n"))
+          event.tag("_aggregated")
+
+          %w(hostname method path remoteip).each do |key|
+            if !event.get(key)
+              event.set(key, map[key])
+            end
+          end
+        '
+        map_action => "update"
+        timeout => 120
+        push_map_as_event_on_timeout => true
+        timeout_tags => ["_aggregated"]
+        end_of_task => true
+      }
+    } else {
+      aggregate {
+        task_id => "%{uuid}"
+        code => '
+          map.merge!(event) if map.empty?
+
+          map["hostname"] = event.get("beat.hostname")
+          %w(method path remoteip).each do |key|
+            if event.get(key)
+              map[key] = event.get(key)
+            end
+          end
+
+          map["loglines"] ||= []
+          map["loglines"] << [event.get("log_timestamp"), event.get("message")]
+          map["message"] = map["loglines"].sort.map {|l| l[1] }.join("\n")
+        '
+      }
+    }
+
+    mutate {
+      remove_field => ["loglines"]
+    }
+
+    if "_aggregated" not in [tags] {
       drop {}
     }
   }
