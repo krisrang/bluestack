@@ -20,11 +20,12 @@ filter {
       code =>  '
         map.merge!(event) if map.empty?
         map["full_message"] ||= ""
-        map["full_message"] += "\n" + event["message"]
+        map["full_message"] += "\n" + event.get("message")
       '
-      timeout => 40
+      timeout => 60
       push_map_as_event_on_timeout => true
       timeout_code => "event.tag('aggregated')"
+      aggregate_maps_path => "/var/lib/logstash/aggregate_maps"
     }
 
     if "aggregated" not in [tags] {
