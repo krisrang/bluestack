@@ -3,21 +3,23 @@ filter {
     if [message] =~ "^.* Started .*$" {
       grok {
         patterns_dir => ["/etc/logstash/conf.d/patterns"]
-        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Started %{WORD:method} \"%{DATA:path}\" for %{IP:remoteip}.*$" ]
+        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Started %{WORD:method} \"%{DATA:path}\" for %{IP:remoteip} .*$" ]
       }
     } else if [message] =~ "^.* Completed .*$" {
       grok {
         patterns_dir => ["/etc/logstash/conf.d/patterns"]
-        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Completed %{NUMBER:httpstatus} .*in %{DATA:totaltiming}.*$" ]
+        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Completed %{NUMBER:httpstatus} .*in %{DATA:totaltiming} .*$" ]
       }
     } else {
       grok {
         patterns_dir => ["/etc/logstash/conf.d/patterns"]
-        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\].*$" ]
+        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] .*$" ]
       }
     }
 
-    if [message] =~ "^.* Completed .*$" {
+    if [message] =~ "^.* FATAL -- :.*$" {
+      drop {}
+    } else if [message] =~ "^.* Completed .*$" {
       aggregate {
         task_id => "%{uuid}"
         code => '
@@ -54,6 +56,7 @@ filter {
           map["loglines"] << [event.get("log_timestamp"), event.get("message")]
           map["message"] = map["loglines"].sort.map {|l| l[1] }.join("\n")
         '
+        aggregate_maps_path => "/var/lib/logstash/aggregatemaps"
       }
     }
 
