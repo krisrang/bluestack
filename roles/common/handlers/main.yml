@@ -28,3 +28,6 @@
 
 - name: regenerate aliases
   command: /usr/bin/newaliases
+
+- name: reload sysctl
+  command: sysctl -p

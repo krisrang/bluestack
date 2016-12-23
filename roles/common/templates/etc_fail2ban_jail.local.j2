@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 [DEFAULT]
-ignoreip  = 127.0.0.1 {{ fail2ban_whitelist }} {% for ip in ansible_all_ipv4_addresses %}{{ip}} {% endfor %} {% for ip in ansible_all_ipv6_addresses %}{{ip}} {% endfor %}
+ignoreip  = 127.0.0.1 192.168.1.0 {{ fail2ban_whitelist }} {% for ip in ansible_all_ipv4_addresses %}{{ip}} {% endfor %} {% for ip in ansible_all_ipv6_addresses %}{{ip}} {% endfor %}
 bantime   = 86400
 destemail = fail2ban@blocklist.de
 sendermail = {{ 'mail@' + ansible_fqdn }}

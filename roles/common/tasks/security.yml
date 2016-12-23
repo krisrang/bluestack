@@ -20,3 +20,17 @@
 # - name: Copy fail2ban configuration files into place
 #   template: src=etc_fail2ban_jail.local.j2 dest=/etc/fail2ban/jail.local
 #   notify: restart fail2ban
+
+- name: Make shm noexec
+  lineinfile:
+    dest: /etc/fstab
+    line: 'tmpfs     /run/shm     tmpfs     defaults,noexec,nosuid     0     0'
+
+- name: Sysctl config
+  template: src=sysctl.conf.j2 dest=/etc/sysctl.conf owner=root group=root mode=0644
+  notify: reload sysctl
+
+- name: Prevent IP spoofing
+  lineinfile:
+    dest: /etc/host.conf
+    line: 'nospoof on'
