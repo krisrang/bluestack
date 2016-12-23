@@ -1,2 +1,4 @@
 secrets
 group_vars/all
+facts.json
+*.retry

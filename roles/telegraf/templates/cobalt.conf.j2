@@ -1,5 +1,17 @@
 # {{ ansible_managed }}
 
+[[inputs.redis]]
+  ## specify servers via a url matching:
+  ##  [protocol://][:password]@address[:port]
+  ##  e.g.
+  ##    tcp://localhost:6379
+  ##    tcp://:password@192.168.99.100
+  ##    unix:///var/run/redis.sock
+  ##
+  ## If no servers are specified, then localhost is used as the host.
+  ## If no port is specified, 6379 is used
+  servers = ["tcp://localhost:6379"]
+
 # Query given DNS server and gives statistics
 [[inputs.dns_query]]
   ## servers to query
@@ -78,7 +90,7 @@
   ## via setcap cap_net_raw+p /bin/ping
   #
   ## urls to ping
-  urls = ["192.168.1.1", "8.8.8.8"] # required
+  urls = ["{{ ansible_default_ipv4.gateway }}", "8.8.8.8"] # required
   ## number of pings to send per collection (ping -c <COUNT>)
   count = 1 # required
   ## interval, in s, at which to ping. 0 == default (ping -i <PING_INTERVAL>)

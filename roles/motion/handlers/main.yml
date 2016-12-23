@@ -1,3 +1,0 @@
----
-- name: restart motioneye
-  service: name=motioneye state=restarted

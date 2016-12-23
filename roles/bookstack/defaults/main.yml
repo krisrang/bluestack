@@ -1,9 +1,0 @@
----
-bookstack_domain: i.kris.moe
-bookstack_root: /opt/bookstack
-bookstack_repo: https://github.com/ssddanbrown/BookStack.git
-
-bookstack_db_name: bookstack
-bookstack_db_user: bookstack
-bookstack_db_pass: ""
-bookstack_key: ""

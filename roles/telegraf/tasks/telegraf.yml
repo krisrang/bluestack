@@ -15,15 +15,27 @@
     - ipmitool
     - smartmontools
 
+- name: copy conf
+  template: src=telegraf.conf.j2 dest=/etc/telegraf/telegraf.conf owner=root group=root mode=0644
+  notify: restart telegraf
+
+- name: copy helium conf
+  template: src=helium.conf.j2 dest=/etc/telegraf/telegraf.d/helium.conf owner=root group=root mode=0644
+  notify: restart telegraf
+  when: ansible_hostname == 'helium'
+
 - name: add user to groups
   user: name=telegraf groups=telegraf,docker,www-data append=yes
+  when: ansible_hostname == 'cobalt'
 
 - name: copy sudoers
   copy: src=telegraf-smartctl dest=/etc/sudoers.d/telegraf-smartctl owner=root group=root mode=0644
+  when: ansible_hostname == 'cobalt'
 
-- name: copy conf
-  template: src=data.conf.j2 dest=/etc/telegraf/telegraf.d/data.conf owner=root group=root mode=0644
+- name: copy cobalt conf
+  template: src=cobalt.conf.j2 dest=/etc/telegraf/telegraf.d/cobalt.conf owner=root group=root mode=0644
   notify: restart telegraf
+  when: ansible_hostname == 'cobalt'
 
 - name: create scripts directory
   file: path={{ telegraf_scripts_path }} state=directory owner=telegraf group=telegraf
@@ -31,18 +43,22 @@
 - name: copy script
   copy: src=plex.rb dest={{ telegraf_scripts_path }}/plex.rb owner=telegraf group=telegraf mode=0755
   notify: restart telegraf
+  when: ansible_hostname == 'cobalt'
 
 - name: copy script
   copy: src=drives.rb dest={{ telegraf_scripts_path }}/drives.rb owner=telegraf group=telegraf mode=0755
   notify: restart telegraf
+  when: ansible_hostname == 'cobalt'
 
 - name: copy script
   copy: src=ups.rb dest={{ telegraf_scripts_path }}/ups.rb owner=telegraf group=telegraf mode=0755
   notify: restart telegraf
+  when: ansible_hostname == 'cobalt'
 
 - name: copy script
   copy: src=switch.rb dest={{ telegraf_scripts_path }}/switch.rb owner=telegraf group=telegraf mode=0755
   notify: restart telegraf
+  when: ansible_hostname == 'cobalt'
 
 - name: enable service
   service: name=telegraf state=started enabled=yes

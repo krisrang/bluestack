@@ -9,5 +9,17 @@
   apt: name=influxdb update_cache=yes state=installed cache_valid_time=86400
   notify: restart influxdb
 
-- name: copy ufw conf
-  template: src=ufw.j2 dest=/etc/ufw/applications.d/influxdb owner=root group=root mode=0644
+- name: copy conf
+  template: src=influxdb.conf.j2 dest=/etc/influxdb/influxdb.conf owner=root group=root mode=0644
+  notify: restart influxdb
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ influxdb_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ influxdb_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ influxdb_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ influxdb_domain }}"
