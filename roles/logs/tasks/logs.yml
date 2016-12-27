@@ -1,6 +1,6 @@
 ---
-- name: install repo key
-  apt_key: url=https:/artifacts.elastic.co/GPG-KEY-elasticsearch state=present
+# - name: install repo key
+#   apt_key: url=https:/artifacts.elastic.co/GPG-KEY-elasticsearch state=present
 
 - name: add repos
   apt_repository: repo={{ item }} state=present
@@ -20,13 +20,6 @@
     - "{{ logs_es_dir }}/data"
     - "{{ logs_es_dir }}/logs"
 
-- name: create directories
-  file: path={{ item }} state=directory
-  with_items:
-    - /etc/pki/tls
-    - /etc/pki/tls/private
-    - /etc/pki/tls/certs
-
 - name: update configuration
   template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml group=elasticsearch mode=750
   notify: restart elasticsearch
@@ -34,6 +27,12 @@
 - name: update configuration
   template: src=kibana.yml.j2 dest=/opt/kibana/config/kibana.yml mode=664
   notify: restart kibana
+
+- name: create directories
+  file: path=/etc/logstash/conf.d/{{ item }} mode=0775 state=directory
+  with_items:
+    - patterns
+    - templates
 
 - name: update configuration
   template: src={{ item }}.j2 dest=/etc/logstash/conf.d/{{ item }} mode=664
@@ -45,6 +44,10 @@
 
 - name: update configuration
   template: src=patterns-rails.j2 dest=/etc/logstash/conf.d/patterns/rails mode=664
+  notify: restart logstash
+
+- name: update configuration
+  template: src=template-rails.json.j2 dest=/etc/logstash/conf.d/templates/rails.json mode=664
   notify: restart logstash
 
 - name: Copy ufw conf

@@ -8,7 +8,7 @@ filter {
     } else if [message] =~ "^.* Completed .*$" {
       grok {
         patterns_dir => ["/etc/logstash/conf.d/patterns"]
-        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Completed %{NUMBER:httpstatus} .*in %{DATA:totaltiming} .*$" ]
+        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Completed %{NUMBER:httpstatus} .*in %{DATA:totaltiming}ms .*$" ]
       }
     } else {
       grok {

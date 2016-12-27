@@ -6,6 +6,9 @@ output {
       manage_template => false
       index => "rails-%{+YYYY.MM.dd}"
       document_id => "%{type}-%{uuid}"
+      template => "/etc/logstash/conf.d/templates/rails.json"
+      template_name => "rails"
+      template_overwrite => true
     }
   }
 }
