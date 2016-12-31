@@ -1,0 +1,6 @@
+---
+- name: restart packetbeat
+  service: name=packetbeat state=restarted
+
+- name: restart filebeat
+  service: name=filebeat state=restarted

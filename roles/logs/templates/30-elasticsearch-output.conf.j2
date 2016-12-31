@@ -1,4 +1,7 @@
 output {
+  # stdout {
+  #   codec => "rubydebug"
+  # }
   if [type] == "rails" {
     elasticsearch {
       hosts => ["localhost:{{ logs_es_port }}"]
@@ -9,6 +12,13 @@ output {
       template => "/etc/logstash/conf.d/templates/rails.json"
       template_name => "rails"
       template_overwrite => true
+    }
+  } else if "filebeat" in [tags] {
+    elasticsearch {
+      hosts => ["localhost:{{ logs_es_port }}"]
+      sniffing => false
+      manage_template => false
+      index => "filebeat-%{+YYYY.MM.dd}"
     }
   }
 }

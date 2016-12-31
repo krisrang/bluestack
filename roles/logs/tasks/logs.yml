@@ -1,6 +1,6 @@
 ---
-# - name: install repo key
-#   apt_key: url=https:/artifacts.elastic.co/GPG-KEY-elasticsearch state=present
+- name: install repo key
+  shell: "wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -"
 
 - name: add repos
   apt_repository: repo={{ item }} state=present
@@ -15,24 +15,28 @@
     - logstash
 
 - name: create directories
-  file: path={{ item }} owner=elasticsearch group=elasticsearch mode=0755 state=directory
+  file: path={{ item.path }} owner={{ item.owner|default("root") }} group={{ item.group|default("root") }} mode={{ item.mode|default("755") }} state=directory
   with_items:
-    - "{{ logs_es_dir }}/data"
-    - "{{ logs_es_dir }}/logs"
+    - path: "{{ logs_es_dir }}/data"
+      owner: elasticsearch
+      group: elasticsearch
+    - path: "/etc/logstash/conf.d/patterns"
+    - path: "/etc/logstash/conf.d/templates"
+    - path: "{{ logs_kibana_logdir }}"
+      owner: kibana
+      group: kibana
+
+- name: update configuration
+  template: src=logstash.yml.j2 dest=/etc/logstash/logstash.yml mode=664
+  notify: restart logstash
 
 - name: update configuration
   template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml group=elasticsearch mode=750
   notify: restart elasticsearch
 
 - name: update configuration
-  template: src=kibana.yml.j2 dest=/opt/kibana/config/kibana.yml mode=664
+  template: src=kibana.yml.j2 dest=/etc/kibana/kibana.yml mode=664
   notify: restart kibana
-
-- name: create directories
-  file: path=/etc/logstash/conf.d/{{ item }} mode=0775 state=directory
-  with_items:
-    - patterns
-    - templates
 
 - name: update configuration
   template: src={{ item }}.j2 dest=/etc/logstash/conf.d/{{ item }} mode=664
@@ -47,7 +51,7 @@
   notify: restart logstash
 
 - name: update configuration
-  template: src=template-rails.json.j2 dest=/etc/logstash/conf.d/templates/rails.json mode=664
+  template: src=template-rails.json.j2 dest=/etc/logstash/conf.d/templates/rails.json owner=logstash group=logstash mode=664
   notify: restart logstash
 
 - name: Copy ufw conf

@@ -4,4 +4,7 @@ input {
     key => "filebeat"
     data_type => list
   }
+  beats {
+    port => {{ logs_logstash_port }}
+  }
 }

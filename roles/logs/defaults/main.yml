@@ -3,4 +3,6 @@ logs_domain: logs.rang.ee
 logs_es_dir: /var/media/elasticsearch
 logs_es_port: 9200
 logs_kibana_port: 5601
+logs_kibana_logdir: /var/log/kibana
 logs_logstash_port: 5044
+logs_logstash_workers: 1

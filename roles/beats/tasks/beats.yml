@@ -1,0 +1,27 @@
+---
+- name: install repo key
+  shell: "wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add -"
+
+- name: add repos
+  apt_repository: repo={{ item }} state=present
+  with_items:
+    - "deb https://artifacts.elastic.co/packages/5.x/apt stable main"
+
+- name: install packages
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - filebeat
+
+# - name: update configuration
+#   template: src=packetbeat-{{ ansible_hostname }}.yml.j2 dest=/etc/packetbeat/packetbeat.yml mode=664
+#   notify: restart packetbeat
+
+- name: update configuration
+  template: src=filebeat-{{ ansible_hostname }}.yml.j2 dest=/etc/filebeat/filebeat.yml mode=664
+  notify: restart filebeat
+
+# - name: enable service
+#   service: name=packetbeat state=started enabled=yes
+
+- name: enable service
+  service: name=filebeat state=started enabled=yes
