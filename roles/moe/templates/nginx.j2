@@ -18,10 +18,12 @@ server {
   ssl_certificate {{ le_root }}{{ moe_domain }}/fullchain.pem;
   ssl_certificate_key {{ le_root }}{{ moe_domain }}/privkey.pem;
 
+  include snippets/moepass.conf;
+
   server_name {{ moe_domain }};
 
   root {{ moe_root }}/;
-  index index.html index.htm /{{ moe_files }}/_h5ai/public/index.php;
+  index index.html index.htm;
 
   error_log   /var/log/nginx/{{ moe_domain }}-error.log;
   access_log  /var/log/nginx/{{ moe_domain }}-access.log;
@@ -39,6 +41,15 @@ server {
 
   location / {
     try_files $uri $uri/ =404;
+  }
+
+  location /stuff {
+    index index.html index.htm /{{ moe_files }}/_h5ai/public/index.php;
+  }
+
+  location /plain {
+    alias {{ moe_root }}/{{ moe_files }}/;
+    autoindex on;
   }
 
   location ~ \.php$ {

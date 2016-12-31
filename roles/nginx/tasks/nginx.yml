@@ -46,14 +46,16 @@
   command: openssl dhparam -outform pem -out /etc/ssl/certs/dhparam.pem 2048 creates=/etc/ssl/certs/dhparam.pem
 
 - name: Create htpasswd directory
-  file: path=/etc/nginx/htpasswd owner=root group=root mode=750 state=directory
+  file: path=/etc/nginx/htpasswd owner=root group=root mode=755 state=directory
 
 - name: Create htpasswd file
   htpasswd: path=/etc/nginx/htpasswd/moe name={{ item.user }} password={{ item.pass }} owner=root group=www-data mode=0640
   with_items: "{{ moe_passusers }}"
+  notify: reload nginx
 
 - name: Write moepass.conf
   template: src=moepass.conf.j2 dest=/etc/nginx/snippets/moepass.conf
+  notify: reload nginx
 
 - name: Create acme directory
   file: path=/var/www/acme/.well-known/acme-challenge owner=www-data group=www-data mode=775 state=directory
