@@ -1,0 +1,14 @@
+---
+- name: install packages
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - bind9
+    - bind9utils
+    - bind9-doc
+
+- name: update configuration
+  template: src=named.conf.options.j2 dest=/etc/bind/named.conf.options owner=root group=bind mode=664
+  notify: restart bind9
+
+- name: enable service
+  service: name=bind9 state=started enabled=yes

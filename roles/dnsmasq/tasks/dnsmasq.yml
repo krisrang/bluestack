@@ -1,0 +1,22 @@
+---
+- name: install packages
+  apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
+  with_items:
+    - dnsmasq
+
+- name: update configuration
+  template: src=rang.conf.j2 dest=/etc/dnsmasq.d/rang.conf mode=664
+  notify: reload dnsmasq
+
+- name: update configuration
+  template: src=banner_add_hosts.j2 dest=/etc/banner_add_hosts mode=664
+  notify: reload dnsmasq
+
+- name: enable service
+  service: name=dnsmasq state=started enabled=yes
+
+- name: copy ufw conf
+  template: src=ufw.j2 dest=/etc/ufw/applications.d/dnsmasq owner=root group=root mode=0644
+
+- name: firewall allow dnsmasq
+  command: ufw allow dnsmasq
