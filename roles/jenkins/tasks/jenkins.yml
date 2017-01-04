@@ -18,24 +18,17 @@
 
 - name: Install Jenkins
   apt: pkg=jenkins update_cache=yes state=installed cache_valid_time=86400
-  register: jenkins_install
 
 - name: Start jenkins
   service: name=jenkins state=started
 
-- name: Create Jenkins CLI destination directory
-  file: path=/var/lib/jenkins state=directory
-
-- name: Create Jenkins .ssh directory
-  file: path=/var/lib/jenkins/.ssh state=directory owner=jenkins group=jenkins
-
 - name: Copy nginx site configuration
   template: src=nginx.conf.j2 dest=/etc/nginx/sites-available/01-{{ jenkins_host }}.conf
-  notify: restart nginx
+  notify: reload nginx
 
 - name: Link nginx site configuration
   file: src=/etc/nginx/sites-available/01-{{ jenkins_host }}.conf path=/etc/nginx/sites-enabled/01-{{ jenkins_host }}.conf state=link
-  notify: restart nginx
+  notify: reload nginx
 
 - name: Generate SSL cert
   command: "{{ le_cmd }} -d {{ jenkins_host }}"

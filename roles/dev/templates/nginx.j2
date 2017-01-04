@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 upstream skyltmax {
-  server 127.0.0.1:{{ dev_skyltmax_port }} fail_timeout=0;
+  server {{ dev_ip }}:{{ dev_port }} fail_timeout=0;
 }
 
 server {

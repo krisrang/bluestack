@@ -102,7 +102,7 @@
 
 # Retrieves SNMP values from remote agents
 [[inputs.snmp]]
-  agents = [ "192.168.1.202" ]
+  agents = [ "192.168.1.110" ]
   timeout = "5s"
   version = 2
 
@@ -172,5 +172,5 @@
   ##  e.g.
   ##    root:passwd@lan(127.0.0.1)
   ##
-  servers = ["{{ telegraf_ipmi_user }}:{{ telegraf_ipmi_password }}@lanplus(192.168.1.201)"]
+  servers = ["{{ telegraf_ipmi_user }}:{{ telegraf_ipmi_password }}@lanplus(192.168.1.101)"]
 

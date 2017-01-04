@@ -43,12 +43,12 @@
   template: src=redis.yml.j2 dest={{ dev_skyltmax_dir }}/config/redis.yml
   notify: restart skyltmax
 
-- name: install skyltmax service
-  template: src=skyltmax.service.j2 dest=/etc/systemd/system/skyltmax.service
-  notify: restart skyltmax
+# - name: install skyltmax service
+#   template: src=skyltmax.service.j2 dest=/etc/systemd/system/skyltmax.service
+#   notify: restart skyltmax
 
-- name: enable service
-  service: name=skyltmax state=started enabled=yes
+# - name: enable service
+#   service: name=skyltmax state=started enabled=yes
 
 - name: Write site
   template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ dev_skyltmax_domain }}.conf

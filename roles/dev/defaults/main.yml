@@ -8,3 +8,5 @@ dev_skyltmax_repo: git@github.com:skyltmax/skyltmax.git
 dev_skyltmax_db: skyltmax
 dev_skyltmax_db_user: skyltmax
 dev_skyltmax_db_pass: ''
+dev_ip: 192.168.1.201
+dev_port: 3000

@@ -33,6 +33,10 @@ server {
     try_files             $uri @jenkins;
   }
 
+  location /workspace {
+    alias {{ jenkins_workspace_dir }}/;
+  }
+
   location @jenkins {
     sendfile off;
     add_header Pragma "no-cache";
