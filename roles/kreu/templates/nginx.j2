@@ -32,6 +32,9 @@ server {
   ssl_certificate {{ le_root }}{{ kreu_domain }}/fullchain.pem;
   ssl_certificate_key {{ le_root }}{{ kreu_domain }}/privkey.pem;
 
+  add_header Strict-Transport-Security "max-age=15768000; includeSubDomains; preload";
+  add_header Content-Security-Policy "default-src https:";
+
   server_name {{ kreu_domain }};
 
   root {{ kreu_root }}/;

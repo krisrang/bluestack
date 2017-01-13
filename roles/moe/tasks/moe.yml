@@ -15,7 +15,6 @@
 - name: unpack moe archive
   unarchive: >
     src=/tmp/{{ moe_archive }} dest={{ moe_root }} copy=no
-    creates={{ moe_root }}/robots.txt
   notify: reload nginx
 
 - name: download h5ai
