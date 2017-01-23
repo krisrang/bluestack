@@ -2,3 +2,6 @@
 grafana_domain: "dash.kris.moe"
 grafana_port: 3100
 grafana_pw: ""
+grafana_s3_bucket: ""
+grafana_s3_access_key: ""
+grafana_s3_secret_key: ""

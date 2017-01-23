@@ -9,8 +9,8 @@
   apt: name=grafana update_cache=yes state=installed cache_valid_time=86400
   notify: restart grafana
 
-- name: Change port
-  lineinfile: dest=/etc/grafana/grafana.ini regexp='^;http_port = 3000' line='http_port = {{ grafana_port }}' owner=root group=grafana mode=0640
+- name: Write config
+  template: src=grafana.ini.j2 dest=/etc/grafana/grafana.ini owner=root group=grafana mode=0640
   notify: restart grafana
 
 - name: Write site

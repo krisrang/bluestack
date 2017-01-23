@@ -18,8 +18,6 @@ server {
   ssl_certificate {{ le_root }}{{ moe_domain }}/fullchain.pem;
   ssl_certificate_key {{ le_root }}{{ moe_domain }}/privkey.pem;
 
-  include snippets/moepass.conf;
-
   server_name {{ moe_domain }};
 
   root {{ moe_root }}/;
@@ -45,11 +43,13 @@ server {
 
   location /stuff {
     index index.html index.htm /{{ moe_files }}/_h5ai/public/index.php;
+    include snippets/moepass.conf;
   }
 
   location /plain {
     alias {{ moe_root }}/{{ moe_files }}/;
     autoindex on;
+    include snippets/moepass.conf;
   }
 
   location ~ \.php$ {
