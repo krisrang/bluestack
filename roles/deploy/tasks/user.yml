@@ -1,0 +1,6 @@
+---
+- name: create deploy user
+  user: name=deploy home=/home/deploy createhome=yes system=yes shell=/bin/bash
+
+- name: create apps directory
+  file: path=/home/deploy/apps mode=775 state=directory owner=deploy group=deploy

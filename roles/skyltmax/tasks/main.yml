@@ -1,0 +1,3 @@
+---
+- include: skyltmax.yml
+  tags: skyltmax

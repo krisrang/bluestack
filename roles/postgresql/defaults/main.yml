@@ -1,0 +1,3 @@
+---
+postgresql_data: "/opt/postgresql"
+postgresql_pw: ""

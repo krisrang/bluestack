@@ -1,0 +1,8 @@
+---
+files_root: /home/kris/files
+files_domain: files.kris.moe
+files_stuff_version: 0.29.0
+files_stuff_url: https://release.larsjung.de/h5ai/h5ai-{{ files_stuff_version }}.zip
+files_stuff_archive: h5ai-{{ files_stuff_version }}.zip
+
+# files_stuff_password:

@@ -1,3 +1,0 @@
----
-- name: restart skyltmax
-  service: name=skyltmax state=restarted

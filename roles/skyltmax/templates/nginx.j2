@@ -1,14 +1,14 @@
 # {{ ansible_managed }}
 
 upstream skyltmax {
-  server {{ dev_ip }}:{{ dev_port }} fail_timeout=0;
+    server {{ skyltmax_ip }}:{{ skyltmax_port }} fail_timeout=0;
 }
 
 server {
   listen [::]:80;
   listen 80;
 
-  server_name {{ dev_skyltmax_domain }};
+  server_name {{ skyltmax_domain }};
   rewrite ^ https://$server_name$request_uri? permanent;
 
   include snippets/le.conf;
@@ -19,20 +19,20 @@ server {
   listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate {{ le_root }}{{ dev_skyltmax_domain }}/fullchain.pem;
-  ssl_certificate_key {{ le_root }}{{ dev_skyltmax_domain }}/privkey.pem;
+  ssl_certificate {{ le_root }}{{ skyltmax_domain }}/fullchain.pem;
+  ssl_certificate_key {{ le_root }}{{ skyltmax_domain }}/privkey.pem;
 
-  include snippets/moepass.conf;
+  server_name {{ skyltmax_domain }};
 
-  server_name {{ dev_skyltmax_domain }};
-
-  root {{ dev_skyltmax_dir }}/public;
+  root /usr/share/www;
   index index.html index.htm;
 
   add_header Strict-Transport-Security max-age=31536000;
 
-  error_log   /var/log/nginx/{{ dev_skyltmax_domain }}-error.log;
-  access_log  /var/log/nginx/{{ dev_skyltmax_domain }}-access.log;
+  error_log   /var/log/nginx/{{ skyltmax_domain }}-error.log;
+  access_log  /var/log/nginx/{{ skyltmax_domain }}-access.log;
+
+  include snippets/logspass.conf;
 
   location / {
     try_files $uri @skyltmax;

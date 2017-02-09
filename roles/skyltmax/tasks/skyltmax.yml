@@ -1,0 +1,11 @@
+---
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ skyltmax_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ skyltmax_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ skyltmax_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ skyltmax_domain }}"

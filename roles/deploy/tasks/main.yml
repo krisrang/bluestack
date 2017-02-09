@@ -1,0 +1,9 @@
+---
+- include: user.yml
+  tags: deploy
+
+- include: rbenv.yml
+  tags: deploy
+
+- include: hawk.yml
+  tags: deploy,hawk

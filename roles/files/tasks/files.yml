@@ -1,0 +1,29 @@
+---
+
+- name: create moe directory
+  file: path={{ files_root }} state=directory owner=www-data group=www-data
+
+- name: download h5ai
+  get_url: url={{ files_stuff_url }} dest=/tmp/{{ files_stuff_archive }} force=yes validate_certs=False
+
+- name: unpack h5ai archive
+  unarchive: >
+    src=/tmp/{{ files_stuff_archive }} dest={{ files_root }} copy=no
+    creates={{ files_root }}/_h5ai/public/index.php
+
+- name: Write h5ai conf
+  template: src=options.json.j2 dest={{ files_root }}/_h5ai/private/conf/options.json
+
+- name: ensure correct ownership
+  file: path={{ files_root }} owner=www-data group=www-data recurse=true state=directory
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ files_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ files_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ files_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ files_domain }}"

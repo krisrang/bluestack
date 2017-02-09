@@ -1,5 +1,5 @@
 [cobalt]
 192.168.1.100:2341 ansible_ssh_user=kris
 
-[helium]
-helium.rang.ee:2341 ansible_ssh_user=kris
+[oxygen]
+oxygen.rang.ee:2341 ansible_ssh_user=kris

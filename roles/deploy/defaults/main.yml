@@ -1,0 +1,7 @@
+---
+deploy_hawk_domain: hawk.rang.ee
+deploy_hawk_port: 8796
+deploy_hawk_db: hawk
+deploy_hawk_db_user: hawk
+deploy_hawk_db_pass: hawk
+deploy_hawk_secret: ""

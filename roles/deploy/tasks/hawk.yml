@@ -1,0 +1,53 @@
+---
+- name: create db
+  postgresql_db:
+    name: "{{ deploy_hawk_db }}"
+    encoding: UTF-8
+    login_user: postgres
+    login_password: "{{ postgresql_pw }}"
+    login_host: 127.0.0.1
+
+- name: create db user
+  postgresql_user:
+    db: "{{ deploy_hawk_db }}"
+    name: "{{ deploy_hawk_db_user }}"
+    password: "{{ deploy_hawk_db_pass }}"
+    priv: "ALL"
+    login_user: postgres
+    login_password: "{{ postgresql_pw }}"
+    login_host: 127.0.0.1
+
+- name: clone reop
+  git:
+    repo: https://git.rang.ee/kris/hawk.git
+    dest: /home/deploy/apps/hawk
+  become_user: deploy
+
+- name: install database.yml
+  template: src=database_hawk.yml.j2 dest=/home/deploy/apps/hawk/config/database.yml owner=deploy group=deploy
+  notify: restart hawk
+
+- name: bundle
+  command: ${HOME}/.rbenv/shims/bundle install -j 8
+  args:
+    chdir: /home/deploy/apps/hawk
+  become_user: deploy
+  notify: restart hawk
+
+- name: install service
+  template: src=hawk.service.j2 dest=/etc/systemd/system/app-hawk.service
+  notify: restart hawk
+
+- name: enable service
+  service: name=app-hawk state=started enabled=yes
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ deploy_hawk_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ deploy_hawk_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ deploy_hawk_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ deploy_hawk_domain }}"

@@ -5,11 +5,25 @@
 - name: Add postgresql repo
   apt_repository: repo='deb http://apt.postgresql.org/pub/repos/apt/ trusty-pgdg main'
 
-- name: Install postgresql
+- name: Install postgresql client
   apt: name={{ item }} update_cache=yes state=latest cache_valid_time=86400
   with_items:
-    - postgresql-client-9.4
+    - postgresql-client-9.6
     - libpq-dev
 
-# - name: Start postgresql container
-#   docker: image=postgres name=postgres ports=5432:5432
+- name: create db directory
+  file: path={{ postgresql_data }} mode=770 state=directory
+
+- name: start postgresql
+  docker:
+    name: postgres
+    image: postgres:latest
+    state: started
+    pull: missing
+    restart_policy: always
+    ports:
+    - 5432:5432
+    volumes:
+    - "{{ postgresql_data }}:/var/lib/postgresql/data"
+    env:
+      POSTGRES_PASSWORD: "{{ postgresql_pw }}"

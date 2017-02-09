@@ -1,5 +1,5 @@
 ---
-- hosts: helium
+- hosts: oxygen
   become: true
   roles:
     - common

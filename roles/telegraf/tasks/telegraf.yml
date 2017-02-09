@@ -22,10 +22,10 @@
   template: src=telegraf.conf.j2 dest=/etc/telegraf/telegraf.conf owner=root group=root mode=0644
   notify: restart telegraf
 
-- name: copy helium conf
-  template: src=helium.conf.j2 dest=/etc/telegraf/telegraf.d/helium.conf owner=root group=root mode=0644
+- name: copy oxygen conf
+  template: src=oxygen.conf.j2 dest=/etc/telegraf/telegraf.d/oxygen.conf owner=root group=root mode=0644
   notify: restart telegraf
-  when: ansible_hostname == 'helium'
+  when: ansible_hostname == 'oxygen'
 
 - name: add user to groups
   user: name=telegraf groups=telegraf,docker,www-data append=yes

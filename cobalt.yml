@@ -13,11 +13,12 @@
     - docker
     - php-fpm
     - php-composer
-    - moe
+    - files
     - kreu
     - plex
     - plexpy
     - rutorrent
+    - deluge
     - jackett
     - nzbget
     - sonarr
@@ -26,10 +27,11 @@
     - influxdb
     - telegraf
     - mariadb
+    - postgresql
     - redis
     - redis-stunnel-client
     - jenkins
     - gitlab
-    - dev
     - logs
     - beats
+    - skyltmax
