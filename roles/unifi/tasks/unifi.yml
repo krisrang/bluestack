@@ -1,0 +1,7 @@
+---
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ unifi_domain }}"
+
+- name: Create renew script
+  template: src=lerestart.sh.j2 dest={{ le_hook_root }}/scripts/unifi mode=755
+

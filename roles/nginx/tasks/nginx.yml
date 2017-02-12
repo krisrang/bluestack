@@ -66,6 +66,9 @@
 - name: Ensure permissions
   command: chown -R www-data:www-data /var/www/acme
 
+- name: Create renew script
+  template: src=lerestart.sh.j2 dest={{ le_hook_root }}/scripts/nginx mode=755
+
 - name: Restart nginx
   service: name=nginx state=restarted
   when: leconf.changed

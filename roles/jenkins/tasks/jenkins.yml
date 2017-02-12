@@ -19,6 +19,12 @@
 - name: Install Jenkins
   apt: pkg=jenkins update_cache=yes state=installed cache_valid_time=86400
 
+- name: Change port
+  lineinfile:
+    dest: /etc/default/jenkins
+    regexp: '^HTTP_PORT=8080'
+    line: 'HTTP_PORT={{ jenkins_port }}'
+
 - name: Start jenkins
   service: name=jenkins state=started
 

@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Convert cert to PKCS #12 format
+openssl pkcs12 -export -inkey /etc/letsencrypt/live/{{ unifi_domain }}/privkey.pem -in /etc/letsencrypt/live/{{ unifi_domain }}/fullchain.pem -out /tmp/lecert.p12 -name ubnt -password pass:temppass
+
+scp /etc/letsencrypt/live/{{ unifi_domain }}/privkey.pem kris@{{ unifi_ip }}:/etc/ssl/private/cloudkey.key
+scp /etc/letsencrypt/live/{{ unifi_domain }}/fullchain.pem kris@{{ unifi_ip }}:/etc/ssl/private/cloudkey.crt
+scp /tmp/lecert.p12 kris@{{ unifi_ip }}:/tmp/lecert.p12
+
+# Load it into the java keystore that UBNT understands
+ssh kris@{{ unifi_ip }} "keytool -importkeystore -deststorepass aircontrolenterprise -destkeypass aircontrolenterprise -destkeystore /usr/lib/unifi/data/keystore -srckeystore /tmp/lecert.p12 -srcstoretype PKCS12 -srcstorepass temppass -alias ubnt -noprompt"
+
+
+# Clean up and use new cert
+ssh kris@{{ unifi_ip }} "rm /tmp/lecert.p12"
+ssh kris@{{ unifi_ip }} "/etc/init.d/unifi restart"
+ssh kris@{{ unifi_ip }} "/etc/init.d/nginx restart"
+rm /tmp/lecert.p12
