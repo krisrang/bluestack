@@ -6,15 +6,15 @@ After=network-online.target
 Environment=DIR={{ jackett_install_dir }}
 Environment=LC_ALL=en_US.UTF-8
 Environment=LANG=en_US.UTF-8
-ExecStart=/usr/bin/mono {{ jackett_install_dir }}/JackettConsole.exe
+ExecStart=/usr/bin/mono --debug {{ jackett_install_dir }}/JackettConsole.exe  --NoRestart
 Type=simple
 User={{ jackett_user }}
 Group={{ jackett_user }}
-Restart=on-failure
-RestartSec=5
+Restart=always
+RestartSec=2
 StartLimitInterval=60s
 StartLimitBurst=3
-TimeoutStopSec=300
+TimeoutStopSec=5
 
 [Install]
 WantedBy=multi-user.target
