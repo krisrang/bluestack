@@ -1,0 +1,46 @@
+---
+- name: install deps
+  apt: name=mono-complete update_cache=yes state=latest cache_valid_time=86400
+
+- name: create user
+  user: name={{ ombi_user }} home={{ ombi_data_dir }} createhome=no system=yes shell=/bin/bash
+
+- name: delete directory
+  file: path={{ ombi_install_dir }} state=absent
+
+- name: create directories
+  file: path={{ item.path }} owner={{ ombi_user }} group={{ ombi_user }} mode={{ item.mode|default("755") }} state=directory
+  with_items:
+    - path: "{{ ombi_data_dir }}"
+    - path: "{{ ombi_config_dir }}"
+    - path: "{{ ombi_install_dir }}"
+
+- name: download
+  get_url: url={{ ombi_release_url }} dest=/tmp/{{ ombi_archive }}
+
+- name: unpack archive
+  unarchive: >
+    src=/tmp/{{ ombi_archive }} dest={{ ombi_install_dir }} copy=no
+    creates={{ ombi_install_dir }}/Release/Ombi.exe
+  notify: restart ombi
+
+- name: fix permissions
+  file: path={{ ombi_install_dir }} owner={{ ombi_user }} group={{ ombi_user }} recurse=yes
+
+- name: install service
+  template: src=service.j2 dest=/etc/systemd/system/ombi.service mode=644
+  notify: restart ombi
+
+# - name: enable service
+#   service: name=ombi state=started enabled=yes
+
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ ombi_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ ombi_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ ombi_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ ombi_domain }}"

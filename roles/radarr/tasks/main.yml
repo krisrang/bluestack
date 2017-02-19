@@ -1,0 +1,3 @@
+---
+- include: radarr.yml
+  tags: radarr

@@ -1,0 +1,9 @@
+---
+radarr_user: radarr
+radarr_archive: Radarr.develop.0.2.0.299.linux.tar.gz
+radarr_release_url: https://github.com/Radarr/Radarr/releases/download/v0.2.0.299/Radarr.develop.0.2.0.299.linux.tar.gz
+radarr_install_dir: /opt/Radarr
+radarr_data_dir: /var/lib/radarr
+radarr_config_dir: "{{ radarr_data_dir }}/.config/Radarr/"
+radarr_port: 7878
+radarr_domain: ""

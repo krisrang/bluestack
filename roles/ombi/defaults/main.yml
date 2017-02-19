@@ -1,0 +1,9 @@
+---
+ombi_user: ombi
+ombi_archive: Ombi-2.1.0.zip
+ombi_release_url: https://github.com/tidusjar/Ombi/releases/download/v2.1.0/Ombi.zip
+ombi_install_dir: /opt/Ombi
+ombi_data_dir: /var/lib/ombi
+ombi_config_dir: "{{ ombi_data_dir }}/.config/Ombi/"
+ombi_port: 3579
+ombi_domain: ""

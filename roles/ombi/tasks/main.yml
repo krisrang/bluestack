@@ -1,0 +1,3 @@
+---
+- include: ombi.yml
+  tags: ombi

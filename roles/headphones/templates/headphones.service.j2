@@ -1,0 +1,12 @@
+[Unit]
+Description=Headphones
+
+[Service]
+ExecStart={{ headphones_install_dir }}/Headphones.py --daemon --config {{ headphones_config_file }} --datadir {{ headphones_data_dir }} --nolaunch --quiet
+GuessMainPID=no
+Type=forking
+User={{ headphones_user }}
+Group=media
+
+[Install]
+WantedBy=multi-user.target

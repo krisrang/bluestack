@@ -1,0 +1,46 @@
+---
+# - name: install dependencies
+#   apt: name={{ item }} update_cache=yes state=installed cache_valid_time=86400
+#   with_items:
+#     - git-core
+#     - python-lxml
+
+# - name: create {{ headphones_user }} user
+#   user: name={{ headphones_user }} home={{ headphones_data_dir }} createhome=no system=yes shell=/bin/bash groups=media
+
+# - name: create directories
+#   file: path={{ item.path }} owner={{ item.user|default(headphones_user) }} group={{ item.group|default(headphones_user) }} mode={{ item.mode|default("755") }} state=directory
+#   with_items:
+#     - path: "{{ headphones_install_dir }}"
+#     - path: "{{ headphones_data_dir }}"
+#     - path: "{{ headphones_config_dir }}"
+#     - path: "{{ headphones_pid_dir }}"
+
+# - name: clone repo
+#   git: repo={{ headphones_repo }} dest={{ headphones_install_dir }} update=yes
+#   notify: restart headphones
+
+# - name: fix repo permissions
+#   file: path={{ headphones_install_dir }} owner={{ headphones_user }} group={{ headphones_user }} recurse=yes
+
+- name: default config file
+  template: src=config.ini.j2 dest={{ headphones_config_file }} owner={{ headphones_user }} group={{ headphones_user }}
+  # notify: restart headphones
+
+# - name: install headphones service
+#   template: src=headphones.service.j2 dest=/etc/systemd/system/headphones.service
+#   notify: restart headphones
+
+# - name: enable headphones service
+#   service: name=headphones enabled=yes
+
+# - name: Write site
+#   template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ headphones_domain }}.conf
+#   notify: reload nginx
+
+# - name: Link site
+#   file: src=/etc/nginx/sites-available/01-{{ headphones_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ headphones_domain }}.conf state=link
+#   notify: reload nginx
+
+# - name: Generate SSL cert
+#   command: "{{ le_cmd }} -d {{ headphones_domain }}"
