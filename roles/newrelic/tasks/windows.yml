@@ -1,0 +1,6 @@
+---
+- name: Install newrelic sysmon
+  win_package:
+    path: "{{ newrelic_msi_url }}"
+    product_id: '{88C2D458-562E-444F-9C7F-340B22A30170}'
+    arguments: NR_LICENSE_KEY="{{ newrelic_sm_key }}"

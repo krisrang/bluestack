@@ -1,5 +1,8 @@
 [cobalt]
-192.168.1.100:2341 ansible_ssh_user=kris
+192.168.1.100
 
 [oxygen]
-oxygen.rang.ee:2341 ansible_ssh_user=kris
+oxygen.rang.ee
+
+[tiger]
+tiger.rang.ee

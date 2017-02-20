@@ -9,7 +9,7 @@
   apt: pkg=newrelic-sysmond update_cache=yes state=latest cache_valid_time=86400
 
 - name: Configure NR server monitor
-  command: nrsysmond-config --set license_key={{nr_key}}
+  command: nrsysmond-config --set license_key={{ newrelic_key }}
 
 - name: Start NR server monitor
   service: name=newrelic-sysmond state=started

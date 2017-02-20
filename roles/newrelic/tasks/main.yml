@@ -1,3 +1,8 @@
 ---
-- include: newrelic.yml
+- include: debian.yml
   tags: newrelic
+  when: ansible_os_family == "Debian"
+
+- include: windows.yml
+  tags: newrelic
+  when: ansible_os_family == "Windows"

@@ -1,4 +1,4 @@
 secrets
-group_vars/all
-facts.json
+group_vars/*
+facts*.json
 *.retry

@@ -1,0 +1,5 @@
+---
+- hosts: tiger
+  roles:
+    - common_win
+    - newrelic
