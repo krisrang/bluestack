@@ -1,0 +1,4 @@
+---
+- name: install java
+  win_chocolatey:
+    name: jre8

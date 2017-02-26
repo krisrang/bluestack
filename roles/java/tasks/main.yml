@@ -1,3 +1,8 @@
 ---
-- include: java.yml
+- include: debian.yml
   tags: java
+  when: ansible_os_family == "Debian"
+
+- include: windows.yml
+  tags: java
+  when: ansible_os_family == "Windows"

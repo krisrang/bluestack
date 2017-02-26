@@ -1,0 +1,11 @@
+---
+selenium_port: 4443
+selenium_win_path: C:\selenium
+selenium_file: selenium-server-standalone-3.1.0.jar
+selenium_url: http://selenium-release.storage.googleapis.com/3.1/{{ selenium_file }}
+selenium_chromedriver_file: chromedriver_win32.zip
+selenium_chromedriver_url: https://chromedriver.storage.googleapis.com/2.27/{{ selenium_chromedriver_file }}
+selenium_geckodriver_file: geckodriver-v0.14.0-win32.zip
+selenium_geckodriver_url: https://github.com/mozilla/geckodriver/releases/download/v0.14.0/{{ selenium_geckodriver_file }}
+selenium_domain: ""
+selenium_pass: ""

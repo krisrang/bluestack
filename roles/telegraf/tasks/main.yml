@@ -1,3 +1,8 @@
 ---
-- include: telegraf.yml
+- include: debian.yml
   tags: telegraf
+  when: ansible_os_family == "Debian"
+
+- include: windows.yml
+  tags: telegraf
+  when: ansible_os_family == "Windows"

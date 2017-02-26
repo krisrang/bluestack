@@ -1,0 +1,57 @@
+---
+- name: Download nginx
+  win_get_url:
+    url: "{{ nginx_url }}"
+    dest: "{{ ansible_env['TEMP'] }}\\{{ nginx_file }}"
+    force: no
+
+- name: Unzip nginx
+  win_unzip:
+    src: "{{ ansible_env['TEMP'] }}\\{{ nginx_file }}"
+    dest: C:\
+    creates: "{{ nginx_win_dir }}\\nginx.exe"
+
+- name: Rename nginx folder
+  win_shell: move C:\nginx-{{ nginx_version }} {{ nginx_win_dir }}
+  args:
+    executable: cmd
+  ignore_errors: yes
+
+- name: Create directories
+  win_file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ nginx_win_dir }}\\conf.d"
+    - "{{ nginx_win_dir }}\\sites-enabled"
+
+- name: Create config
+  win_template:
+    src: nginx_windows.conf.j2
+    dest: "{{ nginx_win_dir }}\\conf\\nginx.conf"
+  notify: restart nginx windows
+
+- name: Create config
+  win_template:
+    src: default_windows.conf.j2
+    dest: "{{ nginx_win_dir }}\\sites-enabled\\00-default.conf"
+  notify: restart nginx windows
+
+- name: Create service
+  win_nssm:
+    name: nginx
+    application: "{{ nginx_win_dir }}\\nginx.exe"
+    stderr_file: "{{ nginx_win_log_dir }}\\stderr.log"
+    stdout_file: "{{ nginx_win_log_dir }}\\stdout.log"
+    state: started
+
+- name: Firewall rule to allow nginx
+  action: win_firewall_rule
+  args:
+      name: nginx
+      enable: yes
+      state: present
+      localport: 80
+      action: allow
+      direction: In
+      protocol: TCP

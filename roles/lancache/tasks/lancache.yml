@@ -1,0 +1,15 @@
+---
+- name: create directory
+  file: path={{ lancache_path }} owner=www-data group=www-data state=directory
+
+- name: write nginx site
+  template: src=nginx.conf.j2 dest=/etc/nginx/sites-enabled/00-default.conf
+  notify: reload nginx
+
+- name: update dnsmasq configuration
+  template: src=lancache.conf.j2 dest=/etc/dnsmasq.d/lancache.conf mode=664
+  notify: reload dnsmasq
+
+- name: update dnsmasq configuration
+  template: src=lancache_hosts.j2 dest=/etc/lancache_hosts mode=664
+  notify: reload dnsmasq

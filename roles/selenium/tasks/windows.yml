@@ -1,0 +1,58 @@
+---
+- name: create install path
+  win_file:
+    path: "{{ selenium_win_path }}"
+    state: directory
+
+- name: download selenium
+  win_get_url:
+    url: "{{ selenium_url }}"
+    dest: "{{ selenium_win_path }}\\{{ selenium_file }}"
+
+- name: download chromedriver
+  win_get_url:
+    url: "{{ selenium_chromedriver_url }}"
+    dest: "{{ ansible_env['TEMP'] }}\\{{ selenium_chromedriver_file }}"
+
+- name: unzip chromedriver
+  win_unzip:
+    src: "{{ ansible_env['TEMP'] }}\\{{ selenium_chromedriver_file }}"
+    dest: "{{ selenium_win_path }}"
+
+- name: download geckodriver
+  win_get_url:
+    url: "{{ selenium_geckodriver_url }}"
+    dest: "{{ ansible_env['TEMP'] }}\\{{ selenium_geckodriver_file }}"
+
+- name: unzip geckodriver
+  win_unzip:
+    src: "{{ ansible_env['TEMP'] }}\\{{ selenium_geckodriver_file }}"
+    dest: "{{ selenium_win_path }}"
+
+- name: create service
+  win_nssm:
+    name: selenium-standalone
+    application: C:\ProgramData\Oracle\Java\javapath\java.exe
+    app_parameters:
+      _: "\"-Dwebdriver.chrome.driver={{ selenium_win_path }}\\chromedriver.exe\" \"-Dwebdriver.gecko.driver={{ selenium_win_path }}\\geckodriver.exe\" -jar {{ selenium_win_path }}\\{{ selenium_file }} -port {{ selenium_port }} -timeout 120"
+    stderr_file: "{{ selenium_win_path }}\\stderr.log"
+    stdout_file: "{{ selenium_win_path }}\\stdout.log"
+    state: restarted
+
+- name: create nginx config
+  win_template:
+    src: nginx.conf.j2
+    dest: "{{ nginx_win_dir }}\\sites-enabled\\01-{{ selenium_domain }}.conf"
+  notify: restart nginx windows
+
+- name: create nginx config
+  win_template:
+    src: pass.conf.j2
+    dest: "{{ nginx_win_dir }}\\conf\\pass.conf"
+  notify: restart nginx windows
+
+- name: create htpasswd file
+  win_template:
+    src: pass.j2
+    dest: "{{ nginx_win_dir }}\\conf\\pass"
+  notify: restart nginx windows

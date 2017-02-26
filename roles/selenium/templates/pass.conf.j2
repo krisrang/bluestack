@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+
+satisfy  any;
+allow  127.0.0.1/32;
+deny   all;
+
+auth_basic            "Selenium";
+auth_basic_user_file  {{ nginx_win_dir }}/conf/pass;

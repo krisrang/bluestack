@@ -1,0 +1,27 @@
+---
+- name: Download telegraf
+  win_get_url:
+    url: "{{ telegraf_win_url }}"
+    dest: "{{ ansible_env['TEMP'] }}\\{{ telegraf_win_archive }}"
+    force: no
+
+- name: Unzip telegraf
+  win_unzip:
+    src: "{{ ansible_env['TEMP'] }}\\{{ telegraf_win_archive }}"
+    dest: C:\Program Files
+    creates: "{{ telegraf_win_dir }}\\telegraf.exe"
+
+- name: Copy conf
+  win_template: src=windows.conf.j2 dest="{{ telegraf_win_dir }}\\telegraf.conf"
+  notify: restart telegraf
+
+- name: Register service
+  win_command: telegraf.exe --service install
+  args:
+    chdir: "{{ telegraf_win_dir }}"
+
+- name: Set service startup mode to auto and ensure it is started
+  win_service:
+    name: telegraf
+    start_mode: auto
+    state: started

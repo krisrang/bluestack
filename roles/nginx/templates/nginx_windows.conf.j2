@@ -1,28 +1,21 @@
 # {{ ansible_managed }}
 
-user {{ nginx_user }} {{ nginx_user }};
+# user {{ nginx_user }} {{ nginx_user }};
 worker_processes  {{ ansible_processor_cores }};
 
-error_log  {{ nginx_log_dir }}/error.log;
-pid        {{ nginx_pid }};
+error_log  {{ nginx_win_log_dir }}/error.log;
+pid        {{ nginx_win_pid }};
 
 events {
   worker_connections  {{ nginx_worker_connections }};
-{% if nginx_multi_accept %}
-  multi_accept on;
-{% endif %}
-
-{% if nginx_event %}
-  use {{ nginx_event }};
-{% endif %}
 }
 
 http {
-  include       {{ nginx_dir }}/mime.types;
+  include       {{ nginx_win_dir }}/conf/mime.types;
   default_type  application/octet-stream;
 
   {% if nginx_enable_access_log %}
-  access_log  {{ nginx_log_dir }}/access.log;
+  access_log  {{ nginx_win_log_dir }}/access.log;
   {% endif %}
 
   sendfile {{ nginx_sendfile }};
@@ -56,6 +49,6 @@ http {
   client_max_body_size {{ nginx_client_max_body_size }};
   {% endif %}
 
-  include {{ nginx_dir }}/conf.d/*.conf;
-  include {{ nginx_dir }}/sites-enabled/*;
+  include {{ nginx_win_dir }}/conf.d/*.conf;
+  include {{ nginx_win_dir }}/sites-enabled/*.conf;
 }

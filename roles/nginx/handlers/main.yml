@@ -1,6 +1,11 @@
 ---
-- name: restart nginx
+- name: restart nginx debian
   service: name=nginx state=restarted
+  when: ansible_os_family == "Debian"
+
+- name: restart nginx windows
+  win_service: name=nginx state=restarted
+  when: ansible_os_family == "Windows"
 
 - name: reload nginx
   service: name=nginx state=reloaded

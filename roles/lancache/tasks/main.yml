@@ -1,0 +1,3 @@
+---
+- include: lancache.yml
+  tags: lancache

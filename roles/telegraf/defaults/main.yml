@@ -2,5 +2,8 @@
 telegraf_dns_domain: kris.moe
 telegraf_scripts_path: /var/lib/telegraf
 telegraf_log_dir: /var/log/telegraf
+telegraf_win_dir: C:\Program Files\telegraf
+telegraf_win_archive: telegraf-1.2.1_windows_amd64.zip
+telegraf_win_url: https://dl.influxdata.com/telegraf/releases/{{ telegraf_win_archive }}
 # telegraf_ipmi_user:
 # telegraf_ipmi_password:
