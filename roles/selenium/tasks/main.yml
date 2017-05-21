@@ -1,4 +1,8 @@
 ---
+- include: debian.yml
+  tags: selenium
+  when: ansible_os_family == "Debian"
+
 - include: windows.yml
   tags: selenium
   when: ansible_os_family == "Windows"

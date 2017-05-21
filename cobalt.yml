@@ -3,7 +3,6 @@
   become: true
   roles:
     - common
-    - dnsmasq
     - ruby
     - forego
     - java
@@ -34,9 +33,7 @@
     - gitlab
     - logs
     - beats
-    - skyltmax
+    - dev
     - unifi
-    - headphones
     - radarr
-    - ombi
-    - lancache
+    - selenium

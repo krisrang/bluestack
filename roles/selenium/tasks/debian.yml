@@ -1,0 +1,28 @@
+---
+- name: create selenium container
+  docker_container:
+    name: selenium
+    image: selenium/standalone-chrome-debug
+    state: started
+    restart_policy: always
+    published_ports:
+      - "{{ selenium_debian_port }}:4444"
+      - 5900:5900
+
+- name: copy ufw conf
+  template: src=ufw.j2 dest=/etc/ufw/applications.d/selenium owner=root group=root mode=0644
+
+- name: firewall allow selenium
+  command: ufw allow selenium
+
+- name: Write site
+  template: src=debian/nginx.conf.j2 dest=/etc/nginx/sites-available/01-{{ selenium_debian_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ selenium_debian_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ selenium_debian_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ selenium_debian_domain }}"
+

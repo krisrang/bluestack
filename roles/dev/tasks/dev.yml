@@ -1,0 +1,11 @@
+---
+- name: Write site
+  template: src=nginx.j2 dest=/etc/nginx/sites-available/01-{{ dev_domain }}.conf
+  notify: reload nginx
+
+- name: Link site
+  file: src=/etc/nginx/sites-available/01-{{ dev_domain }}.conf dest=/etc/nginx/sites-enabled/01-{{ dev_domain }}.conf state=link
+  notify: reload nginx
+
+- name: Generate SSL cert
+  command: "{{ le_cmd }} -d {{ dev_domain }} -d {{ dev_ssl_domains | join(\" -d \") }}"

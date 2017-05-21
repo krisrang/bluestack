@@ -1,22 +1,38 @@
 # {{ ansible_managed }}
 
 upstream selenium {
-    server 127.0.0.1:{{ selenium_port }} fail_timeout=0;
+    server 127.0.0.1:{{ selenium_debian_port }} fail_timeout=0;
 }
 
 server {
   listen [::]:80;
   listen 80;
 
-  include {{ nginx_win_dir }}/conf/pass.conf;
+  server_name {{ selenium_debian_domain }};
+  rewrite ^ https://$server_name$request_uri? permanent;
 
-  server_name {{ selenium_domain }};
+  include snippets/le.conf;
+}
 
-  root {{ nginx_win_dir }}/html/;
+server {
+  listen 443 ssl http2;
+  listen [::]:443 ssl http2;
+  ssl on;
+
+  ssl_certificate {{ le_root }}{{ selenium_debian_domain }}/fullchain.pem;
+  ssl_certificate_key {{ le_root }}{{ selenium_debian_domain }}/privkey.pem;
+
+  include snippets/moepass.conf;
+
+  server_name {{ selenium_debian_domain }};
+
+  root /var/www/;
   index index.html index.htm;
 
-  error_log   {{ nginx_win_log_dir }}/{{ selenium_domain }}-error.log;
-  access_log  {{ nginx_win_log_dir }}/{{ selenium_domain }}-access.log;
+  add_header Strict-Transport-Security max-age=31536000;
+
+  error_log   /var/log/nginx/{{ selenium_debian_domain }}-error.log;
+  access_log  /var/log/nginx/{{ selenium_debian_domain }}-access.log;
 
   location / {
     try_files $uri @selenium;
@@ -26,6 +42,8 @@ server {
     proxy_set_header        Host $host;
     proxy_set_header        X-Real-IP $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header        X-Forwarded-Proto https;
+    proxy_redirect          http:// https://;
 
     proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
 
@@ -47,4 +65,6 @@ server {
       break;
     }
   }
+
+  include snippets/le.conf;
 }

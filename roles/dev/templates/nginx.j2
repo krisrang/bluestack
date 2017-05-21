@@ -1,44 +1,47 @@
 # {{ ansible_managed }}
 
-upstream skyltmax {
-    server {{ skyltmax_ip }}:{{ skyltmax_port }} fail_timeout=0;
+upstream dev {
+    server {{ dev_ip }}:{{ dev_port }} fail_timeout=0;
 }
 
+{% for domain in dev_ssl_domains %}
 server {
   listen [::]:80;
   listen 80;
 
-  server_name {{ skyltmax_domain }};
+  server_name {{ domain }};
   rewrite ^ https://$server_name$request_uri? permanent;
 
   include snippets/le.conf;
 }
+{% endfor %}
 
+{% for domain in dev_ssl_domains %}
 server {
   listen 443 ssl http2;
   listen [::]:443 ssl http2;
   ssl on;
 
-  ssl_certificate {{ le_root }}{{ skyltmax_domain }}/fullchain.pem;
-  ssl_certificate_key {{ le_root }}{{ skyltmax_domain }}/privkey.pem;
+  ssl_certificate {{ le_root }}{{ dev_domain }}/fullchain.pem;
+  ssl_certificate_key {{ le_root }}{{ dev_domain }}/privkey.pem;
 
-  server_name {{ skyltmax_domain }};
+  server_name {{ domain }};
 
   root /usr/share/www;
   index index.html index.htm;
 
   add_header Strict-Transport-Security max-age=31536000;
 
-  error_log   /var/log/nginx/{{ skyltmax_domain }}-error.log;
-  access_log  /var/log/nginx/{{ skyltmax_domain }}-access.log;
+  error_log   /var/log/nginx/{{ domain }}-error.log;
+  access_log  /var/log/nginx/{{ domain }}-access.log;
 
   include snippets/logspass.conf;
 
   location / {
-    try_files $uri @skyltmax;
+    try_files $uri @dev;
   }
 
-  location @skyltmax {
+  location @dev {
     proxy_set_header        Host $host;
     proxy_set_header        X-Real-IP $remote_addr;
     proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -61,10 +64,11 @@ server {
     client_body_buffer_size 128k;
 
     if (!-f $request_filename) {
-      proxy_pass http://skyltmax;
+      proxy_pass http://dev;
       break;
     }
   }
 
   include snippets/le.conf;
 }
+{% endfor %}

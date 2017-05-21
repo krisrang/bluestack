@@ -1,0 +1,7 @@
+---
+dev_domain: dev.rang.ee
+dev_ssl_domains:
+  - skyltmax.dev.rang.ee
+  - talon.dev.rang.ee
+dev_ip: 192.168.1.201
+dev_port: 3000

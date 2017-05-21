@@ -1,0 +1,50 @@
+# {{ ansible_managed }}
+
+upstream selenium {
+    server 127.0.0.1:{{ selenium_win_port }} fail_timeout=0;
+}
+
+server {
+  listen [::]:89;
+  listen 89;
+
+  include {{ nginx_win_dir }}/conf/pass.conf;
+
+  server_name {{ selenium_win_domain }};
+
+  root {{ nginx_win_dir }}/html/;
+  index index.html index.htm;
+
+  error_log   {{ nginx_win_log_dir }}/{{ selenium_win_domain }}-error.log;
+  access_log  {{ nginx_win_log_dir }}/{{ selenium_win_domain }}-access.log;
+
+  location / {
+    try_files $uri @selenium;
+  }
+
+  location @selenium {
+    proxy_set_header        Host $host;
+    proxy_set_header        X-Real-IP $remote_addr;
+    proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504;
+
+    proxy_connect_timeout      90;
+    proxy_send_timeout         90;
+    proxy_read_timeout         90;
+
+    proxy_buffer_size          4k;
+    proxy_buffers              4 32k;
+    proxy_busy_buffers_size    64k;
+    proxy_temp_file_write_size 64k;
+    proxy_max_temp_file_size 0;
+
+    client_max_body_size    10m;
+    client_body_buffer_size 128k;
+
+    if (!-f $request_filename) {
+      proxy_pass http://selenium;
+      break;
+    }
+  }
+}

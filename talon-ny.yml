@@ -1,0 +1,7 @@
+---
+- hosts: talon-ny
+  become: true
+  roles:
+    - common
+    - docker
+    - newrelic

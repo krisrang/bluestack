@@ -3,6 +3,6 @@ le_url: https://dl.eff.org/certbot-auto
 le_dest: /usr/bin/certbot
 le_webroot: /var/www/acme/
 le_email: "mail@rang.ee"
-le_cmd: "certbot certonly -n -m {{ le_email }} --agree-tos --webroot -w /var/www/acme/"
+le_cmd: "certbot certonly -n -m {{ le_email }} --agree-tos --expand --webroot -w /var/www/acme/"
 le_root: /etc/letsencrypt/live/
 le_hook_root: /var/lib/letsencryptrenew
