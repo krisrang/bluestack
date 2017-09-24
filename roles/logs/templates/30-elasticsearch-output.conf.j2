@@ -7,7 +7,7 @@ output {
       hosts => ["localhost:{{ logs_es_port }}"]
       sniffing => false
       manage_template => false
-      index => "%{log_index}-%{+YYYY.MM.dd}"
+      index => "%{log_index}-%{+YYYY.MM}"
       document_type => "%{log_index}"
     }
   } else if [log_type] == "rails" {
@@ -15,16 +15,25 @@ output {
       hosts => ["localhost:{{ logs_es_port }}"]
       sniffing => false
       manage_template => false
-      index => "%{log_index}-%{+YYYY.MM.dd}"
+      index => "%{log_index}-%{+YYYY.MM}"
       document_id => "rails-%{uuid}"
       document_type => "rails"
+    }
+  } else if [log_type] == "railsconsole" {
+    elasticsearch {
+      hosts => ["localhost:{{ logs_es_port }}"]
+      sniffing => false
+      manage_template => false
+      index => "%{log_index}-%{+YYYY.MM}"
+      # document_id => "railsconsole-%{uuid}"
+      document_type => "railsconsole"
     }
   } else if "filebeat" in [tags] {
     elasticsearch {
       hosts => ["localhost:{{ logs_es_port }}"]
       sniffing => false
       manage_template => false
-      index => "filebeat-%{+YYYY.MM.dd}"
+      index => "filebeat-%{+YYYY.MM}"
     }
   }
 }

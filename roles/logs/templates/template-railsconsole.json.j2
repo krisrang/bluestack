@@ -1,0 +1,88 @@
+{
+  "template": "*-railsconsole-*",
+  "order": 3,
+  "settings": {
+    "number_of_shards": 1,
+    "refresh_interval": "5s"
+  },
+  "mappings": {
+    "rails": {
+      "properties": {
+          "@timestamp": {
+            "type": "date"
+          },
+          "@version": {
+            "type": "keyword",
+            "ignore_above": 10
+          },
+          "beat": {
+            "properties": {
+              "hostname": {
+                "type": "keyword",
+                "ignore_above": 256
+              },
+              "name": {
+                "type": "keyword",
+                "ignore_above": 256
+              },
+              "version": {
+                "type": "keyword",
+                "ignore_above": 10
+              }
+            }
+          },
+          "input_type": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "log_timestamp": {
+            "type": "date"
+          },
+          "message": {
+            "type": "text"
+          },
+          "method": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "offset": {
+            "type": "long"
+          },
+          "pid": {
+            "type": "integer",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 10
+              }
+            }
+          },
+          "remoteip": {
+            "type": "ip",
+            "fields": {
+              "keyword": {
+                "type": "keyword",
+                "ignore_above": 30
+              }
+            }
+          },
+          "source": {
+            "type": "text"
+          },
+          "tags": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "type": {
+            "type": "keyword",
+            "ignore_above": 256
+          },
+          "uuid": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      }
+    }
+  }
+}

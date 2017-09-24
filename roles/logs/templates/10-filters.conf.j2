@@ -71,4 +71,21 @@ filter {
       }
     }
   }
+
+  if [fields][log_type] == "railsconsole" {
+    grok {
+      patterns_dir => ["/etc/logstash/conf.d/patterns"]
+      match => { "message" =>
+        [
+          "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Started console session for %{IP:remoteip} in %{WORD:environment}.*$",
+          "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] .*$"
+        ]
+      }
+    }
+
+    mutate {
+      add_field => { "log_type" => "%{[fields][log_type]}" }
+      add_field => { "log_index" => "%{[fields][log_index]}" }
+    }
+  }
 }
