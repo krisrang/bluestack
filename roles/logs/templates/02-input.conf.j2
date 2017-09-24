@@ -7,4 +7,10 @@ input {
   beats {
     port => {{ logs_logstash_port }}
   }
+  gelf {
+    port => {{ logs_logstash_gelf_port }}
+    type => "gelf"
+    add_field => { "log_type" => "docker" }
+    add_field => { "log_index" => "docker" }
+  }
 }

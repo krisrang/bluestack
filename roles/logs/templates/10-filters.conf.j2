@@ -1,71 +1,74 @@
 filter {
-  if [type] == "rails" {
-    if [message] =~ "^.* Started .*$" {
-      grok {
-        patterns_dir => ["/etc/logstash/conf.d/patterns"]
-        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Started %{WORD:method} \"%{DATA:path}\" for %{IP:remoteip} .*$" ]
+  if [type] == "gelf" or [fields][log_type] == "rails" {
+    grok {
+      patterns_dir => ["/etc/logstash/conf.d/patterns"]
+      match => { "message" =>
+        [
+          "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Started %{WORD:method} \"%{DATA:path}\" for %{IP:remoteip} .*$",
+          "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Completed %{NUMBER:httpstatus} .*in %{DATA:totaltiming}ms .*$",
+          "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] .*$"
+        ]
       }
-    } else if [message] =~ "^.* Completed .*$" {
-      grok {
-        patterns_dir => ["/etc/logstash/conf.d/patterns"]
-        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] Completed %{NUMBER:httpstatus} .*in %{DATA:totaltiming}ms .*$" ]
-      }
-    } else {
-      grok {
-        patterns_dir => ["/etc/logstash/conf.d/patterns"]
-        match => [ "message", "^.?. \[%{RAILSISO:log_timestamp}[0-9]{3} #%{NUMBER:pid}.*\] .* -- : \[%{UUID:uuid}\] .*$" ]
-      }
+      add_field => { "line_type" => "rails_line" }
+      tag_on_failure => []
     }
 
-    if [message] =~ "^.* FATAL -- :.*$" {
-      drop {}
-    } else if [message] =~ "^.* Completed .*$" {
-      aggregate {
-        task_id => "%{uuid}"
-        code => '
-          map["loglines"] << [event.get("log_timestamp"), event.get("message")]
-          event.set("message", map["loglines"].sort.map {|l| l[1] }.join("\n"))
-          event.tag("_aggregated")
+    if [line_type] == "rails_line" {
+      if [message] =~ "^.* Completed .*$" {
+        aggregate {
+          task_id => "%{uuid}"
+          code => '
+            map["loglines"] << [event.get("log_timestamp"), event.get("message")]
+            event.set("message", map["loglines"].sort.map {|l| l[1] }.join("\n"))
+            event.tag("_aggregated")
 
-          %w(hostname method path remoteip).each do |key|
-            if !event.get(key)
-              event.set(key, map[key])
+            %w(hostname method path remoteip).each do |key|
+              if !event.get(key)
+                event.set(key, map[key])
+              end
             end
-          end
-        '
-        map_action => "update"
-        timeout => 120
-        push_map_as_event_on_timeout => true
-        timeout_tags => ["_aggregated"]
-        end_of_task => true
-      }
-    } else {
-      aggregate {
-        task_id => "%{uuid}"
-        code => '
-          map.merge!(event) if map.empty?
+          '
+          map_action => "update"
+          timeout => 120
+          push_map_as_event_on_timeout => true
+          timeout_tags => ["_aggregated"]
+          end_of_task => true
+        }
+      } else {
+        aggregate {
+          task_id => "%{uuid}"
+          code => '
+            map.merge!(event) if map.empty?
 
-          map["hostname"] = event.get("beat.hostname")
-          %w(method path remoteip).each do |key|
-            if event.get(key)
-              map[key] = event.get(key)
+            map["hostname"] = event.get("beat.hostname")
+            %w(method path remoteip).each do |key|
+              if event.get(key)
+                map[key] = event.get(key)
+              end
             end
-          end
 
-          map["loglines"] ||= []
-          map["loglines"] << [event.get("log_timestamp"), event.get("message")]
-          map["message"] = map["loglines"].sort.map {|l| l[1] }.join("\n")
-        '
-        aggregate_maps_path => "/var/lib/logstash/aggregatemaps"
+            map["loglines"] ||= []
+            map["loglines"] << [event.get("log_timestamp"), event.get("message")]
+            map["message"] = map["loglines"].sort.map {|l| l[1] }.join("\n")
+          '
+          aggregate_maps_path => "/var/lib/logstash/aggregatemaps"
+        }
       }
-    }
 
-    mutate {
-      remove_field => ["loglines"]
-    }
+      if [fields][log_type] == "rails" {
+        mutate {
+          add_field => { "log_type" => "%{[fields][log_type]}" }
+          add_field => { "log_index" => "%{[fields][log_index]}" }
+        }
+      }
 
-    if "_aggregated" not in [tags] {
-      drop {}
+      mutate {
+        remove_field => ["loglines"]
+      }
+
+      if "_aggregated" not in [tags] {
+        drop {}
+      }
     }
   }
 }

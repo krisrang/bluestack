@@ -2,16 +2,22 @@ output {
   # stdout {
   #   codec => "rubydebug"
   # }
-  if [type] == "rails" {
+  if [log_type] == "docker" {
     elasticsearch {
       hosts => ["localhost:{{ logs_es_port }}"]
       sniffing => false
       manage_template => false
-      index => "rails-%{+YYYY.MM.dd}"
-      document_id => "%{type}-%{uuid}"
-      template => "/etc/logstash/conf.d/templates/rails.json"
-      template_name => "rails"
-      template_overwrite => true
+      index => "%{log_index}-%{+YYYY.MM.dd}"
+      document_type => "%{log_index}"
+    }
+  } else if [log_type] == "rails" {
+    elasticsearch {
+      hosts => ["localhost:{{ logs_es_port }}"]
+      sniffing => false
+      manage_template => false
+      index => "%{log_index}-%{+YYYY.MM.dd}"
+      document_id => "rails-%{uuid}"
+      document_type => "rails"
     }
   } else if "filebeat" in [tags] {
     elasticsearch {

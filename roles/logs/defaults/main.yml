@@ -6,3 +6,4 @@ logs_kibana_port: 5601
 logs_kibana_logdir: /var/log/kibana
 logs_logstash_port: 5044
 logs_logstash_workers: 1
+logs_logstash_gelf_port: 12201
