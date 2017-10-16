@@ -4,6 +4,11 @@ input {
     key => "filebeat"
     data_type => list
   }
+  redis {
+    port => 6378
+    key => "metricbeat"
+    data_type => list
+  }
   beats {
     port => {{ logs_logstash_port }}
   }

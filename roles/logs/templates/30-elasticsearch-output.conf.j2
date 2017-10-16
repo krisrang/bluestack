@@ -35,5 +35,12 @@ output {
       manage_template => false
       index => "filebeat-%{+YYYY.MM}"
     }
+  } else if "metricbeat" in [tags] {
+    elasticsearch {
+      hosts => ["localhost:{{ logs_es_port }}"]
+      sniffing => false
+      manage_template => false
+      index => "metricbeat-%{+YYYY.MM}"
+    }
   }
 }
